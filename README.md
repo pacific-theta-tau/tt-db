@@ -19,37 +19,13 @@ This project aims to benefit the organization by:
     * API: [Go](http://go.dev/) ([Chi](https://github.com/go-chi/chi))
     * Database: PostgreSQL
 
+For a more in depth explanation of the project architecture, check out the [PROJECT.md]() docs.
+
 ## Usage
 TODO
 
-## Contributing
-> "Whatsoever you findeth to do, do it with thy might"
-
-One of the goals of this project is to give current and future Brothers an opportunity to learn and work with fellow TT members.
-
-Before getting started, please read the contributing guide below for rules and best practices: 
-
-### Contributing Guide
-
-> TODO
-#### Requesting/Solving Issues
-All planned and ongoing tasks will be listed under the Github Issues of this repository. You may pick any Issues listed to contribute to the project.
-
-If you want to request a new feature or report a bug, you may also create an Issue with your request.
-
-### Development Process
-> TODO
-
-When working in a task, create a branch to work on and create a pull request when you are ready for a code review. Do NOT code in the main branch!
-#### Branch Organization
-> TODO
-
-#### Code Conventions
-* Comment functions appropriately
-* Check Go code formatting conventions [here](https://go.dev/doc/effective_go)
-
-### Getting Started
-> TODO
+## Getting Involved
+This project is open to any Brothers wanting to learn or build something! Please read the [Contributing Guidelines](/CONTRIBUTING.md) before getting started.
 
 ## Contact
 > TODO
