@@ -19,7 +19,7 @@ This project aims to benefit the organization by:
     * API: [Go](http://go.dev/) ([Chi](https://github.com/go-chi/chi))
     * Database: PostgreSQL
 
-For a more in depth explanation of the project architecture, check out the [PROJECT.md]() docs.
+For a more in depth explanation of the project architecture, check out the [Project Details](/project_details.md) docs.
 
 ## Usage
 TODO
@@ -28,7 +28,16 @@ TODO
 This project is open to any Brothers wanting to learn or build something! Please read the [Contributing Guidelines](/CONTRIBUTING.md) before getting started.
 
 ## Contact
-> TODO
+* **Project Owner**:
+  * Nicolas Ahn
+    * Email: n_ahn2@u.pacific.edu
+    * Discord: @its_nickel
+* **Current Project Maintainers**:
+  * Nicolas Ahn:
+    * Email: n_ahn2@u.pacific.edu
+    * Discord: @its_nickel
+  * Thomas Lau:
+    * Email: t_lau11@u.pacific.edu
 
 ## FAQ
 > TODO
