@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/pacific-theta-tau/tt-db/api/handlers"
 	"github.com/pacific-theta-tau/tt-db/db"
 )
 
@@ -33,11 +34,13 @@ func (app *Application) Serve() {
 	app.Database.Connect(app.Config.DatabaseURL)
 
 	// Start routers and middleware
+	handler := handlers.NewHandler(app.Database.Conn)
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello World!"))
 	})
+	r.Get("/api/brothers", handler.GetAllBrothers)
 
 	//TODO: cleaner address
 	addr := "localhost:" + app.Config.Port
