@@ -1,18 +1,25 @@
 # Contributing Guidelines
-> "Whatsoever you findeth to do, do it with thy might"
+> "Whatsoever thy hand findeth to do, do it with thy might"
 
 To get started, follow the steps below:
 
-1. Clone project and install all required packages/dependencies 
-    * see [Project Setup](#project-setup) for instructions
-2. Check open issues that interest you, or make an [Issue Request](#github-issues)
-3. Assign yourself to the issue
-4. Create your branch, and start coding!
-    * see [Development Process](#development-process) for some best practices
+1. Check open issues that interest you, or make an [Issue Request](#github-issues)
+2. Assign yourself to the issue
+3. Setup the project locally, create your branch, and start coding!
+    * see [Project Setup](#project-setup) for setup instructions
+    * see [Development Process](#development-process) for best practices 
 
 To Learn more about the technologies used in this project, check [Resources](#resources)
 
+## Github Issues
+All planned and ongoing tasks will be listed under the Github Issues of this repository. You may pick any Issues listed to contribute to the project.
+
+If you want to request a new feature or report a bug, you may also create an Issue with your request
+* When requesting a feature, explain the what, the why, and show some use cases
+* When reporting a bug, the more details the better to help any coders replicate and debug the issue
+
 ## Project Setup
+Instructions for setting up repo for local development:
 1. clone repository
     - cloning via HTTPS:
         ```
@@ -26,27 +33,29 @@ To Learn more about the technologies used in this project, check [Resources](#re
 
 2. Install Go. You can see instructions [here](https://go.dev/doc/install)
 
-3. Install Go dependencies defined in `go.mod`
+3. Install dependencies defined in `go.mod`
     ```
     go mod tidy
     ```
-
-
-## Github Issues
-All planned and ongoing tasks will be listed under the Github Issues of this repository. You may pick any Issues listed to contribute to the project.
-
-If you want to request a new feature or report a bug, you may also create an Issue with your request
-* When requesting a feature, explain the what, the why, and show some use cases
-* When reporting a bug, the more details the better to help any coders replicate and debug the issue
+4. Create a `.env` file in the root directory of your project
+    - the `.env` file defines the necessary environment variables for local development, such as `DATABASE_URL` to connect to the TT-DB and `PORT` to choose the server address.
+    - Add the following to the `.env` file:
+    ```
+    DATABASE_URL=<add-here>
+    PORT=<add-here>
+    ```
+5. run server
+    ```
+    go run cmd/server/main.go
+    ```
 
 ## Development Process
-After finding an open issue to work on, you should:
+When working on an issue, you should:
 
-1. Clone Project
-2. Create a [Branch](#how-to-branch) to code on
+1. Create a [Branch](#how-to-branch) to code on
     * See [How to Branch](#how-to-branch) for branch naming conventions
-3. Create a [Pull Request](#pull-requests) when you are ready for a code review
-4. Merge to main after approval
+2. Create a [Pull Request](#pull-requests) when you are ready for a code review
+3. Merge to main after approval
 
 ### Code Conventions
 * Comment your code! Follow the official Go commenting conventions [here](https://go.dev/blog/godoc)
@@ -75,8 +84,10 @@ When creating a Pull Request, describe what you did and assign reviewers to appr
 
 ## Resources
 ### Learn Go
-* [Go By Example]()
-    * Very quick guide to make you familiar with Go's syntax and features
+* [Tour of Go](https://go.dev/tour/welcome/1)
+    * A very quick guide of Go's syntax and features, including some practice problems
+* [Go By Example](https://gobyexample.com/)
+    * Guide to make you familiar with Go's syntax and features
 * [An Introduction to Programming in GO](https://www.golang-book.com/books/intro)
     * A more in depth, yet gentle, introduction to Go
 
