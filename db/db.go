@@ -2,13 +2,14 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
-	"github.com/joho/godotenv"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 type PostgresDB struct {
-	db *sql.DB
+	Conn *sql.DB
 }
 
 // Constructor for PostgresDB struct
@@ -16,24 +17,30 @@ func NewPostgresDB() *PostgresDB {
 	return &PostgresDB{}
 }
 
-// Connect() estabilishes connection with a postgreSQL database defined in the environment variable "DATABASE_URL".
-// Returns the database connection as a pgx.Conn object
-func (d *PostgresDB) Connect(addr string) {
-	// Make sure to have setup a .env file with database configs
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error in loading .env file")
-	}
-
-	// // Establish connection to postgres DB
-	// conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	// if err != nil {
-	// 	fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-	// 	os.Exit(1)
-	// }
-	conn, err := sql.Open("pgx", addr)
+// Estabilishes connection with a postgreSQL database defined in the environment variable "DATABASE_URL".
+func (db *PostgresDB) Connect(dsn string) {
+	// Establish connection to postgres DB
+	conn, err := sql.Open("pgx", dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
-	d.db = conn
+	defer conn.Close()
+
+	err = testDB(conn)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Connected to Database successfully!")
+	db.Conn = conn
+}
+
+// Test connection with database by sending a ping
+func testDB(conn *sql.DB) error {
+	err := conn.Ping()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
