@@ -1,29 +1,20 @@
 package main
 
 import (
-	"context"
+	"flag"
 	"fmt"
-	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/pacific-theta-tau/tt-db/api"
 	"github.com/pacific-theta-tau/tt-db/db"
 )
 
 func main() {
-	// Connect to TT Postgres Database
-	dbConn, err := db.ConnectPostgresDB()
-	if err != nil {
-		fmt.Println("Error connecting to database:", err)
-	}
-	defer dbConn.Close(context.Background())
+	port := flag.String("port", ":3000", "Port for server to listen and serve to")
+	flag.Parse()
 
-	// Start server and routers
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
-	})
+	db := db.NewPostgresDB()
 
-	http.ListenAndServe(":3000", r)
+	app := api.NewApplication(*port, db)
+	fmt.Println("Server running on port", *port)
+	app.Serve()
 }
