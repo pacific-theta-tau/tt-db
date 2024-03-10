@@ -27,20 +27,21 @@ TODO
 ## Getting Involved
 This project is open to any Brothers wanting to learn or build something! Please read the [Contributing Guidelines](/CONTRIBUTING.md) before getting started.
 
+## FAQ
+> TODO
+
 ## Contact
-* **Project Owner**:
-  * Nicolas Ahn
-    * Email: n_ahn2@u.pacific.edu
-    * Discord: @its_nickel
-* **Current Project Maintainers**:
+* **Project Maintainers**:
   * Nicolas Ahn:
     * Email: n_ahn2@u.pacific.edu
     * Discord: @its_nickel
   * Thomas Lau:
     * Email: t_lau11@u.pacific.edu
 
-## FAQ
-> TODO
+* **Project Owner**:
+  * Nicolas Ahn
+    * Email: n_ahn2@u.pacific.edu
+    * Discord: @its_nickel
 
 ## Acknowledgements
 > TODO
