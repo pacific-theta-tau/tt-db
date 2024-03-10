@@ -24,7 +24,6 @@ func (db *PostgresDB) Connect(dsn string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer conn.Close()
 
 	err = testDB(conn)
 	if err != nil {
