@@ -35,6 +35,18 @@ func (app *Application) Serve() {
 
 	// Start routers and middleware
 	handler := handlers.NewHandler(app.Database.Conn)
+	routes := setupRoutes(handler)
+
+	//TODO: cleaner address
+	addr := "localhost:" + app.Config.Port
+	err := http.ListenAndServe(addr, routes)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Setup mux with all middleware and routes
+func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -42,10 +54,5 @@ func (app *Application) Serve() {
 	})
 	r.Get("/api/brothers", handler.GetAllBrothers)
 
-	//TODO: cleaner address
-	addr := "localhost:" + app.Config.Port
-	err := http.ListenAndServe(addr, r)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return r
 }
