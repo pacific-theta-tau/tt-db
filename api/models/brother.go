@@ -52,3 +52,29 @@ func GetAllBrothers(db *sql.DB) ([]*Brother, error) {
 
 	return brothers, nil
 }
+
+func GetBrotherByID(db *sql.DB, id string) (*Brother, error) {
+	// ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	// defer cancel()
+
+	query := "SELECT * FROM brothers WHERE id = @ID"
+	row, err := db.Query(query, sql.Named("ID", id))
+	if err != nil {
+		return nil, err
+	}
+
+	var brother *Brother
+	err = row.Scan(
+		&brother.ID,
+		&brother.First,
+		&brother.Last,
+		&brother.Status,
+		&brother.Class,
+		&brother.Email,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return brother, nil
+}
