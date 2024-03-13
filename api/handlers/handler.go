@@ -1,3 +1,4 @@
+// Handler is initialized and used in server.go for routing
 package handlers
 
 import (
