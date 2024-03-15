@@ -3,10 +3,7 @@ package handlers
 
 import (
 	"database/sql"
-	"time"
 )
-
-const dbTimeout = time.Second * 3
 
 type Handler struct {
 	db *sql.DB

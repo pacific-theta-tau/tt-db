@@ -6,26 +6,27 @@ import (
 	"time"
 )
 
+const brothers_table = "brothers"
+
 // TODO: decide which fields are nullable.
 type Brother struct {
-	ID     int    `json:id` // should it be 989?
-	First  string `json:first`
-	Last   string `json:last`
-	Status string `json:status`
-	Class  string `json:class` // should be required
-	Email  string `json:email` // nullable
-	//Roll_call //nullable
-	//Phone_number // nullable
-	// created_at?
-	// updated_at?
+	PacificId   string `json:"pacificId"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	Status      string `json:"status"`
+	Class       string `json:"className"`
+	RollCall    string `json:"rollCall"`
+	Email       string `json:"email"`
+	PhoneNumber string `json:"phoneNumber"`
+	BadStanding int    `json:"badStanding"`
 }
 
 func GetAllBrothers(db *sql.DB) ([]*Brother, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
 	// TODO: explicitly type columns
-	query := "SELECT * FROM brothers"
+	query := "SELECT * FROM " + brothers_table
 	rows, err := db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -36,12 +37,15 @@ func GetAllBrothers(db *sql.DB) ([]*Brother, error) {
 	for rows.Next() {
 		var brother Brother
 		err = rows.Scan(
-			&brother.ID,
-			&brother.First,
-			&brother.Last,
+			&brother.PacificId,
+			&brother.FirstName,
+			&brother.LastName,
 			&brother.Status,
 			&brother.Class,
+			&brother.RollCall,
 			&brother.Email,
+			&brother.PhoneNumber,
+			&brother.BadStanding,
 		)
 
 		if err != nil {
@@ -53,28 +57,33 @@ func GetAllBrothers(db *sql.DB) ([]*Brother, error) {
 	return brothers, nil
 }
 
-func GetBrotherByID(db *sql.DB, id string) (*Brother, error) {
-	// ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
-	// defer cancel()
+// TODO: fix function
+func GetBrotherByPacificID(db *sql.DB, pacificID string) (*Brother, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
 
-	query := "SELECT * FROM brothers WHERE id = @ID"
-	row, err := db.Query(query, sql.Named("ID", id))
+	query := "SELECT * FROM brothers WHERE pacificId = $1"
+	row, err := db.QueryContext(ctx, query, pacificID)
 	if err != nil {
 		return nil, err
 	}
 
-	var brother *Brother
+	var brother Brother
 	err = row.Scan(
-		&brother.ID,
-		&brother.First,
-		&brother.Last,
+		&brother.PacificId,
+		&brother.FirstName,
+		&brother.LastName,
 		&brother.Status,
 		&brother.Class,
+		&brother.RollCall,
 		&brother.Email,
+		&brother.PhoneNumber,
+		&brother.BadStanding,
 	)
+
 	if err != nil {
 		return nil, err
 	}
 
-	return brother, nil
+	return &brother, nil
 }

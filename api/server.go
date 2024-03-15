@@ -53,7 +53,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 		w.Write([]byte("Hello World!"))
 	})
 	r.Get("/api/brothers", handler.GetAllBrothers)
-	r.Get("/api/brothers/{id}", handler.GetBrotherByID)
+	r.Get("/api/brothers/{id}", handler.GetBrotherByPacificID)
 
 	return r
 }
