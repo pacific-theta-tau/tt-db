@@ -2,6 +2,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -11,23 +12,31 @@ import (
 	"github.com/pacific-theta-tau/tt-db/db"
 )
 
-func Add() int {
-	return 2 + 3
-}
-
 func main() {
 	// Make sure to setup .env file with all necessary configs
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file.")
+	devFlag := flag.String("env", "dev", "Environment to serve app. Options: dev (default) | prod")
+	flag.Parse()
+	var port string
+	var databaseUrl string
+
+	if *devFlag == "prod" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file.")
+		}
 	}
 
+	port = os.Getenv("PORT")
+	databaseUrl = os.Getenv("DATABASE_URL")
+
+	fmt.Println("Starting app in", *devFlag, "environment.")
 	config := api.Config{
-		Port:        os.Getenv("PORT"),
-		DatabaseURL: os.Getenv("DATABASE_URL"),
+		Port:        port,
+		DatabaseURL: databaseUrl,
 	}
+	fmt.Println("Using config:", config)
 	db := db.NewPostgresDB()
 	app := api.NewApplication(config, db)
-	fmt.Println("Starting server on port", app.Config.Port, "...")
+	fmt.Println("Serving app on port", app.Config.Port, "...")
 	app.Serve()
 }
