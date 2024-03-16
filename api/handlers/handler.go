@@ -1,10 +1,14 @@
-// Handler is initialized and used in server.go for routing
 package handlers
 
 import (
 	"database/sql"
+	"time"
 )
 
+// Threshold for waiting database response
+const dbTimeout = time.Second * 5
+
+// Handler contains methods to handle all API requests
 type Handler struct {
 	db *sql.DB
 }
