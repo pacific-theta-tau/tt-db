@@ -33,20 +33,15 @@ Instructions for setting up repo for local development:
 
 2. Install Go. You can see instructions [here](https://go.dev/doc/install)
 
+3. Install Docker. Instructions [here](https://docs.docker.com/engine/install/)
+
 3. Install dependencies defined in `go.mod`
     ```
     go mod tidy
     ```
-4. Create a `.env` file in the root directory of your project
-    - the `.env` file defines the necessary environment variables for local development, such as `DATABASE_URL` to connect to the TT-DB and `PORT` to choose the server address.
-    - Add the following to the `.env` file:
+5. run server using Docker Compose
     ```
-    DATABASE_URL=<add-here>
-    PORT=<add-here>
-    ```
-5. run server
-    ```
-    go run cmd/server/main.go
+    docker compose --profile dev up
     ```
 
 ## Development Process
@@ -60,6 +55,7 @@ When working on an issue, you should:
 ### Code Conventions
 * Comment your code! Follow the official Go commenting conventions [here](https://go.dev/blog/godoc)
 * Check Go code formatting conventions [here](https://go.dev/doc/effective_go)
+* For API conventions, check [this](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design)
 
 ### Branching 
 #### How to Branch
@@ -98,3 +94,6 @@ When creating a Pull Request, describe what you did and assign reviewers to appr
 * [PostgreSQL Tutorial](https://www.postgresqltutorial.com/)
     * More in depth tutorial with practice examples
 
+### Docker
+* [Dockerfile Reference](https://docs.docker.com/reference/dockerfile/)
+* [Docker Compose File Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
