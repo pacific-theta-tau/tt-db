@@ -29,7 +29,7 @@ func NewApplication(config Config, db *db.PostgresDB) *Application {
 	}
 }
 
-// Start server and routers for the application
+// Connect to database, start routers, and serve app
 func (app *Application) Serve() {
 	// Connect to database
 	app.Database.Connect(app.Config.DatabaseURL)
