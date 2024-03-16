@@ -2,6 +2,7 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -28,7 +29,7 @@ func NewApplication(config Config, db *db.PostgresDB) *Application {
 	}
 }
 
-// Start server and routers for the application
+// Connect to database, start routers, and serve app
 func (app *Application) Serve() {
 	// Connect to database
 	app.Database.Connect(app.Config.DatabaseURL)
@@ -38,7 +39,7 @@ func (app *Application) Serve() {
 	routes := setupRoutes(handler)
 
 	//TODO: cleaner address
-	addr := "localhost:" + app.Config.Port
+	addr := fmt.Sprint(":", app.Config.Port)
 	err := http.ListenAndServe(addr, routes)
 	if err != nil {
 		log.Fatal(err)

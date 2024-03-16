@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  db:
+    profiles: [dev]
+    image: postgres:latest
+    ports:
+      - "8001:5432"
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d testdb -U myuser"]
+      # test: ["CMD-SHELL", "pg_isready", "-d", "testdb"]
+      interval: 1s
+      timeout:  5s
+      retries: 5
+
+  api_dev:
+    profiles: [dev]
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # Load environment variables from dev.env
+    env_file: dev.env
+    # Expose ports from <host>:<container>
+    ports:
+      - "8080:8080"
+    depends_on:
+      # Make sure db is up before running api_dev service
+      db:
+        condition: service_healthy
+
+
+  api_prod:
+    profiles: [prod]
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: ["/app/main", "-env=prod"]
+    env_file: prod.env
+    ports:
+      - "8080:8080"
