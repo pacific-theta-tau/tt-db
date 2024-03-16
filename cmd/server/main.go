@@ -11,6 +11,10 @@ import (
 	"github.com/pacific-theta-tau/tt-db/db"
 )
 
+func Add() int {
+	return 2 + 3
+}
+
 func main() {
 	// Make sure to setup .env file with all necessary configs
 	err := godotenv.Load()
