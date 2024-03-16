@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "8001:5432"
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydb?sslmode=disable
+    depends_on:
+      - db
