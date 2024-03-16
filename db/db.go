@@ -18,11 +18,11 @@ func NewPostgresDB() *PostgresDB {
 }
 
 // Estabilishes connection with a postgreSQL database defined in the environment variable "DATABASE_URL".
-func (db *PostgresDB) Connect(dsn string) {
+func (db *PostgresDB) Connect(databaseURL string) {
 	// Establish connection to postgres DB
-	// dsn = "postgresql://Theta%20Tau%20Database_owner:dWotgmw7q1QH@ep-fancy-smoke-a6wr39jt.us-west-2.aws.neon.tech/Theta%20Tau%20Database?sslmode=require"
-	conn, err := sql.Open("pgx", dsn)
+	conn, err := sql.Open("pgx", databaseURL)
 	if err != nil {
+		fmt.Println("database url:", databaseURL)
 		log.Fatal(err)
 	}
 
