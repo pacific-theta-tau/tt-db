@@ -13,12 +13,13 @@ COPY . .
 # Install dependencies
 RUN go mod download
 
-# Build server binary
-RUN go build -o main ./cmd/server/main.go
+RUN go build -o main cmd/server/main.go
 
 # Expose port 8080 via TCP
 EXPOSE 8080
 
-# Recursively test all packages
-# CMD ["go", "test", "-v", "./..."]
-CMD ["/app/main"]
+# Run app using local postgres container
+CMD ["/app/main", "-env=dev"]
+
+# Run app using prod DB
+# CMD ["/app/main", "-env=prod"]

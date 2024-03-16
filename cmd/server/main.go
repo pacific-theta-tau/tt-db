@@ -13,28 +13,25 @@ import (
 )
 
 func main() {
-	// Make sure to setup .env file with all necessary configs
+	// Loading environment variables
 	devFlag := flag.String("env", "dev", "Environment to serve app. Options: dev (default) | prod")
 	flag.Parse()
-	var port string
-	var databaseUrl string
-
-	if *devFlag == "prod" {
-		err := godotenv.Load()
-		if err != nil {
-			log.Fatal("Error loading .env file.")
-		}
+	err := godotenv.Load(*devFlag + ".env")
+	if err != nil {
+		log.Fatal("Error loading .env file. Make sure to have setup the appropriate .env file")
 	}
 
-	port = os.Getenv("PORT")
-	databaseUrl = os.Getenv("DATABASE_URL")
-
-	fmt.Println("Starting app in", *devFlag, "environment.")
+	fmt.Println("** Initializing app in", *devFlag, "environment **")
+	// Setup app configurations
+	port := os.Getenv("PORT")
+	databaseUrl := os.Getenv("DATABASE_URL")
 	config := api.Config{
 		Port:        port,
 		DatabaseURL: databaseUrl,
 	}
-	fmt.Println("Using config:", config)
+	fmt.Println("Using configs:", config)
+
+	// Connect to DB and serve API
 	db := db.NewPostgresDB()
 	app := api.NewApplication(config, db)
 	fmt.Println("Serving app on port", app.Config.Port, "...")
