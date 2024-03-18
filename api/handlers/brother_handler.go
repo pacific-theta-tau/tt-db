@@ -3,6 +3,7 @@ package handlers
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -13,6 +14,27 @@ import (
 )
 
 const brothers_table = "brothers"
+
+// Helper function to scan SQL row and create new Brother instance
+func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
+	var brother models.Brother
+	err := row.Scan(
+		&brother.PacificId,
+		&brother.FirstName,
+		&brother.LastName,
+		&brother.Status,
+		&brother.Class,
+		&brother.RollCall,
+		&brother.Email,
+		&brother.PhoneNumber,
+		&brother.BadStanding,
+	)
+	if err != nil {
+		return models.Brother{}, err
+	}
+
+	return brother, err
+}
 
 // Get data from all brothers in the Brother's table
 func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
@@ -28,22 +50,10 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Scan rows from query to create Brother instances
+	// Read rows from query to create Brother instances
 	var brothers []*models.Brother
 	for rows.Next() {
-		var brother models.Brother
-		err = rows.Scan(
-			&brother.PacificId,
-			&brother.FirstName,
-			&brother.LastName,
-			&brother.Status,
-			&brother.Class,
-			&brother.RollCall,
-			&brother.Email,
-			&brother.PhoneNumber,
-			&brother.BadStanding,
-		)
-
+		brother, err := createBrotherFromRow(rows)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -87,20 +97,8 @@ func (h *Handler) GetBrotherByPacificID(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Scan rows to create Brother instance
-	var brother models.Brother
-	err = row.Scan(
-		&brother.PacificId,
-		&brother.FirstName,
-		&brother.LastName,
-		&brother.Status,
-		&brother.Class,
-		&brother.RollCall,
-		&brother.Email,
-		&brother.PhoneNumber,
-		&brother.BadStanding,
-	)
+	brother, err := createBrotherFromRow(row)
 	if err != nil {
-		// TODO: send error response
 		fmt.Println(err)
 		return
 	}
