@@ -15,9 +15,9 @@ import (
 	"github.com/pacific-theta-tau/tt-db/db"
 )
 
-// var testdb *db.PostgresDB
 var handler *Handler
 
+// TestMain() setups the db connection and handler before running tests
 func TestMain(m *testing.M) {
 	// Create DB connection to dev db
 	err := godotenv.Load("../../dev.env")
