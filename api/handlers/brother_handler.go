@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -161,4 +162,38 @@ func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(brother)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Inserted new Brother entry to 'brothers' table"))
+}
+
+// Delete brother from brothers table by Roll Call number
+func (h *Handler) RemoveBrother(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+
+	var requestBody map[string]interface{}
+	if err = json.Unmarshal(body, &requestBody); err != nil {
+		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+		return
+	}
+
+	rollCall, ok := requestBody["rollCall"]
+	if !ok {
+		http.Error(w, "Key not found in request body", http.StatusBadRequest)
+		return
+	}
+
+	query := fmt.Sprintf("DELETE FROM %s WHERE rollCall = $1", brothers_table)
+	_, err = h.db.ExecContext(ctx, query, rollCall)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Removed brother from 'brothers' table successfully"))
 }
