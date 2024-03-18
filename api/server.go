@@ -55,6 +55,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	})
 	r.Get("/api/brothers", handler.GetAllBrothers)
 	r.Get("/api/brothers/{id}", handler.GetBrotherByPacificID)
+	r.Post("/api/brothers", handler.AddBrother)
 
 	return r
 }

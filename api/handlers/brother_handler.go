@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
 
@@ -119,4 +120,48 @@ func (h *Handler) GetBrotherByPacificID(w http.ResponseWriter, r *http.Request) 
 		fmt.Println(err)
 		return
 	}
+}
+
+// Add new brother entry to database
+func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
+
+	var brother models.Brother
+	err := json.NewDecoder(r.Body).Decode(&brother)
+	if err != nil {
+		http.Error(w, fmt.Sprint("Error decoding request body", err.Error()), http.StatusBadRequest)
+	}
+
+	// Validate brothers struct
+	validate := validator.New()
+	if err := validate.Struct(brother); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	query := `
+	INSERT INTO brothers (pacificId, firstName, lastName, status, className, rollCall, email, phoneNumber, badStanding)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *
+	`
+	_, err = h.db.ExecContext(
+		ctx,
+		query,
+		brother.PacificId,
+		brother.FirstName,
+		brother.LastName,
+		brother.Status,
+		brother.Class,
+		brother.RollCall,
+		brother.Email,
+		brother.PhoneNumber,
+		brother.BadStanding,
+	)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	fmt.Println(brother)
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Inserted new Brother entry to 'brothers' table"))
 }
