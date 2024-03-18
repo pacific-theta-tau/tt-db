@@ -46,7 +46,7 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
 		// return error status code
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -55,7 +55,7 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		brother, err := createBrotherFromRow(rows)
 		if err != nil {
-			fmt.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		brothers = append(brothers, &brother)
@@ -65,7 +65,7 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	out, err := json.MarshalIndent(brothers, "", "\t")
 	if err != nil {
 		// log.Fatal(err)
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -74,9 +74,7 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(out)
 
 	if err != nil {
-		// log.Fatal(err)
-		fmt.Println(err)
-		return
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -92,14 +90,14 @@ func (h *Handler) GetBrotherByPacificID(w http.ResponseWriter, r *http.Request) 
 	row, err := h.db.QueryContext(ctx, query, pacificID)
 	if err != nil {
 		fmt.Println(err)
-		// TODO: return error status code
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// Scan rows to create Brother instance
 	brother, err := createBrotherFromRow(row)
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -115,7 +113,7 @@ func (h *Handler) GetBrotherByPacificID(w http.ResponseWriter, r *http.Request) 
 	_, err = w.Write(out)
 
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -156,7 +154,8 @@ func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
 		brother.BadStanding,
 	)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	fmt.Println(brother)
