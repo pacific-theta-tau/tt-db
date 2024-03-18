@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    profiles: [dev]
+    profiles: [dev, test]
     image: postgres:latest
     ports:
       - "8001:5432"
@@ -13,13 +13,14 @@ services:
     volumes:
       # mount script to run during database initialization
       - ./db/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    # Used to check if db is up before starting api containers
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d testdb -U myuser"]
-      # test: ["CMD-SHELL", "pg_isready", "-d", "testdb"]
       interval: 1s
       timeout:  5s
       retries: 5
 
+  # Run API service using dev db
   api_dev:
     profiles: [dev]
     build:
@@ -35,7 +36,7 @@ services:
       db:
         condition: service_healthy
 
-
+  # Run API service using prod db
   api_prod:
     profiles: [prod]
     build:
@@ -45,3 +46,16 @@ services:
     env_file: prod.env
     ports:
       - "8080:8080"
+
+  # Run API tests on dev db
+  api_test:
+    profiles: [test]
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # Overwrite Dockerfile command with the test command
+    command: ["go", "test", "./..."]
+    env_file: dev.env
+    depends_on:
+      db:
+        condition: service_healthy
