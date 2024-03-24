@@ -35,6 +35,7 @@ This project is open to any Brothers wanting to learn or build something! Please
   * Nicolas Ahn:
     * Email: n_ahn2@u.pacific.edu
     * Discord: @its_nickel
+	* Fun fact: is the biggest of cs nerds
   * Thomas Lau:
     * Email: t_lau11@u.pacific.edu
 
