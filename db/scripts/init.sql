@@ -20,11 +20,11 @@ CREATE TABLE events(
   eventID INT PRIMARY KEY NOT NULL, 
   eventName TEXT NOT NULL,
   category INT NOT NULL,
-  locations Text NOT NULL,
-  dates date NOT NULL
+  eventLocation Text NOT NULL,
+  eventDate date NOT NULL
 );
 
-INSERT INTO events (eventID, eventName, category, locations, dates)
+INSERT INTO events (eventID, eventName, category, eventLocation, eventDate)
 VALUES (1, 'Meet the Bros', 5, 'Ballroom', '1/28/24');
 
 
