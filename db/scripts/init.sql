@@ -15,3 +15,23 @@ CREATE TABLE IF NOT EXISTS brothers(
 
 INSERT INTO brothers (pacificId, firstName, lastName, status, className, rollCall, email, phoneNumber, badStanding)
 VALUES (989123456, 'Nicolas', 'Ahn', 'Active', 'Chi', '000', 'na@gmail.com', '(123) 456-7890', 0);
+
+CREATE TABLE events(
+  eventID INT PRIMARY KEY NOT NULL, 
+  eventName TEXT NOT NULL,
+  category INT NOT NULL,
+  eventLocation Text NOT NULL,
+  eventDate date NOT NULL
+);
+
+INSERT INTO events (eventID, eventName, category, eventLocation, eventDate)
+VALUES (1, 'Meet the Bros', 5, 'Ballroom', '1/28/24');
+
+
+CREATE TABLE eventsCategory(
+  categoryID INT PRIMARY KEY NOT NULL, 
+  categoryName TEXT NOT NULL
+);
+
+INSERT INTO eventsCategory (categoryID, categoryName)
+VALUE (1, 'CO-OP Panel'); 
