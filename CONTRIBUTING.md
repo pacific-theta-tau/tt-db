@@ -41,8 +41,16 @@ Instructions for setting up repo for local development:
     ```
 5. run server using Docker Compose
     ```
-    docker compose --profile dev up
+    # Run dev containers
+    docker compose --profile dev up 
+
+    # Add `--build` after changes in code to rebuild services
+    docker compose --profile dev up --build
+
+    # Shut down dev containers
+    docker compose --profile dev down
     ```
+
 
 ## Development Process
 When working on an issue, you should:
