@@ -142,7 +142,7 @@ func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
 
 	query := `
 	INSERT INTO brothers (rollCall, firstName, lastName, status, className, email, phoneNumber, badStanding)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning *
 	`
 	_, err = h.db.ExecContext(
 		ctx,
