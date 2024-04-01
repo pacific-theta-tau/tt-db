@@ -54,7 +54,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 		w.Write([]byte("Hello World!"))
 	})
 	r.Get("/api/brothers", handler.GetAllBrothers)
-	r.Get("/api/brothers/{id}", handler.GetBrotherByPacificID)
+	r.Get("/api/brothers/{id}", handler.GetBrotherByRollCall)
 	r.Post("/api/brothers", handler.AddBrother)
 	r.Delete("/api/brothers", handler.RemoveBrother)
 
