@@ -7,9 +7,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
@@ -20,12 +22,11 @@ const brothers_table = "brothers"
 func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
 	var brother models.Brother
 	err := row.Scan(
-		&brother.PacificId,
+		&brother.RollCall,
 		&brother.FirstName,
 		&brother.LastName,
 		&brother.Status,
 		&brother.Class,
-		&brother.RollCall,
 		&brother.Email,
 		&brother.PhoneNumber,
 		&brother.BadStanding,
@@ -39,6 +40,7 @@ func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
 
 // Get data from all brothers in the Brother's table
 func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(" - Called GetAllBrothers")
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -79,16 +81,16 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Query Brothers by their PacificID
-func (h *Handler) GetBrotherByPacificID(w http.ResponseWriter, r *http.Request) {
+// Query Brothers by their RollCall
+func (h *Handler) GetBrotherByRollCall(w http.ResponseWriter, r *http.Request) {
 	// TODO: handle case when param is not provided
-	pacificID := r.URL.Query().Get("pacificID")
-	// brother, err := models.GetBrotherByPacificID(h.db, pacificID)
+	rollCall := chi.URLParam(r, "rollCall")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
-	query := "SELECT * FROM brothers WHERE pacificId = $1"
-	row, err := h.db.QueryContext(ctx, query, pacificID)
+	query := "SELECT * FROM brothers WHERE rollCall = $1"
+	row, err := h.db.QueryContext(ctx, query, rollCall)
+	fmt.Println("row", row)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -96,10 +98,14 @@ func (h *Handler) GetBrotherByPacificID(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Scan rows to create Brother instance
-	brother, err := createBrotherFromRow(row)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	var brother models.Brother
+	for row.Next() {
+		brother, err = createBrotherFromRow(row)
+		if err != nil {
+			log.Fatal("Error!", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	// Build HTTP response
@@ -138,18 +144,17 @@ func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := `
-	INSERT INTO brothers (pacificId, firstName, lastName, status, className, rollCall, email, phoneNumber, badStanding)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *
+	INSERT INTO brothers (rollCall, firstName, lastName, status, className, email, phoneNumber, badStanding)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning *
 	`
 	_, err = h.db.ExecContext(
 		ctx,
 		query,
-		brother.PacificId,
+		brother.RollCall,
 		brother.FirstName,
 		brother.LastName,
 		brother.Status,
 		brother.Class,
-		brother.RollCall,
 		brother.Email,
 		brother.PhoneNumber,
 		brother.BadStanding,
