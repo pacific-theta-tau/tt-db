@@ -7,10 +7,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
-	"reflect"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
@@ -83,15 +84,13 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 // Query Brothers by their RollCall
 func (h *Handler) GetBrotherByRollCall(w http.ResponseWriter, r *http.Request) {
 	// TODO: handle case when param is not provided
-	rollCall := r.URL.Query().Get("rollCall")
-	fmt.Println("received rollCall:", rollCall)
-	fmt.Println("type of rollcall:", reflect.TypeOf(rollCall))
-	// brother, err := models.GetBrotherByPacificID(h.db, pacificID)
+	rollCall := chi.URLParam(r, "rollCall")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
 	query := "SELECT * FROM brothers WHERE rollCall = $1"
 	row, err := h.db.QueryContext(ctx, query, rollCall)
+	fmt.Println("row", row)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -99,10 +98,14 @@ func (h *Handler) GetBrotherByRollCall(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Scan rows to create Brother instance
-	brother, err := createBrotherFromRow(row)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	var brother models.Brother
+	for row.Next() {
+		brother, err = createBrotherFromRow(row)
+		if err != nil {
+			log.Fatal("Error!", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	// Build HTTP response
