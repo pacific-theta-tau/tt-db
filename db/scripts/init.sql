@@ -16,7 +16,7 @@ INSERT INTO brothers (rollCall, firstName, lastName, status, className, email, p
 VALUES (239, 'Nicolas', 'Ahn', 'Active', 'Chi', 'na@gmail.com', '(123) 456-7890', 0);
 
 
-CREATE TABLE eventsCategory(
+CREATE TABLE IF NOT EXISTS eventsCategory(
   categoryID INT PRIMARY KEY NOT NULL, 
   categoryName TEXT NOT NULL
 );
@@ -28,7 +28,7 @@ VALUES
     (3, 'Community Service'); 
 
 
-CREATE TABLE events(
+CREATE TABLE IF NOT EXISTS events(
   eventID INT PRIMARY KEY NOT NULL, 
   eventName TEXT NOT NULL,
   categoryID INT REFERENCES eventsCategory(categoryID),
@@ -37,4 +37,4 @@ CREATE TABLE events(
 );
 
 INSERT INTO events (eventID, eventName, categoryID, eventLocation, eventDate)
-VALUES (1, 'Meet the Bros', 2, 'Ballroom', '1/28/24');
+VALUES (1, 'CO-OP Panel', 1, 'Regent Room', '1/28/24');
