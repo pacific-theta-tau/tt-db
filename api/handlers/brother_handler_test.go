@@ -24,8 +24,8 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("Error loading .env file. Make sure to have setup the appropriate .env file")
 	}
-	testdb := db.NewPostgresDB()
-	testdb.Connect(os.Getenv("DATABASE_URL"))
+	testdb := db.NewPostgresDB(os.Getenv("DATABASE_URL"))
+	testdb.Connect()
 	defer testdb.Conn.Close()
 	handler = NewHandler(testdb.Conn)
 
@@ -70,4 +70,26 @@ func TestGetAllBrothers(t *testing.T) {
 		t.Errorf("failed to parse response body: %v", err)
 	}
 	fmt.Println(response)
+}
+
+func TestUpdateBrother(t *testing.T) {
+	router := chi.NewRouter()
+	router.Put("/api/brothers", handler.UpdateBrother)
+
+	// Create put request
+	req, err := http.NewRequest("PUT", "/api/brothers", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Record response in a ResponseReqcorder
+	rr := httptest.NewRecorder()
+
+	// Serve HTTP request
+	router.ServeHTTP(rr, req)
+
+	// Check status code
+	checkResponseCode(t, 200, rr.Code)
+
+	// TODO: check if expected changes were made
 }
