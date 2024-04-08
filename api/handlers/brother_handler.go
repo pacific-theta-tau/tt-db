@@ -202,3 +202,58 @@ func (h *Handler) RemoveBrother(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Removed brother from 'brothers' table successfully"))
 }
+
+func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+
+	var requestBody map[string]interface{}
+	if err = json.Unmarshal(body, &requestBody); err != nil {
+		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+		return
+	}
+
+	rollCall, ok := requestBody["rollCall"]
+	if !ok {
+		http.Error(w, "Key not found in request body", http.StatusBadRequest)
+		return
+	}
+
+	// Format query with each param in request body
+	// TODO: add validator checks for Body params
+	query := fmt.Sprintf("UPDATE %s SET", brothers_table)
+	columns := []string{
+		"firstName",
+		"lastName",
+		"status",
+		"class",
+		"email",
+		"phoneNumber",
+		"badStanding",
+	}
+	for _, column := range columns {
+		newColumnValue, ok := requestBody[column]
+		if !ok {
+			continue
+		}
+		query += fmt.Sprintf(" %s = '%s',", column, newColumnValue)
+	}
+
+	// remove trailling comma
+	query = query[:len(query)-1] + " WHERE rollCall = $1"
+
+	_, err = h.db.ExecContext(ctx, query, rollCall)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("Updated brother with rollCall %s successfully", rollCall)))
+}
