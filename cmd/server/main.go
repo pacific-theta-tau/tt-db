@@ -24,16 +24,14 @@ func main() {
 	fmt.Println("** Initializing app in", *devFlag, "environment **")
 	// Setup app configurations
 	port := os.Getenv("PORT")
-	databaseUrl := os.Getenv("DATABASE_URL")
-	config := api.Config{
-		Port:        port,
-		DatabaseURL: databaseUrl,
+	databaseURL := os.Getenv("DATABASE_URL")
+	if databaseURL == "" {
+		log.Fatal("ERROR: environment variable DatabaseURL not set")
 	}
-	fmt.Println("Using configs:", config)
 
 	// Connect to DB and serve API
-	db := db.NewPostgresDB()
-	app := api.NewApplication(config, db)
-	fmt.Println("Serving app on port", app.Config.Port, "...")
+	db := db.NewPostgresDB(databaseURL)
+	app := api.NewApplication(db, port)
+	fmt.Println("Serving app on port", app.Port, "...")
 	app.Serve()
 }

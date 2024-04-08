@@ -9,20 +9,23 @@ import (
 )
 
 type PostgresDB struct {
-	Conn *sql.DB
+	Conn        *sql.DB
+	DatabaseURL string
 }
 
 // Constructor for PostgresDB struct
-func NewPostgresDB() *PostgresDB {
-	return &PostgresDB{}
+func NewPostgresDB(databaseURL string) *PostgresDB {
+	return &PostgresDB{
+		DatabaseURL: databaseURL,
+	}
 }
 
 // Estabilishes connection with a postgreSQL database defined in the environment variable "DATABASE_URL".
-func (db *PostgresDB) Connect(databaseURL string) {
+func (db *PostgresDB) Connect() {
 	// Establish connection to postgres DB
-	conn, err := sql.Open("pgx", databaseURL)
+	conn, err := sql.Open("pgx", db.DatabaseURL)
 	if err != nil {
-		fmt.Println("database url:", databaseURL)
+		fmt.Println("database url:", db.DatabaseURL)
 		log.Fatal(err)
 	}
 
