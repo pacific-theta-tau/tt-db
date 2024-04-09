@@ -4,7 +4,7 @@ import("time")
 
 // TODO: decide which fields are nullable.
 type Event struct {
-	EventID			int			`json:"eventID"`
+	EventID			int			`json:"eventID"`//primary
 	Category		int			`json:"category"` 
 	EventName		string 		`json:"eventName"`
 	EventLocation	string 		`json:"eventLocation"`

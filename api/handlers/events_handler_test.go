@@ -11,7 +11,7 @@ import (
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
 
-// Test GET request for /api/brothers
+// Test GET request for /api/events
 func TestGetAllEvents(t *testing.T) {
 	// Init chi router and handler function
 	router := chi.NewRouter()

@@ -58,6 +58,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	r.Post("/api/brothers", handler.AddBrother)
 	r.Delete("/api/brothers", handler.RemoveBrother)
 	r.Get("/api/events", handler.GetAllEvents)
+	r.Get("/api/events/{eventID}", handler.GetEventByEventID)
 
 	return r
 }
