@@ -37,4 +37,6 @@ CREATE TABLE IF NOT EXISTS events(
 );
 
 INSERT INTO events (eventID, eventName, categoryID, eventLocation, eventDate)
-VALUES (1, 'CO-OP Panel', 1, 'Regent Room', '1/28/24');
+VALUES 
+    (1, 'CO-OP Panel', 1, 'Regent Room', '1/28/24'),
+    (2, 'Movies', 2, 'CTC', '3/14/24');
