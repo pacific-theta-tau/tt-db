@@ -12,6 +12,7 @@ import (
 	"github.com/pacific-theta-tau/tt-db/db"
 )
 
+// TODO: Create a Pgpool instead using dependency injection
 type Application struct {
 	Database    *db.PostgresDB
 	DatabaseURL string
