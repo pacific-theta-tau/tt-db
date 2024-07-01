@@ -13,7 +13,8 @@ COPY . .
 # Install dependencies
 RUN go mod download
 
-RUN go build -o main cmd/server/main.go
+# RUN go build -o main cmd/server/main.go
+RUN go build -o main main.go
 
 # Expose port 8080 via TCP
 EXPOSE 8080
