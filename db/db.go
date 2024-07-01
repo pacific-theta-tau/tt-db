@@ -22,19 +22,20 @@ func NewPostgresDB(databaseURL string) *PostgresDB {
 
 // Estabilishes connection with a postgreSQL database defined in the environment variable "DATABASE_URL".
 func (db *PostgresDB) Connect() {
+    log.Println(fmt.Sprintf("Connecting to Database URL %s", db.DatabaseURL))
+
 	// Establish connection to postgres DB
 	conn, err := sql.Open("pgx", db.DatabaseURL)
 	if err != nil {
-		fmt.Println("database url:", db.DatabaseURL)
-		log.Fatal(err)
+        log.Fatalf("Unable to connect to database: %v", err)
 	}
 
 	err = testDB(conn)
 	if err != nil {
-		log.Fatal(err)
+        log.Fatalf("Unable to ping database: %v", err)
 	}
 
-	fmt.Println("Connected to Database successfully!")
+	log.Println("Connected to Database successfully!")
 	db.Conn = conn
 }
 
