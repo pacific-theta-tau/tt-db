@@ -29,6 +29,7 @@ func NewApplication(db *db.PostgresDB, port string) *Application {
 
 // Connect to database, start routers, and serve app
 func (app *Application) Serve() {
+    log.Println("-- Application.Serve() --")
 	// Connect to database
 	app.Database.Connect()
 
@@ -38,21 +39,23 @@ func (app *Application) Serve() {
 
 	//TODO: cleaner address
 	addr := fmt.Sprint(":", app.Port)
-	fmt.Println("address:", addr)
+	log.Printf("App address: %s", addr)
 	err := http.ListenAndServe(addr, routes)
 	if err != nil {
-		log.Fatal(err)
+        log.Fatalf("Error while serving application: %v", err)
 	}
 }
 
 // Setup mux with all middleware and routes
 func setupRoutes(handler *handlers.Handler) *chi.Mux {
+    log.Println("Setting up routes...")
 	r := chi.NewRouter()
+    // TODO: look into slog for structured logging
 	r.Use(middleware.Logger)
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello World!"))
 	})
-
 	// brothers endpoint
 	r.Get("/api/brothers", handler.GetAllBrothers)
 	r.Get("/api/brothers/{rollCall}", handler.GetBrotherByRollCall)
@@ -60,8 +63,10 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	r.Put("/api/brothers", handler.UpdateBrother)
 	r.Delete("/api/brothers", handler.RemoveBrother)
 
-	// events endpoint
+    // TODO: events endpoint
 	r.Get("/api/events", handler.GetAllEvents)
+
+    // TODO: attendance endpoints
 
 	return r
 }
