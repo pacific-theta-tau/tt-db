@@ -23,7 +23,7 @@ func main() {
 
 	fmt.Println("** Initializing app in", *devFlag, "environment **")
 	// Setup app configurations
-	port := os.Getenv("PORT")
+	port := os.Getenv("DB_PORT")
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
 		log.Fatal("ERROR: environment variable DatabaseURL not set")
