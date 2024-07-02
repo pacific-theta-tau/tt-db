@@ -40,12 +40,13 @@ func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
 
 // Get data from all brothers in the Brother's table
 func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(" - Called GetAllBrothers")
+	log.Println("-- Called GetAllBrothers() --")
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
 	// TODO: explicitly type columns
 	query := "SELECT * FROM " + brothers_table
+    log.Println("Querying %s", query)
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
 		// return error status code
@@ -64,8 +65,14 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 		brothers = append(brothers, &brother)
 	}
 
+    log.Println("Query Successful")
+    // data := make(map[string]interface{})
+    // data["data"] = brothers
+    // data["status"] = "success"
+    data := brothers
+
 	// Build HTTP response
-	out, err := json.MarshalIndent(brothers, "", "\t")
+	out, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		// log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -77,6 +84,7 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(out)
 
 	if err != nil {
+        log.Fatal("Error while creating response: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
