@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+    "github.com/go-chi/cors"
 	"github.com/pacific-theta-tau/tt-db/api/handlers"
 	"github.com/pacific-theta-tau/tt-db/db"
 )
@@ -50,8 +51,19 @@ func (app *Application) Serve() {
 func setupRoutes(handler *handlers.Handler) *chi.Mux {
     log.Println("Setting up routes...")
 	r := chi.NewRouter()
+
+    // Setup Middleware
     // TODO: look into slog for structured logging
 	r.Use(middleware.Logger)
+    corsHandler := cors.New(cors.Options{
+        AllowedOrigins:   []string{"*"},     // Allow all origins
+        AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+        ExposedHeaders:   []string{"Link"},
+        AllowCredentials: true,
+        MaxAge:           300, // Maximum value not ignored by any of major browsers
+    })
+    r.Use(corsHandler.Handler)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello World!"))
