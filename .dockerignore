@@ -1,3 +1,6 @@
 .*
 *.md
 node_modules
+build
+dist
+.git
