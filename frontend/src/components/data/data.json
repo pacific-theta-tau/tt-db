@@ -1,0 +1,2504 @@
+{
+    "data": [
+        {
+            "rollCall": 1,
+            "firstName": "Steven",
+            "lastName": "Barry",
+            "status": "Alumnus",
+            "className": "(209)323-9936",
+            "email": "s_barry@u.pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 2,
+            "firstName": "Thanh",
+            "lastName": "Do",
+            "status": "Alumnus",
+            "className": "(209) 244-5936",
+            "email": "t_dongoc@u.pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 3,
+            "firstName": "Laura",
+            "lastName": "Domingo",
+            "status": "Transferred",
+            "className": "(808) 728-7088",
+            "email": "",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 4,
+            "firstName": "Matthew",
+            "lastName": "Ebia",
+            "status": "Alumnus",
+            "className": "(808) 228-9312",
+            "email": "m_ebia@u.pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 5,
+            "firstName": "Bryant",
+            "lastName": "Fukuda",
+            "status": "Alumnus",
+            "className": "(626) 437-8777",
+            "email": "b_fukuda@u.pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 6,
+            "firstName": "Lauren",
+            "lastName": "Fukuda (Pace)",
+            "status": "Alumnus",
+            "className": "(626) 437-8419",
+            "email": "fukudamatata@gmail.com",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 7,
+            "firstName": "Anthony",
+            "lastName": "Inouye",
+            "status": "Alumnus",
+            "className": "(808) 389-0994",
+            "email": "a_inouye@u.pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 8,
+            "firstName": "Alan",
+            "lastName": "Joe",
+            "status": "Alumnus",
+            "className": "(925) 759-8805",
+            "email": "a_joe@u.pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 9,
+            "firstName": "Jennifer",
+            "lastName": "Loi",
+            "status": "Alumnus",
+            "className": "(916) 835-2595",
+            "email": "j_loi@pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 10,
+            "firstName": "Lindsey",
+            "lastName": "Miho",
+            "status": "Alumnus",
+            "className": "(808) 780-6496",
+            "email": "l_miho@u.pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 11,
+            "firstName": "Seyla",
+            "lastName": "My",
+            "status": "Alumnus",
+            "className": "(209) 423-6170",
+            "email": "seyla.my@gmail.com",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 12,
+            "firstName": "Kyle",
+            "lastName": "Pace",
+            "status": "Alumnus",
+            "className": "(916) 505-1686",
+            "email": "Dynamik87@gmail.com",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 13,
+            "firstName": "Kenton",
+            "lastName": "Suzuki",
+            "status": "Alumnus",
+            "className": "(808) 228-8405",
+            "email": "k_suzuki@u.pacific.edu",
+            "phoneNumber": "Founders",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 14,
+            "firstName": "Thomas",
+            "lastName": "Andrew",
+            "status": "Alumnus",
+            "className": "(925) 683-3639",
+            "email": "t_andrew1@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 15,
+            "firstName": "Ross",
+            "lastName": "Bennet",
+            "status": "Alumnus",
+            "className": "(650) 248-6772",
+            "email": "c_bennett1@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 16,
+            "firstName": "Janpierre",
+            "lastName": "Bonan",
+            "status": "Alumnus",
+            "className": "(408) 313-4707",
+            "email": "j_bonoan@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 17,
+            "firstName": "Max",
+            "lastName": "Cao",
+            "status": "Transferred",
+            "className": "(209) 479-9833",
+            "email": "m_cao@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 18,
+            "firstName": "Angie",
+            "lastName": "Cheng",
+            "status": "Alumnus",
+            "className": "(714) 686-5456",
+            "email": "a_cheng2@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 19,
+            "firstName": "Nestor",
+            "lastName": "Decierdo",
+            "status": "Alumnus",
+            "className": "",
+            "email": "n_decierdo@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 20,
+            "firstName": "Todd",
+            "lastName": "Heino",
+            "status": "Alumnus",
+            "className": "(714) 323-2044",
+            "email": "t_heino@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 21,
+            "firstName": "Brianna",
+            "lastName": "Juhrend",
+            "status": "Alumnus",
+            "className": "(530) 391-5805",
+            "email": "b_juhrend@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 22,
+            "firstName": "Brian",
+            "lastName": "Liu",
+            "status": "Alumnus",
+            "className": "(415) 702-5491",
+            "email": "b_liu@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 23,
+            "firstName": "Jason",
+            "lastName": "Ortiz",
+            "status": "Alumnus",
+            "className": "(559) 593-2743",
+            "email": "j_ortiz2@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 24,
+            "firstName": "Jessica",
+            "lastName": "Ovieda",
+            "status": "Alumnus",
+            "className": "(209) 271-5667",
+            "email": "j_ortiz@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 25,
+            "firstName": "Justin",
+            "lastName": "Pyun",
+            "status": "Alumnus",
+            "className": "(714) 747-9142",
+            "email": "j_pyun@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 26,
+            "firstName": "Eileen",
+            "lastName": "Thai",
+            "status": "Alumnus",
+            "className": "(408) 726-3769",
+            "email": "e_thai2@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 27,
+            "firstName": "Nguyen",
+            "lastName": "Tran",
+            "status": "Alumnus",
+            "className": "(408) 326-9585",
+            "email": "n_tran11@u.pacific.ed",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 28,
+            "firstName": "Sam",
+            "lastName": "Winlock",
+            "status": "Alumnus",
+            "className": "(916) 719-3169",
+            "email": "s_winlock@u.pacific.edu",
+            "phoneNumber": "Alpha",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 29,
+            "firstName": "Kimberly",
+            "lastName": "Au-Yeung",
+            "status": "Alumnus",
+            "className": "(415)  272-8923",
+            "email": "k_auyeung@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 30,
+            "firstName": "Jeremy",
+            "lastName": "Bagnol",
+            "status": "Alumnus",
+            "className": "(707) 319-5662",
+            "email": "j_bagnol@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 31,
+            "firstName": "Nichelle",
+            "lastName": "Dismer",
+            "status": "Alumnus",
+            "className": "(925) 518-6701",
+            "email": "n_dismer@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 32,
+            "firstName": "Joe",
+            "lastName": "Doan",
+            "status": "Alumnus",
+            "className": "(209) 403-6579",
+            "email": "j_doan@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 33,
+            "firstName": "Stephanie",
+            "lastName": "Douglass",
+            "status": "Alumnus",
+            "className": "(408) 858-1065",
+            "email": "soccergirlusa122@aol.com",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 34,
+            "firstName": "Elena",
+            "lastName": "Goldfoos",
+            "status": "Alumnus",
+            "className": "(209) 261-8460",
+            "email": "elenagoldfoos93@gmail.com",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 35,
+            "firstName": "Rhett",
+            "lastName": "Kilgore",
+            "status": "Alumnus",
+            "className": "(559) 960-1366",
+            "email": "r_kilgore@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 36,
+            "firstName": "Kirstin",
+            "lastName": "Kita",
+            "status": "Alumnus",
+            "className": "(310) 941-1990",
+            "email": "kkita12@gmail.com",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 37,
+            "firstName": "Linh",
+            "lastName": "Nguyen",
+            "status": "Alumnus",
+            "className": "(209) 482-0399",
+            "email": "l_nguyen20@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 38,
+            "firstName": "Hien",
+            "lastName": "Quang",
+            "status": "Alumnus",
+            "className": "(925) 998-6820",
+            "email": "h_quang@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 39,
+            "firstName": "Garet",
+            "lastName": "Rae",
+            "status": "Alumnus",
+            "className": "(661) 265-5401",
+            "email": "g_rae@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 40,
+            "firstName": "Marvin",
+            "lastName": "Miel Soriano",
+            "status": "Alumnus",
+            "className": "(808) 397-8072",
+            "email": "m_soriano@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 41,
+            "firstName": "Sean",
+            "lastName": "Storc",
+            "status": "Alumnus",
+            "className": "(760) 994-7752",
+            "email": "s_storc@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 42,
+            "firstName": "Fernando",
+            "lastName": "Carranza",
+            "status": "Alumnus",
+            "className": "(707) 536-6893",
+            "email": "f_carranza1@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 43,
+            "firstName": "Jana",
+            "lastName": "Cicerello",
+            "status": "Alumnus",
+            "className": "(925) 864-1385",
+            "email": "j_cicerello@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 44,
+            "firstName": "Deven",
+            "lastName": "Kelling",
+            "status": "Alumnus",
+            "className": "(612) 991-4666",
+            "email": "devenkelling79@gmail.com",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 45,
+            "firstName": "Jumal",
+            "lastName": "Khan",
+            "status": "Alumnus",
+            "className": "(209) 684-3560",
+            "email": "j_khan@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 46,
+            "firstName": "Michael",
+            "lastName": "Ledesma",
+            "status": "Alumnus",
+            "className": "(909) 936-8884",
+            "email": "m_ledesma@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 47,
+            "firstName": "Gizela",
+            "lastName": "Nava",
+            "status": "Alumnus",
+            "className": "(805) 665-8616",
+            "email": "g_nava@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 48,
+            "firstName": "Samantha",
+            "lastName": "Poling",
+            "status": "Transferred",
+            "className": "(707) 301-7319",
+            "email": "s_poling1@u.pacific.edu",
+            "phoneNumber": "Beta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 49,
+            "firstName": "Aldo-Chentte",
+            "lastName": "Ruiz",
+            "status": "Alumnus",
+            "className": "(510) 329-2745",
+            "email": "a_ruiz5@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 50,
+            "firstName": "Krista",
+            "lastName": "Suizo",
+            "status": "Alumnus",
+            "className": "(209) 969-1772",
+            "email": "k_suizo@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 51,
+            "firstName": "Diana",
+            "lastName": "Valenzuela Medina",
+            "status": "Alumnus",
+            "className": "(530) 300-8713",
+            "email": "d_medina1@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 52,
+            "firstName": "Deanne",
+            "lastName": "Zhao",
+            "status": "Alumnus",
+            "className": "(415) 828-3101",
+            "email": "d_zhao2@u.pacific.edu",
+            "phoneNumber": "Gamma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 53,
+            "firstName": "Camila",
+            "lastName": "Carvajal",
+            "status": "Alumnus",
+            "className": "(209) 915-9277",
+            "email": "c_carvajal@u.pacific.edu",
+            "phoneNumber": "Delta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 54,
+            "firstName": "Vanessa",
+            "lastName": "Maciel",
+            "status": "Alumnus",
+            "className": "(209) 609-1890",
+            "email": "vnmaciel32@gmail.com",
+            "phoneNumber": "Delta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 55,
+            "firstName": "Micaela",
+            "lastName": "Nino",
+            "status": "Alumnus",
+            "className": "(805) 551-9545",
+            "email": "m_nino@u.pacific.edu",
+            "phoneNumber": "Delta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 56,
+            "firstName": "Gabrielle",
+            "lastName": "Rubio",
+            "status": "Alumnus",
+            "className": "(925) 640-8286",
+            "email": "g_rubio1@u.pacific.edu",
+            "phoneNumber": "Delta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 57,
+            "firstName": "Chloe",
+            "lastName": "Umble",
+            "status": "Alumnus",
+            "className": "(707) 321-1687",
+            "email": "c_umble@u.pacific.edu",
+            "phoneNumber": "Delta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 58,
+            "firstName": "Ingrid",
+            "lastName": "Verastegui",
+            "status": "Alumnus",
+            "className": "(209) 818-6356",
+            "email": "i_verastegui@u.pacific.edu",
+            "phoneNumber": "Delta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 59,
+            "firstName": "Curtis",
+            "lastName": "Yamanaka",
+            "status": "Alumnus",
+            "className": "(209) 663-1005",
+            "email": "c_yamanaka@u.pacific.edu",
+            "phoneNumber": "Delta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 60,
+            "firstName": "Francisco",
+            "lastName": "Gonzalez",
+            "status": "Alumnus",
+            "className": "(925) 270-8488",
+            "email": "f_gonzalez3@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 61,
+            "firstName": "Wilson",
+            "lastName": "Good",
+            "status": "Alumnus",
+            "className": "(559) 786-2767",
+            "email": "w_good@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 62,
+            "firstName": "Chris",
+            "lastName": "Van Hoosear",
+            "status": "Alumnus",
+            "className": "(530) 566-2073",
+            "email": "c_vanhoosear@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 63,
+            "firstName": "Bradley",
+            "lastName": "Johnson",
+            "status": "Alumnus",
+            "className": "(925) 922-4352",
+            "email": "brjohnson07@gmail.com",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 64,
+            "firstName": "Anthony",
+            "lastName": "Leonetti",
+            "status": "Alumnus",
+            "className": "(209) 256-9446",
+            "email": "a_leonetti@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 65,
+            "firstName": "Clara",
+            "lastName": "Lindberg",
+            "status": "Alumnus",
+            "className": "(925) 915-0754",
+            "email": "c_lindberg@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 66,
+            "firstName": "Owen",
+            "lastName": "Lincoln",
+            "status": "Alumnus",
+            "className": "(408) 431-9397",
+            "email": "o_lincoln@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 67,
+            "firstName": "Breanna",
+            "lastName": "Nasholm",
+            "status": "Alumnus",
+            "className": "(541) 556-9687",
+            "email": "b_nasholm@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 68,
+            "firstName": "Phuong",
+            "lastName": "Pham",
+            "status": "Expelled",
+            "className": "(714) 697-5476",
+            "email": "p_pham4@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 69,
+            "firstName": "Todd",
+            "lastName": "Rau",
+            "status": "Alumnus",
+            "className": "(209) 484-2554",
+            "email": "t_rau@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 70,
+            "firstName": "Dylan",
+            "lastName": "Saracco",
+            "status": "Alumnus",
+            "className": "(510) 305-6939",
+            "email": "d_saracco@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 71,
+            "firstName": "Richard",
+            "lastName": "Tam",
+            "status": "Alumnus",
+            "className": "(916) 512 9665",
+            "email": "r_tam1@u.pacific.edu",
+            "phoneNumber": "Epsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 72,
+            "firstName": "Marshall",
+            "lastName": "Chambers",
+            "status": "Alumnus",
+            "className": "(469) 955-2250",
+            "email": "m_chambers2@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 73,
+            "firstName": "Kevin",
+            "lastName": "Chan",
+            "status": "Alumnus",
+            "className": "(925) 922-4182",
+            "email": "kevinchan32@gmail.com",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 74,
+            "firstName": "Kaylee",
+            "lastName": "Grodske",
+            "status": "Alumnus",
+            "className": "(818) 568-4301",
+            "email": "k_grodske@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 75,
+            "firstName": "Michael",
+            "lastName": "Jimenez",
+            "status": "Alumnus",
+            "className": "(209) 598-8453",
+            "email": "m_jimenez6@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 76,
+            "firstName": "Andrew",
+            "lastName": "Lee",
+            "status": "Alumnus",
+            "className": "(714) 980-1285",
+            "email": "a_lee49@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 77,
+            "firstName": "Alex",
+            "lastName": "Maroufkhani",
+            "status": "Alumnus",
+            "className": "(209) 612-2888",
+            "email": "a_maroufkhani@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 78,
+            "firstName": "Bryson",
+            "lastName": "Mitsui",
+            "status": "Alumnus",
+            "className": "(808) 220-0418",
+            "email": "brysonmitsui@gmail.com",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 79,
+            "firstName": "Brendan",
+            "lastName": "Nichols",
+            "status": "Alumnus",
+            "className": "(858) 248-0579",
+            "email": "b_nichols2@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 80,
+            "firstName": "Eugene",
+            "lastName": "Ragasa",
+            "status": "Alumnus",
+            "className": "(917) 415-8691",
+            "email": "eugene.ragasa@gmail.com",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 81,
+            "firstName": "Chris",
+            "lastName": "Sanchez",
+            "status": "Alumnus",
+            "className": "(209) 985-7468",
+            "email": "c_sanchez4@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 82,
+            "firstName": "Jeremy",
+            "lastName": "Sopoaga",
+            "status": "Alumnus",
+            "className": "(831) 241-0405",
+            "email": "j_sopoaga@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 83,
+            "firstName": "Taylor",
+            "lastName": "Yatogo",
+            "status": "Alumnus",
+            "className": "(808)-349-4915",
+            "email": "t_yatogo@u.pacific.edu",
+            "phoneNumber": "Zeta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 84,
+            "firstName": "Emanuel",
+            "lastName": "Abarca",
+            "status": "Alumnus",
+            "className": "(209) 546-2872",
+            "email": "e_abarca@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 85,
+            "firstName": "Joshua",
+            "lastName": "Arucan",
+            "status": "Alumnus",
+            "className": "(707) 319-8911",
+            "email": "joshuaarucan@gmail.com",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 86,
+            "firstName": "Andrew",
+            "lastName": "Bose",
+            "status": "Alumnus",
+            "className": "(510) 274-0087",
+            "email": "a_bose@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 87,
+            "firstName": "Cecilia",
+            "lastName": "Carrillo",
+            "status": "Alumnus",
+            "className": "(209) 485-3625",
+            "email": "c_carrillo1@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 88,
+            "firstName": "Marielle",
+            "lastName": "Cortez",
+            "status": "Alumnus",
+            "className": "(408) 859-2770",
+            "email": "m_cortez3@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 89,
+            "firstName": "Sam",
+            "lastName": "Costigan",
+            "status": "Alumnus",
+            "className": "(206) 465-1272",
+            "email": "s_costigan@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 90,
+            "firstName": "Cameron",
+            "lastName": "Cowan",
+            "status": "Alumnus",
+            "className": "(562) 277-0643",
+            "email": "c_cowan1@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 91,
+            "firstName": "Scott",
+            "lastName": "Denton",
+            "status": "Alumnus",
+            "className": "(209) 327-9457",
+            "email": "s_denton@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 92,
+            "firstName": "Alex",
+            "lastName": "Dickerson",
+            "status": "Alumnus",
+            "className": "(209) 202-6304",
+            "email": "a_dickerson1@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 93,
+            "firstName": "Brad",
+            "lastName": "Hirayama",
+            "status": "Alumnus",
+            "className": "(808) 342-0347",
+            "email": "b_hirayama@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 94,
+            "firstName": "Edison",
+            "lastName": "Huang",
+            "status": "Alumnus",
+            "className": "(415) 378-5346",
+            "email": "e_huang3@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 95,
+            "firstName": "Thi-Vu",
+            "lastName": "Huynh",
+            "status": "Alumnus",
+            "className": "(408) 440-6950",
+            "email": "t_huynh13@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 96,
+            "firstName": "Alex",
+            "lastName": "Lecko",
+            "status": "Expelled",
+            "className": "(619) 962-4552",
+            "email": "a_lecko@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 97,
+            "firstName": "Kevin",
+            "lastName": "Leong",
+            "status": "Alumnus",
+            "className": "(510) 857-7603",
+            "email": "k_leong3@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 98,
+            "firstName": "Paolo",
+            "lastName": "Mariani",
+            "status": "Alumnus",
+            "className": "(209) 406-6747",
+            "email": "paulpaul92@gmail.com",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 99,
+            "firstName": "Jesus",
+            "lastName": "Martinez",
+            "status": "Transferred",
+            "className": "(818) 458-0080",
+            "email": "j_martinez29@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 100,
+            "firstName": "Stefan",
+            "lastName": "Soezeri",
+            "status": "Alumnus",
+            "className": "(619) 368-6153",
+            "email": "s_soezeri@u.pacific.edu",
+            "phoneNumber": "Eta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 101,
+            "firstName": "Victor",
+            "lastName": "Aw",
+            "status": "Alumnus",
+            "className": "(408) 386-2881",
+            "email": "v_aw@u.pacific.edu",
+            "phoneNumber": "Theta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 102,
+            "firstName": "Ranjot",
+            "lastName": "Dhaliwal",
+            "status": "Alumnus",
+            "className": "(209) 663-3383",
+            "email": "r_singh7@u.pacific.edu",
+            "phoneNumber": "Theta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 103,
+            "firstName": "Alex",
+            "lastName": "Flores",
+            "status": "Alumnus",
+            "className": "(209) 610-0171",
+            "email": "a_flores8@u.pacific.edu",
+            "phoneNumber": "Theta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 104,
+            "firstName": "Kristena",
+            "lastName": "Moules",
+            "status": "Alumnus",
+            "className": "(209) 747-3219",
+            "email": "k_moules@u.pacific.edu",
+            "phoneNumber": "Theta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 105,
+            "firstName": "Scharlyce",
+            "lastName": "Powell",
+            "status": "Alumnus",
+            "className": "(209) 817-3166",
+            "email": "s_powell2@u.pacific.edu",
+            "phoneNumber": "Theta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 106,
+            "firstName": "Mark",
+            "lastName": "Rodriguez",
+            "status": "Alumnus",
+            "className": "(559) 430-4348",
+            "email": "m_rodriguez14@u.pacific.edu",
+            "phoneNumber": "Theta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 107,
+            "firstName": "Alex",
+            "lastName": "Walker",
+            "status": "Alumnus",
+            "className": "(507) 363 2454",
+            "email": "a_walker4@u.pacific.edu",
+            "phoneNumber": "Theta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 108,
+            "firstName": "Faithe",
+            "lastName": "Yates",
+            "status": "Alumnus",
+            "className": "(760) 486-3554",
+            "email": "f_yates@u.pacific.edu",
+            "phoneNumber": "Theta",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 109,
+            "firstName": "Lauren",
+            "lastName": "Anderson",
+            "status": "Alumnus",
+            "className": "(916) 660-6809",
+            "email": "l_anderson15@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 110,
+            "firstName": "Matt",
+            "lastName": "Horner",
+            "status": "Alumnus",
+            "className": "(209) 401-4479",
+            "email": "m_horner@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 111,
+            "firstName": "Jackie",
+            "lastName": "Koyama",
+            "status": "Alumnus",
+            "className": "(916) 753-9921",
+            "email": "j_koyama@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 112,
+            "firstName": "Colleen",
+            "lastName": "Motoyasu",
+            "status": "Alumnus",
+            "className": "(559) 392-6166",
+            "email": "c_motoyasu@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 113,
+            "firstName": "Bri",
+            "lastName": "Prebelic Cole",
+            "status": "Alumnus",
+            "className": "(925) 658-2779",
+            "email": "b_prebeliccole@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 114,
+            "firstName": "Kylee",
+            "lastName": "Schesser",
+            "status": "Alumnus",
+            "className": "(707) 386-5747",
+            "email": "k_schesser@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 115,
+            "firstName": "Rebecca",
+            "lastName": "Tuttle",
+            "status": "Alumnus",
+            "className": "(714) 743-5006",
+            "email": "r_tuttle@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 116,
+            "firstName": "Liane",
+            "lastName": "Young",
+            "status": "Alumnus",
+            "className": "(925) 699-0393",
+            "email": "l_young8@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 117,
+            "firstName": "Bing",
+            "lastName": "Zhang",
+            "status": "Alumnus",
+            "className": "(209) 774-6933",
+            "email": "b_zhang3@u.pacific.edu",
+            "phoneNumber": "Iota",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 118,
+            "firstName": "Taryn",
+            "lastName": "Aranador",
+            "status": "Alumnus",
+            "className": "(808) 542-1378",
+            "email": "t_aranador@u.pacific.edu",
+            "phoneNumber": "Kappa",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 119,
+            "firstName": "Pablo",
+            "lastName": "Bernardino",
+            "status": "Alumnus",
+            "className": "(209) 623-9538",
+            "email": "p_bernardino@u.pacific.edu",
+            "phoneNumber": "Kappa",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 120,
+            "firstName": "Bryan",
+            "lastName": "Ching",
+            "status": "Alumnus",
+            "className": "(415) 816-5621",
+            "email": "b_ching@u.pacific.edu",
+            "phoneNumber": "Kappa",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 121,
+            "firstName": "Tyler",
+            "lastName": "Fernandez",
+            "status": "Alumnus",
+            "className": "(209) 923-0920",
+            "email": "t_fernadez@u.pacific.edu",
+            "phoneNumber": "Kappa",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 122,
+            "firstName": "Selena",
+            "lastName": "Kaffer",
+            "status": "Alumnus",
+            "className": "(775) 901-3925",
+            "email": "s_kaffer@u.pacific.edu",
+            "phoneNumber": "Kappa",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 123,
+            "firstName": "Aimee",
+            "lastName": "Morales",
+            "status": "Alumnus",
+            "className": "(951) 570-7928",
+            "email": "a_morales6@u.pacific.edu",
+            "phoneNumber": "Kappa",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 124,
+            "firstName": "Kenneth",
+            "lastName": "Terzi",
+            "status": "Alumnus",
+            "className": "(209) 518-9459",
+            "email": "k_terzi@u.pacific.edu",
+            "phoneNumber": "Kappa",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 125,
+            "firstName": "Jason",
+            "lastName": "Wong",
+            "status": "Alumnus",
+            "className": "(510) 846-4482",
+            "email": "j_wong55@u.pacific.edu",
+            "phoneNumber": "Kappa",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 126,
+            "firstName": "Belal",
+            "lastName": "Ahmed",
+            "status": "Alumnus",
+            "className": "(916) 690-9144",
+            "email": "b_ahmed1@u.pacific.edu",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 127,
+            "firstName": "Louis",
+            "lastName": "Born",
+            "status": "Alumnus",
+            "className": "(206) 601-3944",
+            "email": "l_born@u.pacific.edu",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 128,
+            "firstName": "Rachel",
+            "lastName": "Flores",
+            "status": "Alumnus",
+            "className": "(909) 653-3863",
+            "email": "r_flores2@u.pacific.edu",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 129,
+            "firstName": "Tiffany",
+            "lastName": "Lee",
+            "status": "Alumnus",
+            "className": "(408) 892-2369",
+            "email": "tlee1993@gmail.com",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 130,
+            "firstName": "James",
+            "lastName": "Ling",
+            "status": "Alumnus",
+            "className": "(408) 396-8918",
+            "email": "j_ling3@u.pacific.edu",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 131,
+            "firstName": "Kourtnie",
+            "lastName": "Sicam",
+            "status": "Alumnus",
+            "className": "(510) 305-2155",
+            "email": "k_sicam1@u.pacific.edu",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 132,
+            "firstName": "Tamara",
+            "lastName": "Turton",
+            "status": "Alumnus",
+            "className": "(951) 202-3550",
+            "email": "t_turton@u.pacific.edu",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 133,
+            "firstName": "Nick",
+            "lastName": "Vaughn",
+            "status": "Alumnus",
+            "className": "(209) 914-4269",
+            "email": "n_vaughn@u.pacific.edu",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 134,
+            "firstName": "Nathan",
+            "lastName": "Wong",
+            "status": "Alumnus",
+            "className": "(650) 766-3357",
+            "email": "n_wong10@u.pacific.edu",
+            "phoneNumber": "Lambda",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 135,
+            "firstName": "Zachary",
+            "lastName": "Allen",
+            "status": "Alumnus",
+            "className": "(661) 332-2519",
+            "email": "z_allen@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 136,
+            "firstName": "Fahad",
+            "lastName": "Almenai",
+            "status": "Alumnus",
+            "className": "(909) 529-3054",
+            "email": "f_almenai@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 137,
+            "firstName": "Wesley",
+            "lastName": "Gee",
+            "status": "Alumnus",
+            "className": "(510) 917-9348",
+            "email": "w_gee1@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 138,
+            "firstName": "Kelly",
+            "lastName": "Inuzuka",
+            "status": "Alumnus",
+            "className": "(650) 504-8823",
+            "email": "k_inuzuka@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 139,
+            "firstName": "Tyler",
+            "lastName": "Norlund",
+            "status": "Alumnus",
+            "className": "(818) 397-3879",
+            "email": "t_norlund@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 140,
+            "firstName": "Evan",
+            "lastName": "Sano",
+            "status": "Alumnus",
+            "className": "(510) 386-7453",
+            "email": "e_sano1@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 141,
+            "firstName": "Christian",
+            "lastName": "Jemera",
+            "status": "Alumnus",
+            "className": "(209) 740-5660",
+            "email": "c_jemera@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 142,
+            "firstName": "Jacob",
+            "lastName": "Ramme",
+            "status": "Alumnus",
+            "className": "(209) 675-6465",
+            "email": "j_ramme@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 143,
+            "firstName": "Claire",
+            "lastName": "Rhodes",
+            "status": "Alumnus",
+            "className": "(858) 442-6884",
+            "email": "c_rhodes3@u.pacific.edu",
+            "phoneNumber": "Mu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 144,
+            "firstName": "Ross",
+            "lastName": "Anderson",
+            "status": "Alumnus",
+            "className": "(209) 914-2530",
+            "email": "r_anderson13@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 145,
+            "firstName": "Dustin",
+            "lastName": "Carter",
+            "status": "Alumnus",
+            "className": "(209) 610-8339",
+            "email": "d_carter4@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 146,
+            "firstName": "Allison",
+            "lastName": "Chan",
+            "status": "Transferred",
+            "className": "(408) 628-8299",
+            "email": "a_chan37@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 147,
+            "firstName": "Natalie",
+            "lastName": "Giang",
+            "status": "Alumnus",
+            "className": "(916) 753-0627",
+            "email": "n_giang@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 148,
+            "firstName": "Sahibjit",
+            "lastName": "Gosal",
+            "status": "Alumnus",
+            "className": "(530) 513-8846",
+            "email": "s_gosal2@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 149,
+            "firstName": "Michael",
+            "lastName": "Hsueh",
+            "status": "Alumnus",
+            "className": "(650) 302-3975",
+            "email": "m_hsueh@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 150,
+            "firstName": "Logan",
+            "lastName": "Sanne",
+            "status": "Expelled",
+            "className": "(916) 588-7538",
+            "email": "l_sanne@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 151,
+            "firstName": "Saima",
+            "lastName": "Uz-Zaman",
+            "status": "Alumnus",
+            "className": "(916) 897-4816",
+            "email": "s_uzzaman@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 152,
+            "firstName": "Phoebe",
+            "lastName": "Wetherbee",
+            "status": "Alumnus",
+            "className": "(720) 206-9643",
+            "email": "p_wetherbee@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 153,
+            "firstName": "Jason",
+            "lastName": "Wu",
+            "status": "Alumnus",
+            "className": "(916) 591-2680",
+            "email": "j_wu31@u.pacific.edu",
+            "phoneNumber": "Nu",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 154,
+            "firstName": "Alex",
+            "lastName": "Hall",
+            "status": "Alumnus",
+            "className": "(530) 301-2348",
+            "email": "a_hall11@u.pacific.edu",
+            "phoneNumber": "Xi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 155,
+            "firstName": "Ethan",
+            "lastName": "Malonzo",
+            "status": "Alumnus",
+            "className": "(408) 916-6146",
+            "email": "e_malonzo@u.pacific.edu",
+            "phoneNumber": "Xi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 156,
+            "firstName": "Lillian",
+            "lastName": "Sam",
+            "status": "Alumnus",
+            "className": "(206) 755-3141",
+            "email": "l_sam@u.pacific.edu",
+            "phoneNumber": "Xi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 157,
+            "firstName": "Hillary",
+            "lastName": "Tong",
+            "status": "Alumnus",
+            "className": "(408) 887-7478",
+            "email": "h_tong@u.pacific.edu",
+            "phoneNumber": "Xi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 158,
+            "firstName": "Austin",
+            "lastName": "Van",
+            "status": "Alumnus",
+            "className": "(415) 672-3836",
+            "email": "a_van@u.pacific.edu",
+            "phoneNumber": "Xi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 159,
+            "firstName": "Michael",
+            "lastName": "Chen",
+            "status": "Alumnus",
+            "className": "(808) 386-2753",
+            "email": "m_chen21@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 160,
+            "firstName": "Jeremy",
+            "lastName": "Clay",
+            "status": "Alumnus",
+            "className": "(650) 743-0483",
+            "email": "j_clay1@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 161,
+            "firstName": "Celine",
+            "lastName": "Esteron",
+            "status": "Alumnus",
+            "className": "(650) 303-1870",
+            "email": "c_esteron@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 162,
+            "firstName": "Alexander",
+            "lastName": "Hui",
+            "status": "Expelled",
+            "className": "(650) 862-2281",
+            "email": "a_hui2@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 163,
+            "firstName": "Gimelle",
+            "lastName": "Jacala",
+            "status": "Alumnus",
+            "className": "(707) 652-4554",
+            "email": "g_jacala@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 164,
+            "firstName": "Haris",
+            "lastName": "Jebrini",
+            "status": "Alumnus",
+            "className": "(530) 588-8377",
+            "email": "h_jebrini@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 165,
+            "firstName": "Kevin",
+            "lastName": "Lei",
+            "status": "Alumnus",
+            "className": "(209) 981-4371",
+            "email": "k_lei3@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 166,
+            "firstName": "Sage",
+            "lastName": "Moreland",
+            "status": "Alumnus",
+            "className": "(801) 913-2372",
+            "email": "s_moreland@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 167,
+            "firstName": "Eric",
+            "lastName": "Nooteboom",
+            "status": "Alumnus",
+            "className": "(925)813-8101",
+            "email": "e_nooteboom@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 168,
+            "firstName": "Alisha",
+            "lastName": "Rodriguez",
+            "status": "Alumnus",
+            "className": "(916) 517-3798",
+            "email": "a_rodriguez35@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 169,
+            "firstName": "Samuel",
+            "lastName": "Salas",
+            "status": "Alumnus",
+            "className": "(925) 808-9372",
+            "email": "s_salas2@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 170,
+            "firstName": "Gavin",
+            "lastName": "Tan",
+            "status": "Alumnus",
+            "className": "(858)-699-5887",
+            "email": "g_tan2@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 171,
+            "firstName": "Jason",
+            "lastName": "To-Tran",
+            "status": "Alumnus",
+            "className": "(209) 910-8050",
+            "email": "j_totran@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 172,
+            "firstName": "Katrina",
+            "lastName": "Yap",
+            "status": "Transferred",
+            "className": "(650)580-2264",
+            "email": "k_yap1@u.pacific.edu",
+            "phoneNumber": "Omicron",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 173,
+            "firstName": "Caroline",
+            "lastName": "Bullard",
+            "status": "Alumnus",
+            "className": "(219) 508-5688",
+            "email": "carrie.g.bullard@gmail.com",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 174,
+            "firstName": "Serena",
+            "lastName": "Chu",
+            "status": "Alumnus",
+            "className": "(415) 786-8835",
+            "email": "s_chu10@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 175,
+            "firstName": "Jose",
+            "lastName": "Jimenez",
+            "status": "Alumnus",
+            "className": "(209) 321-6169",
+            "email": "j_jimenezgomez@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 176,
+            "firstName": "Michelle",
+            "lastName": "Lee",
+            "status": "Alumnus",
+            "className": "(916) 715-8827",
+            "email": "m_lee87@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 177,
+            "firstName": "Dorothy",
+            "lastName": "Luu",
+            "status": "Alumnus",
+            "className": "(408) 821-8156",
+            "email": "d_luu4@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 178,
+            "firstName": "Jamie Anne",
+            "lastName": "Narciso",
+            "status": "Alumnus",
+            "className": "(209) 670-6633",
+            "email": "j_narciso1@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 179,
+            "firstName": "Brian",
+            "lastName": "Popish",
+            "status": "Alumnus",
+            "className": "(209) 769-5512",
+            "email": "b_popish@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 180,
+            "firstName": "Kristi",
+            "lastName": "Wong",
+            "status": "Alumnus",
+            "className": "(916) 494-8296",
+            "email": "k_wong53@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 181,
+            "firstName": "Jacob",
+            "lastName": "Angulo",
+            "status": "Alumnus",
+            "className": "(209) 681-3150",
+            "email": "j_angulo1@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 182,
+            "firstName": "Daniel",
+            "lastName": "Balerite",
+            "status": "Active",
+            "className": "(209) 566-3226",
+            "email": "d_balerite@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 183,
+            "firstName": "Gerson",
+            "lastName": "Castillo",
+            "status": "Alumnus",
+            "className": "(209) 684-1733",
+            "email": "g_castillo6@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 184,
+            "firstName": "Adam",
+            "lastName": "Flaten",
+            "status": "Alumnus",
+            "className": "(775) 315-3454",
+            "email": "flatenadam@gmail.com",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 185,
+            "firstName": "Noah",
+            "lastName": "Garner",
+            "status": "Alumnus",
+            "className": "(925) 719-4657",
+            "email": "noahguy16@gmail.com",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 186,
+            "firstName": "Rosalind",
+            "lastName": "Jackson Roe",
+            "status": "Alumnus",
+            "className": "(209) 337-8459",
+            "email": "r_jacksonroe@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 187,
+            "firstName": "Sonali",
+            "lastName": "Patil",
+            "status": "Alumnus",
+            "className": "(775) 853-7685",
+            "email": "s_patil1@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 188,
+            "firstName": "David",
+            "lastName": "Saldana",
+            "status": "Alumnus",
+            "className": "(323) 919-7017",
+            "email": "d_saldana@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 189,
+            "firstName": "Kristi Anne",
+            "lastName": "Yoshioka",
+            "status": "Alumnus",
+            "className": "(808) 224-3912",
+            "email": "k_yoshioka2@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 190,
+            "firstName": "Millenia",
+            "lastName": "Tangkere",
+            "status": "Alumnus",
+            "className": "(415) 937-2709",
+            "email": "m_tangkere@u.pacific.edu",
+            "phoneNumber": "Pi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 191,
+            "firstName": "Yusuf",
+            "lastName": "Asefi",
+            "status": "Pre-Alumnus",
+            "className": "(510) 936-3027",
+            "email": "y_asefi@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 192,
+            "firstName": "Edgar",
+            "lastName": "Berber",
+            "status": "Alumnus",
+            "className": "(209) 430-8261",
+            "email": "e_berber@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 193,
+            "firstName": "Rachel",
+            "lastName": "Carpenter",
+            "status": "Alumnus",
+            "className": "(209) 351-3100",
+            "email": "r_carpenter@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 194,
+            "firstName": "Cory",
+            "lastName": "Cunningham",
+            "status": "Alumnus",
+            "className": "(209) 834-7443",
+            "email": "c_cunningham4@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 195,
+            "firstName": "DeRico",
+            "lastName": "Fuller",
+            "status": "Active",
+            "className": "(206) 393-2183",
+            "email": "d_fuller3@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 196,
+            "firstName": "Ethan",
+            "lastName": "Hall",
+            "status": "Pre-Alumnus",
+            "className": "(916) 949-2391",
+            "email": "e_hall5@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 197,
+            "firstName": "Kyla",
+            "lastName": "Kariger",
+            "status": "Alumnus",
+            "className": "(310) 909-4053",
+            "email": "k_kariger@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 198,
+            "firstName": "Alene",
+            "lastName": "Lai",
+            "status": "Alumnus",
+            "className": "(530) 304-0740",
+            "email": "a_lai8@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 199,
+            "firstName": "Brayden",
+            "lastName": "Salas",
+            "status": "Alumnus",
+            "className": "(808) 393-3854",
+            "email": "b_salas@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 200,
+            "firstName": "Diego",
+            "lastName": "Sandoval",
+            "status": "Alumnus",
+            "className": "(209) 681-3121",
+            "email": "d_sandoval7@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 201,
+            "firstName": "Kevin",
+            "lastName": "Szeto",
+            "status": "Pre-Alumnus",
+            "className": "(415) 860-1294",
+            "email": "k_szeto1@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 202,
+            "firstName": "Pranav",
+            "lastName": "Thirunavukkarasu",
+            "status": "Alumnus",
+            "className": "(925) 399-9384",
+            "email": "p_thirunavukkarasu@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 203,
+            "firstName": "Jenny",
+            "lastName": "Zheng",
+            "status": "Alumnus",
+            "className": "(510) 456-6216",
+            "email": "j_zheng7@u.pacific.edu",
+            "phoneNumber": "Rho",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 204,
+            "firstName": "Karen",
+            "lastName": "Bamnolker",
+            "status": "Alumnus",
+            "className": "(408) 515-6881",
+            "email": "k_bamnolker@u.pacific.edu",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 205,
+            "firstName": "Cintia",
+            "lastName": "Cortez",
+            "status": "Inactive",
+            "className": "(209) 453-4008",
+            "email": "c_cortez4@u.pacific.edu",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 206,
+            "firstName": "Luci",
+            "lastName": "Delanda",
+            "status": "Transferred",
+            "className": "(559) 586-0873",
+            "email": "l_delanda@u.pacific.edu",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 207,
+            "firstName": "Kayla",
+            "lastName": "Goldsby",
+            "status": "Co-op",
+            "className": "(209) 914-5891",
+            "email": "k_goldsby@u.pacific.edu",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 208,
+            "firstName": "Dalton",
+            "lastName": "Kaua",
+            "status": "Alumnus",
+            "className": "(209) 770-7185",
+            "email": "d_kaua@u.pacific.edu",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 209,
+            "firstName": "Matthew",
+            "lastName": "Lee",
+            "status": "Alumnus",
+            "className": "(949) 616-9431",
+            "email": "matthewlee76@gmail.com",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 210,
+            "firstName": "Hannah",
+            "lastName": "Tong",
+            "status": "Inactive",
+            "className": "(408) 881-4193",
+            "email": "h_tong1@u.pacific.edu",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 211,
+            "firstName": "Camryn",
+            "lastName": "Wong",
+            "status": "Alumnus",
+            "className": "(808) 728-3727",
+            "email": "c_wong48@u.pacific.edu",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 212,
+            "firstName": "Stanley",
+            "lastName": "Yu",
+            "status": "Co-op",
+            "className": "(415) 645-3782",
+            "email": "s_yu26@u.pacific.edu",
+            "phoneNumber": "Sigma",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 213,
+            "firstName": "Tarek",
+            "lastName": "Boudames",
+            "status": "Co-op",
+            "className": "(510) 999-0446",
+            "email": "t_boudames@u.pacific.edu",
+            "phoneNumber": "Tau",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 214,
+            "firstName": "Andy",
+            "lastName": "Lei",
+            "status": "Active",
+            "className": "(206) 619-0983",
+            "email": "a_lei2@u.pacfic.edu",
+            "phoneNumber": "Tau",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 215,
+            "firstName": "Jackie",
+            "lastName": "Nguyen",
+            "status": "Active",
+            "className": "(714) 933-8264",
+            "email": "j_nguyen125@u.pacific.edu",
+            "phoneNumber": "Tau",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 216,
+            "firstName": "Peter",
+            "lastName": "Phung",
+            "status": "Co-op",
+            "className": "(510) 894-9132",
+            "email": "p_phung1@u.pacific.edu",
+            "phoneNumber": "Tau",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 217,
+            "firstName": "Zac",
+            "lastName": "Tobias",
+            "status": "Active",
+            "className": "(209) 602-5103",
+            "email": "z_tobias@u.pacific.edu",
+            "phoneNumber": "Tau",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 218,
+            "firstName": "Oscar",
+            "lastName": "Wong",
+            "status": "Active",
+            "className": "(650) 350-2243",
+            "email": "o_wong4@u.pacific.edu",
+            "phoneNumber": "Tau",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 219,
+            "firstName": "Kenny",
+            "lastName": "Wu",
+            "status": "Active",
+            "className": "(415) 770-5407",
+            "email": "k_wu13@u.pacific.edu",
+            "phoneNumber": "Tau",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 220,
+            "firstName": "Davis",
+            "lastName": "Young",
+            "status": "Active",
+            "className": "(925) 699-1881",
+            "email": "d_young11@u.pacific.edu",
+            "phoneNumber": "Tau",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 221,
+            "firstName": "Jason",
+            "lastName": "Duan",
+            "status": "Active",
+            "className": "(209) 426-7908",
+            "email": "c_duan1@u.pacific.edu",
+            "phoneNumber": "Upsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 222,
+            "firstName": "Joe",
+            "lastName": "Paulus",
+            "status": "Active",
+            "className": "(209) 596-5680",
+            "email": "j_paulus@u.pacific.edu",
+            "phoneNumber": "Upsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 223,
+            "firstName": "Andrew",
+            "lastName": "Vanderpool",
+            "status": "Active",
+            "className": "(209) 981-0150",
+            "email": "a_vanderpool@u.pacific.edu",
+            "phoneNumber": "Upsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 224,
+            "firstName": "Noah",
+            "lastName": "Blount",
+            "status": "Active",
+            "className": "(650) 269-8196",
+            "email": "n_blount@u.pacific.edu",
+            "phoneNumber": "Upsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 225,
+            "firstName": "Rita",
+            "lastName": "Kearns",
+            "status": "Active",
+            "className": "(626) 633-7973",
+            "email": "r_kearns@u.pacific.edu",
+            "phoneNumber": "Upsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 226,
+            "firstName": "Carinne",
+            "lastName": "Malana",
+            "status": "Active",
+            "className": "(916) 704-4509",
+            "email": "c_malana@u.pacific.edu",
+            "phoneNumber": "Upsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 227,
+            "firstName": "Michelle",
+            "lastName": "Vu",
+            "status": "Active",
+            "className": "(408) 823-8548",
+            "email": "m_vu12@u.pacific.edu",
+            "phoneNumber": "Upsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 228,
+            "firstName": "Emily",
+            "lastName": "Yeh",
+            "status": "Active",
+            "className": "(949) 573-4374",
+            "email": "e_yeh1@u.pacific.edu",
+            "phoneNumber": "Upsilon",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 229,
+            "firstName": "Haider",
+            "lastName": "Ali",
+            "status": "Transferred",
+            "className": "",
+            "email": "s_ali10@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 230,
+            "firstName": "William",
+            "lastName": "Efstratis",
+            "status": "Active",
+            "className": "(916)-225-3924",
+            "email": "w_efstratis@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 231,
+            "firstName": "Kaili",
+            "lastName": "Fisher",
+            "status": "Active",
+            "className": "(909)-684-1340",
+            "email": "k_fisher10@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 232,
+            "firstName": "Hannah",
+            "lastName": "Hart",
+            "status": "Active",
+            "className": "(209)-483-6331",
+            "email": "h_hart1@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 233,
+            "firstName": "Sage",
+            "lastName": "Lee",
+            "status": "Active",
+            "className": "(650)-270-8479",
+            "email": "s_lee146@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 234,
+            "firstName": "Joseph",
+            "lastName": "Quarshie",
+            "status": "Active",
+            "className": "(206)-507-2567",
+            "email": "j_quarshie@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 235,
+            "firstName": "Marcos",
+            "lastName": "Reyes",
+            "status": "Active",
+            "className": "(323)-273-5976",
+            "email": "m_reyes21@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 236,
+            "firstName": "Jordan",
+            "lastName": "Somers",
+            "status": "Active",
+            "className": "(209)-602-1462",
+            "email": "j_somers2@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 237,
+            "firstName": "Dereck",
+            "lastName": "Vicevich",
+            "status": "Active",
+            "className": "(707)-365-6826",
+            "email": "d_vicevich@u.pacific.edu",
+            "phoneNumber": "Phi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 238,
+            "firstName": "Megan",
+            "lastName": "Acosta",
+            "status": "Active",
+            "className": "(323)-497-0007",
+            "email": "m_acosta4@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 239,
+            "firstName": "Nicolas",
+            "lastName": "Ahn",
+            "status": "Active",
+            "className": "(104)-490-1297",
+            "email": "n_ahn2@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 240,
+            "firstName": "Ethan",
+            "lastName": "Coe-Renner",
+            "status": "Active",
+            "className": "(626)-205-5834",
+            "email": "e_coerenner@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 241,
+            "firstName": "Elline",
+            "lastName": "Difuntorum",
+            "status": "Active",
+            "className": "(669)-400-9982",
+            "email": "e_difuntorum@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 242,
+            "firstName": "Michael",
+            "lastName": "Funes-Solis",
+            "status": "Active",
+            "className": "(510)-361-7660",
+            "email": "m_solis2@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 243,
+            "firstName": "Thomas",
+            "lastName": "Lau",
+            "status": "Active",
+            "className": "(415)-350-8216",
+            "email": "t_lau11@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 244,
+            "firstName": "Lanya",
+            "lastName": "Liebler-Bendix",
+            "status": "Active",
+            "className": "(315)-506-9315",
+            "email": "l_lieblerbendix@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 245,
+            "firstName": "Olivia",
+            "lastName": "Ong",
+            "status": "Active",
+            "className": "(415)-404-1751",
+            "email": "o_ong@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 246,
+            "firstName": "Jeyrik",
+            "lastName": "Paduga",
+            "status": "Active",
+            "className": "(661)-331-2861",
+            "email": "j_paduga@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 247,
+            "firstName": "Tanraj",
+            "lastName": "Shergill",
+            "status": "Active",
+            "className": "(209)-298-4203",
+            "email": "t_shergill@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 248,
+            "firstName": "Haya",
+            "lastName": "Syed",
+            "status": "Co-op",
+            "className": "(209)-820-4533",
+            "email": "h_syed@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 249,
+            "firstName": "Miya",
+            "lastName": "Uenaka",
+            "status": "Active",
+            "className": "(408)-442-9764",
+            "email": "m_uenaka@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        },
+        {
+            "rollCall": 250,
+            "firstName": "Kaitlyn",
+            "lastName": "Venegas",
+            "status": "Active",
+            "className": "(626)-343-0172",
+            "email": "k_venegas@u.pacific.edu",
+            "phoneNumber": "Chi",
+            "badStanding": 0
+        }
+    ]
+}
