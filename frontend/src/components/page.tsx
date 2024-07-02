@@ -2,28 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Brother, columns } from "./columns"
 import { DataTable } from "./data-table"
 
-//async function getData(): Promise<Payment[]> {
-//    // get
-//    // const endpoint = "http://localhost:8080/api/brothers"
-//    // using proxy at http://localhost:8080
-//    const endpoint = "/api/brothers"
-//    try {
-//        const response = await fetch(endpoint, {
-//            mode: 'cors',
-//            headers: {
-//                'Content-Type': 'application/json',
-//            }
-//        });
-//        if (!response.ok) {
-//          throw new Error('Network response was not ok');
-//        }
-//        const data = await response.json();
-//    return data;
-//    } catch (error) {
-//        console.log('Error fetching data:', error);
-//        throw error;
-//    }
-//}
 
 const DemoPage: React.FC = () => {
     const [data, setData] = useState<Brother[]>([]);
