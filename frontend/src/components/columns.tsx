@@ -70,7 +70,7 @@ export const columns: ColumnDef<Brother>[] = [
   {
       id: "actions",
     cell: ({ row }) => {
-      const payment = row.original
+      const brother = row.original
  
       return (
         <DropdownMenu>
@@ -82,14 +82,19 @@ export const columns: ColumnDef<Brother>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(brother.id)} >
+              Copy Brother ID
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
+                Copy Full Name
+            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+
+            <DropdownMenuItem>
+                View Brother
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
