@@ -1,10 +1,13 @@
+import DemoPage from './components/page'
 import './App.css'
 
 function App() {
   return (
     <>
-        <h1>Test</h1>
-    </>
+        <div className="container mx-auto py-10">
+            <DemoPage />
+        </div>
+     </>
   )
 }
 
