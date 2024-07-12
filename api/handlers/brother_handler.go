@@ -40,12 +40,13 @@ func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
 
 // Get data from all brothers in the Brother's table
 func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(" - Called GetAllBrothers")
+	log.Println("-- Called GetAllBrothers() --")
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
 	// TODO: explicitly type columns
 	query := "SELECT * FROM " + brothers_table
+    log.Println("Querying %s", query)
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
 		// return error status code
@@ -64,8 +65,14 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 		brothers = append(brothers, &brother)
 	}
 
+    log.Println("Query Successful")
+    // data := make(map[string]interface{})
+    // data["data"] = brothers
+    // data["status"] = "success"
+    data := brothers
+
 	// Build HTTP response
-	out, err := json.MarshalIndent(brothers, "", "\t")
+	out, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		// log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -77,6 +84,7 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(out)
 
 	if err != nil {
+        log.Fatal("Error while creating response: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -201,4 +209,59 @@ func (h *Handler) RemoveBrother(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Removed brother from 'brothers' table successfully"))
+}
+
+func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+
+	var requestBody map[string]interface{}
+	if err = json.Unmarshal(body, &requestBody); err != nil {
+		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+		return
+	}
+
+	rollCall, ok := requestBody["rollCall"]
+	if !ok {
+		http.Error(w, "Key not found in request body", http.StatusBadRequest)
+		return
+	}
+
+	// Format query with each param in request body
+	// TODO: add validator checks for Body params
+	query := fmt.Sprintf("UPDATE %s SET", brothers_table)
+	columns := []string{
+		"firstName",
+		"lastName",
+		"status",
+		"class",
+		"email",
+		"phoneNumber",
+		"badStanding",
+	}
+	for _, column := range columns {
+		newColumnValue, ok := requestBody[column]
+		if !ok {
+			continue
+		}
+		query += fmt.Sprintf(" %s = '%s',", column, newColumnValue)
+	}
+
+	// remove trailling comma
+	query = query[:len(query)-1] + " WHERE rollCall = $1"
+
+	_, err = h.db.ExecContext(ctx, query, rollCall)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("Updated brother with rollCall %s successfully", rollCall)))
 }

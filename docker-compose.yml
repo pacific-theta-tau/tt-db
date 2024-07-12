@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   db:
     profiles: [dev, test]
@@ -25,7 +23,7 @@ services:
     profiles: [dev]
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: docker/backend/Dockerfile
     # Load environment variables from dev.env
     env_file: dev.env
     # Expose ports from <host>:<container>
@@ -41,7 +39,7 @@ services:
     profiles: [prod]
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: docker/backend/Dockerfile
     command: ["/app/main", "-env=prod"]
     env_file: prod.env
     ports:
@@ -59,3 +57,15 @@ services:
     depends_on:
       db:
         condition: service_healthy
+   
+  frontend:
+    profiles: [dev, test]
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      db:
+        condition: service_healthy
+

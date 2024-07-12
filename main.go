@@ -3,7 +3,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
@@ -21,19 +20,17 @@ func main() {
 		log.Fatal("Error loading .env file. Make sure to have setup the appropriate .env file")
 	}
 
-	fmt.Println("** Initializing app in", *devFlag, "environment **")
+	log.Println("** Initializing app in", *devFlag, "environment **")
 	// Setup app configurations
-	port := os.Getenv("PORT")
-	databaseUrl := os.Getenv("DATABASE_URL")
-	config := api.Config{
-		Port:        port,
-		DatabaseURL: databaseUrl,
+	app_port := os.Getenv("APP_PORT")
+	databaseURL := os.Getenv("DATABASE_URL")
+	if databaseURL == "" {
+		log.Fatal("ERROR: environment variable DatabaseURL not set")
 	}
-	fmt.Println("Using configs:", config)
 
 	// Connect to DB and serve API
-	db := db.NewPostgresDB()
-	app := api.NewApplication(config, db)
-	fmt.Println("Serving app on port", app.Config.Port, "...")
+	db := db.NewPostgresDB(databaseURL)
+	app := api.NewApplication(db, app_port)
+	log.Printf("Serving app on port %s ...", app.Port)
 	app.Serve()
 }
