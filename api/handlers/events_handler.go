@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -33,12 +32,15 @@ func createEventFromRow(row *sql.Rows) (models.Event, error) {
 
 // Get data events table
 func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(" - Called GetAllEvents")
+	log.Println(" - Called GetAllEvents")
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	// TODO: explicitly type columns
-	query := "SELECT * FROM " + events_table
+	query := `
+        SELECT e.eventid, e.eventName, ec.categoryName, e.eventLocation, e.eventDate
+        FROM events e
+        JOIN eventsCategory ec ON e.categoryID = ec.categoryID;
+    `
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
 		// return error status code
@@ -76,10 +78,10 @@ func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 
 // Query Event by their eventID
 func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(" - Called GetEventByEventID")
+	log.Println(" - Called GetEventByEventID")
 	eventID := chi.URLParam(r, "eventID")
 	if eventID == "" {
-		fmt.Println("eventID = ", eventID)
+		log.Println("eventID = ", eventID)
 		// If eventID is empty, return an error response
 		http.Error(w, "eventID parameter is required", http.StatusBadRequest)
 		return
@@ -89,9 +91,9 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 
 	query := "SELECT * FROM events WHERE eventID = $1"
 	row, err := h.db.QueryContext(ctx, query, eventID)
-	fmt.Println("row= ", row)
+	log.Println("row= ", row)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -115,7 +117,7 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 	// Build HTTP response
 	out, err := json.MarshalIndent(event, "", "\t")
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 		return
 	}
 
