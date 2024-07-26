@@ -39,3 +39,31 @@ func TestGetAllEvents(t *testing.T) {
 	}
 	fmt.Println(response)
 }
+
+func TestGetEventByID(t *testing.T) {
+	// Init chi router and handler function
+	router := chi.NewRouter()
+	router.Get("/api/events/1", handler.GetAllEvents)
+
+	// Create new request
+	req, err := http.NewRequest("GET", "/api/events/1", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Record response in a ResponseReqcorder
+	rr := httptest.NewRecorder()
+
+	// Serve HTTP request
+	router.ServeHTTP(rr, req)
+
+	// Check status code
+	checkResponseCode(t, 200, rr.Code)
+
+	// Parse body
+	var response []*models.Event
+	if err = json.Unmarshal(rr.Body.Bytes(), &response); err != nil {
+		t.Errorf("failed to parse response body: %v", err)
+	}
+	fmt.Println(response)
+}
