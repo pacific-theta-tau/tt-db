@@ -19,7 +19,7 @@ func createEventFromRow(row *sql.Rows) (models.Event, error) {
 	err := row.Scan(
 		&events.EventID,
 		&events.EventName,
-		&events.Category,
+		&events.CategoryName,
 		&events.EventLocation,
 		&events.EventDate,
 	)
@@ -89,7 +89,13 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
-	query := "SELECT * FROM events WHERE eventID = $1"
+    query := `
+        SELECT e.eventid, e.eventName, ec.categoryName, e.eventLocation, e.eventDate
+        FROM events e
+        JOIN eventsCategory ec ON e.categoryID = ec.categoryID
+        WHERE eventID = $1
+    `
+
 	row, err := h.db.QueryContext(ctx, query, eventID)
 	log.Println("row= ", row)
 	if err != nil {
