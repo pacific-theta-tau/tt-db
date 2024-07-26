@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Brother, columns } from "./columns"
+import { Brother, brothersTableColumns } from "./columns"
 import { DataTable } from "./data-table"
 
 
-const DemoPage: React.FC = () => {
+const BrothersTable: React.FC = () => {
     const [data, setData] = useState<Brother[]>([]);
     const [loading, setLoading] = useState<boolean | null>(true);
     const [error, setError] = useState<string | null>(null);
@@ -46,8 +46,8 @@ const DemoPage: React.FC = () => {
     }
 
     return (
-        <DataTable columns={columns} data={data} />
+        <DataTable columns={brothersTableColumns} data={data} />
    )
 }
 
-export default DemoPage
+export default BrothersTable 
