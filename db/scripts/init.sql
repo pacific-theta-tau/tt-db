@@ -17,7 +17,7 @@ VALUES (239, 'Nicolas', 'Ahn', 'Active', 'Chi', 'na@gmail.com', '(123) 456-7890'
 
 
 CREATE TABLE IF NOT EXISTS eventsCategory(
-  categoryID INT PRIMARY KEY NOT NULL, 
+  categoryID SERIAL PRIMARY KEY, 
   categoryName TEXT NOT NULL
 );
 
@@ -29,14 +29,14 @@ VALUES
 
 
 CREATE TABLE IF NOT EXISTS events(
-  eventID INT PRIMARY KEY NOT NULL, 
+  eventID SERIAL PRIMARY KEY, 
   eventName TEXT NOT NULL,
   categoryID INT REFERENCES eventsCategory(categoryID),
   eventLocation Text NOT NULL,
   eventDate date NOT NULL
 );
 
-INSERT INTO events (eventID, eventName, categoryID, eventLocation, eventDate)
+INSERT INTO events (eventName, categoryID, eventLocation, eventDate)
 VALUES 
-    (1, 'CO-OP Panel', 1, 'Regent Room', '1/28/24'),
-    (2, 'Movies', 2, 'CTC', '3/14/24');
+    ('CO-OP Panel', 1, 'Regent Room', '1/28/24'),
+    ('Movies', 2, 'CTC', '3/14/24');

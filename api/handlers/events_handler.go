@@ -1,6 +1,7 @@
 package handlers
 
 import (
+    "fmt"
 	"context"
 	"database/sql"
 	"encoding/json"
@@ -9,6 +10,7 @@ import (
 	"time"
 	"github.com/pacific-theta-tau/tt-db/api/models"
 	"github.com/go-chi/chi"
+    "github.com/go-playground/validator/v10"
 )
 
 const events_table = "events"
@@ -135,4 +137,55 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
+    log.Println("Called InsertEvent()")
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+    defer cancel()
+
+    var event models.Event
+    err := json.NewDecoder(r.Body).Decode(&event)
+    if err != nil {
+        http.Error(w, fmt.Sprint("Error decoding request body", err.Error()), http.StatusBadRequest)
+    }
+
+    // Validate events struct
+    validate := validator.New() 
+    if err := validate.Struct(event); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+    // 1. fetch categoryID from categoryName
+    log.Printf("Querying for categoryID of %s", event.CategoryName)
+    var categoryID int
+    query := "SELECT categoryID FROM eventsCategory WHERE categoryName = $1"
+    log.Println(query)
+    err = h.db.QueryRow(query, event.CategoryName).Scan(&categoryID)
+    if err != nil {
+        http.Error(w, "Category not found", http.StatusNotFound)
+        return
+    }
+
+    // 2. Insert new event in `events` table
+    log.Println("Inserting new event")
+    query = `
+    INSERT INTO events (eventName, categoryID, eventLocation, eventDate)
+    VALUES ($1, $2, $3, $4) returning *
+    `
+    log.Println(query)
+    _, err = h.db.ExecContext(
+        ctx,
+        query,
+        event.EventName,
+        categoryID,
+        event.EventLocation,
+        event.EventDate,
+    )
+
+    log.Println("Successfully inserted event to `events` table")
+    log.Println(event)
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("Inserted new Event entry to `events` table"))
 }
