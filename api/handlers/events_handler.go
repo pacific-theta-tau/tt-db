@@ -42,7 +42,7 @@ func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 	query := `
         SELECT e.eventid, e.eventName, ec.categoryName, e.eventLocation, e.eventDate
         FROM events e
-        JOIN eventsCategory ec ON e.categoryID = ec.categoryID;
+        JOIN eventsCategory ec ON e.categoryID = ec.categoryID
     `
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
@@ -240,23 +240,31 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     }
 
     // Remove trailling comma
-    updateQuery = strings.TrimRight(updateQuery, ",") + " WHERE eventID = $1"
+    updateQuery = strings.TrimRight(updateQuery, ",") 
+    // UPDATE events SET (values) FROM eventsCategory ...
+    updateQuery += `
+        FROM eventsCategory ec
+        WHERE eventID = $1 AND events.categoryID = ec.categoryID
+        RETURNING events.eventID, events.eventName, events.eventDate, events.eventLocation, ec.categoryName
+    `
+    log.Printf("UPDATE query: %s", updateQuery)
 
-    result, err := h.db.ExecContext(ctx, updateQuery, eventID)
+    var queryResult models.Event
+    err = h.db.QueryRowContext(ctx, updateQuery, eventID).Scan(
+        &queryResult.EventID,
+        &queryResult.EventName,
+        &queryResult.EventDate,
+        &queryResult.EventLocation,
+        &queryResult.CategoryName,
+    )
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
     }
-
-    // Checking result
-    rowsAffected, err := result.RowsAffected()
-    if err != nil {
-        fmt.Println("Error getting rows affected:", err)
-        return
-    }
-    fmt.Println("Rows affected:", rowsAffected)
+    log.Printf("query result: %+v", queryResult)
 
     // API Response
     w.WriteHeader(http.StatusOK)
-    w.Write([]byte(fmt.Sprintf("Updated event with eventID %s successfully", eventID)))
+    //w.Write([]byte(fmt.Sprintf("Updated event with eventID %s successfully", eventID)))
+    json.NewEncoder(w).Encode(queryResult)
 }
