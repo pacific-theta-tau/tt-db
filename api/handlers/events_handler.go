@@ -5,8 +5,10 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+    "io"
 	"log"
 	"net/http"
+    "strings"
 	"time"
 	"github.com/pacific-theta-tau/tt-db/api/models"
 	"github.com/go-chi/chi"
@@ -34,7 +36,6 @@ func createEventFromRow(row *sql.Rows) (models.Event, error) {
 
 // Get data events table
 func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
-	log.Println(" - Called GetAllEvents")
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -80,10 +81,8 @@ func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 
 // Query Event by their eventID
 func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
-	log.Println(" - Called GetEventByEventID")
 	eventID := chi.URLParam(r, "eventID")
 	if eventID == "" {
-		log.Println("eventID = ", eventID)
 		// If eventID is empty, return an error response
 		http.Error(w, "eventID parameter is required", http.StatusBadRequest)
 		return
@@ -99,7 +98,6 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
     `
 
 	row, err := h.db.QueryContext(ctx, query, eventID)
-	log.Println("row= ", row)
 	if err != nil {
 		log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -139,8 +137,8 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// POST endpoint for Event table
 func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
-    log.Println("Called InsertEvent()")
     ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
     defer cancel()
 
@@ -161,7 +159,6 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
     log.Printf("Querying for categoryID of %s", event.CategoryName)
     var categoryID int
     query := "SELECT categoryID FROM eventsCategory WHERE categoryName = $1"
-    log.Println(query)
     err = h.db.QueryRow(query, event.CategoryName).Scan(&categoryID)
     if err != nil {
         http.Error(w, "Category not found", http.StatusNotFound)
@@ -185,7 +182,81 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
     )
 
     log.Println("Successfully inserted event to `events` table")
-    log.Println(event)
     w.WriteHeader(http.StatusOK)
     w.Write([]byte("Inserted new Event entry to `events` table"))
+}
+
+// PUT request to update fields of event row by event ID
+func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel :=  context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+
+	var requestBody map[string]interface{}
+	if err = json.Unmarshal(body, &requestBody); err != nil {
+		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+		return
+	}
+
+	eventID, ok := requestBody["eventID"]
+	if !ok {
+		http.Error(w, "Missing eventID in request body", http.StatusBadRequest)
+		return
+	}
+
+    updateQuery := fmt.Sprintf("UPDATE %s SET", events_table)
+    columns := []string{
+        "eventName",
+        "categoryName",
+        "eventLocation",
+        "eventDate",
+    }
+    // Build query statement for each param in requestBody
+    for _, column := range columns {
+        newColumnValue, ok := requestBody[column]
+        if !ok {
+            continue
+        }
+        if column == "categoryName" {
+            // 1. fetch categoryID from categoryName
+            // TODO: refactor this into own function to avoid duplicate
+            var categoryID int
+            categoryIdQuery := "SELECT categoryID FROM eventsCategory WHERE categoryName = $1"
+            err = h.db.QueryRow(categoryIdQuery, newColumnValue).Scan(&categoryID)
+            if err != nil {
+                http.Error(w, "Category not found", http.StatusNotFound)
+                return
+            }
+            updateQuery += fmt.Sprintf(" %s = %d,", "categoryID", categoryID)
+            continue
+        }
+
+        updateQuery += fmt.Sprintf(" %s = '%s',", column, newColumnValue)
+    }
+
+    // Remove trailling comma
+    updateQuery = strings.TrimRight(updateQuery, ",") + " WHERE eventID = $1"
+
+    result, err := h.db.ExecContext(ctx, updateQuery, eventID)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+    }
+
+    // Checking result
+    rowsAffected, err := result.RowsAffected()
+    if err != nil {
+        fmt.Println("Error getting rows affected:", err)
+        return
+    }
+    fmt.Println("Rows affected:", rowsAffected)
+
+    // API Response
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte(fmt.Sprintf("Updated event with eventID %s successfully", eventID)))
 }
