@@ -8,6 +8,7 @@ import (
     "io"
 	"log"
 	"net/http"
+    "strconv"
     "strings"
 	"time"
 	"github.com/pacific-theta-tau/tt-db/api/models"
@@ -81,45 +82,32 @@ func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 
 // Query Event by their eventID
 func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
-	eventID := chi.URLParam(r, "eventID")
-	if eventID == "" {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
+
+	requestEventID := chi.URLParam(r, "eventID")
+	if requestEventID == "" {
 		// If eventID is empty, return an error response
 		http.Error(w, "eventID parameter is required", http.StatusBadRequest)
 		return
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
-	defer cancel()
+    eventID, err := strconv.Atoi(requestEventID)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
 
-    query := `
-        SELECT e.eventid, e.eventName, ec.categoryName, e.eventLocation, e.eventDate
-        FROM events e
-        JOIN eventsCategory ec ON e.categoryID = ec.categoryID
-        WHERE eventID = $1
-    `
-
-	row, err := h.db.QueryContext(ctx, query, eventID)
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer row.Close()
-	
-	// Scan rows to create Brother instance
-	var event models.Event
-	for row.Next() {
-		event, err = createEventFromRow(row)
-		if err != nil {
-			log.Fatal("Error!", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}
+    event, err := queryEvent(h, ctx, eventID)
+    if err != nil {
+        log.Fatalf("Failed to query event with eventID %d: %s", eventID, err)
+    }
 
 	if event.EventID == 0 {
+        log.Printf("EventID %d not found", eventID)
 		http.Error(w, "Event not found", http.StatusNotFound)
 		return
 	}
+
 	// Build HTTP response
 	out, err := json.MarshalIndent(event, "", "\t")
 	if err != nil {
@@ -135,6 +123,36 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+// Helper function to query event by eventID
+func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, error) {
+    // TODO: refactor so that we don't need to inject handler and context
+    query := `
+        SELECT e.eventid, e.eventName, ec.categoryName, e.eventLocation, e.eventDate
+        FROM events e
+        JOIN eventsCategory ec ON e.categoryID = ec.categoryID
+        WHERE eventID = $1
+    `
+
+	row, err := h.db.QueryContext(ctx, query, eventID)
+	if err != nil {
+		log.Fatal(err)
+		return models.Event{}, err
+	}
+	defer row.Close()
+	
+	// Scan rows to create Brother instance
+	var event models.Event
+	for row.Next() {
+		event, err = createEventFromRow(row)
+		if err != nil {
+			log.Fatal("Error!", err)
+			return models.Event{}, err
+		}
+	}
+
+    return event, nil
 }
 
 // POST endpoint for Event table
@@ -202,12 +220,16 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
 		return
 	}
+    log.Printf("request body: %+v", requestBody)
 
-	eventID, ok := requestBody["eventID"]
+	parsedEventID, ok := requestBody["eventID"].(float64)
 	if !ok {
 		http.Error(w, "Missing eventID in request body", http.StatusBadRequest)
+        log.Printf("\tError: Missing eventID in request body")
 		return
 	}
+    eventID := int(parsedEventID)
+    log.Printf("Request Body: %+v", requestBody)
 
     updateQuery := fmt.Sprintf("UPDATE %s SET", events_table)
     columns := []string{
@@ -230,6 +252,7 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
             err = h.db.QueryRow(categoryIdQuery, newColumnValue).Scan(&categoryID)
             if err != nil {
                 http.Error(w, "Category not found", http.StatusNotFound)
+                log.Printf("\tError while querying category: Category not found")
                 return
             }
             updateQuery += fmt.Sprintf(" %s = %d,", "categoryID", categoryID)
@@ -263,8 +286,15 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     }
     log.Printf("query result: %+v", queryResult)
 
+    // query modified row
+    // TODO: refactor this
+    event, err := queryEvent(h, ctx, eventID)
+    if err != nil {
+        log.Fatalf("Failed to query event with eventID %d: %s", eventID, err)
+    }
+
     // API Response
     w.WriteHeader(http.StatusOK)
     //w.Write([]byte(fmt.Sprintf("Updated event with eventID %s successfully", eventID)))
-    json.NewEncoder(w).Encode(queryResult)
+    json.NewEncoder(w).Encode(event)
 }
