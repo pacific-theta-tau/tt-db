@@ -59,7 +59,7 @@ services:
         condition: service_healthy
    
   frontend:
-    profiles: [dev, test]
+    profiles: [dev]
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile
