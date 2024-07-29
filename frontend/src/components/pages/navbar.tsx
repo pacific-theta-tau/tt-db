@@ -20,6 +20,18 @@ const SideBar = ({ children }: React.ComponentProps<"aside">) =>
         </aside>
     )
 
+type SideBarItemProps = {
+    text: string;
+}
+
+const SideBarItem: React.FC<SideBarItemProps> = ({ text }) => 
+    (
+        <li>
+            <span>{text}</span>
+        </li>
+    )
+
 export {
     SideBar,
+    SideBarItem,
 }
