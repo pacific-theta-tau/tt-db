@@ -78,8 +78,8 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     // TODO: events endpoint
 	r.Get("/api/events", handler.GetAllEvents)
 	r.Get("/api/events/{eventID}", handler.GetEventByEventID)
-    r.Post("/api/events/", handler.InsertEvent)
-    r.Put("/api/events/", handler.UpdateEventByID)
+    r.Post("/api/events", handler.InsertEvent)
+    r.Put("/api/events", handler.UpdateEventByID)
     // TODO: attendance endpoints
 
 	return r
