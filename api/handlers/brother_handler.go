@@ -46,7 +46,6 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: explicitly type columns
 	query := "SELECT * FROM " + brothers_table
-    log.Println("Querying %s", query)
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
 		// return error status code
@@ -84,7 +83,7 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(out)
 
 	if err != nil {
-        log.Fatal("Error while creating response: %v", err)
+        log.Fatalf("Error while creating response: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -217,18 +216,21 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+        log.Printf("Error reading request body %s", err)
 		http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		return
 	}
 
 	var requestBody map[string]interface{}
 	if err = json.Unmarshal(body, &requestBody); err != nil {
+        log.Printf("Error decoding JSON: %s", err)
 		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
 		return
 	}
 
 	rollCall, ok := requestBody["rollCall"]
 	if !ok {
+        log.Printf("Key not found in request body: %s", err)
 		http.Error(w, "Key not found in request body", http.StatusBadRequest)
 		return
 	}
@@ -258,6 +260,7 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 
 	_, err = h.db.ExecContext(ctx, query, rollCall)
 	if err != nil {
+        log.Printf("Error while querying `%s`: %s", query, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
