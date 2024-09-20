@@ -99,7 +99,9 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 
     event, err := queryEvent(h, ctx, eventID)
     if err != nil {
-        log.Fatalf("Failed to query event with eventID %d: %s", eventID, err)
+        log.Printf("Failed to query event with eventID %d: %s", eventID, err)
+        http.Error(w, "Error while querying event", http.StatusNotFound)
+        return
     }
 
 	if event.EventID == 0 {
@@ -111,7 +113,7 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 	// Build HTTP response
 	out, err := json.MarshalIndent(event, "", "\t")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return
 	}
 
@@ -137,7 +139,7 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
 
 	row, err := h.db.QueryContext(ctx, query, eventID)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return models.Event{}, err
 	}
 	defer row.Close()
@@ -147,7 +149,7 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
 	for row.Next() {
 		event, err = createEventFromRow(row)
 		if err != nil {
-			log.Fatal("Error!", err)
+			log.Println("Error!", err)
 			return models.Event{}, err
 		}
 	}
@@ -155,7 +157,8 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
     return event, nil
 }
 
-// POST endpoint for Event table
+// Add new event to events table
+// POST /api/events
 func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
     defer cancel()
@@ -204,7 +207,8 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("Inserted new Event entry to `events` table"))
 }
 
-// PUT request to update fields of event row by event ID
+// Update fields of event row by event ID
+// PUT /api/events
 func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     ctx, cancel :=  context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
@@ -290,7 +294,7 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     // TODO: refactor this
     event, err := queryEvent(h, ctx, eventID)
     if err != nil {
-        log.Fatalf("Failed to query event with eventID %d: %s", eventID, err)
+        log.Printf("Failed to query event with eventID %d: %s", eventID, err)
     }
 
     // API Response
