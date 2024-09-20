@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+    "strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -22,6 +23,7 @@ const brothers_table = "brothers"
 func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
 	var brother models.Brother
 	err := row.Scan(
+        &brother.BrotherID,
 		&brother.RollCall,
 		&brother.FirstName,
 		&brother.LastName,
@@ -83,37 +85,50 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(out)
 
 	if err != nil {
-        log.Fatalf("Error while creating response: %v", err)
+        log.Printf("Error while creating response: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
-// Query Brothers by their RollCall
-func (h *Handler) GetBrotherByRollCall(w http.ResponseWriter, r *http.Request) {
-	// TODO: handle case when param is not provided
-	rollCall := chi.URLParam(r, "rollCall")
+// Query brothers by ID
+// GET /api/brothers/{id}
+func (h *Handler) GetBrotherByID(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("\nGetBrrotherByID called")
+    brotherIDStr := chi.URLParam(r, "id")
+    brotherID, err := strconv.Atoi(brotherIDStr)
+    if err != nil {
+        log.Printf("Invalid brother ID: %v", err)
+        http.Error(w, "Invalid event ID", http.StatusBadRequest)
+        return
+    }
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
-	query := "SELECT * FROM brothers WHERE rollCall = $1"
-	row, err := h.db.QueryContext(ctx, query, rollCall)
-	fmt.Println("row", row)
+    query := "SELECT * FROM brothers WHERE brotherID = $1"
+    row, err := h.db.QueryContext(ctx, query, brotherID)
+	fmt.Printf("row", row)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Scan rows to create Brother instance
+    // Scan rows to create Brother instance
 	var brother models.Brother
 	for row.Next() {
 		brother, err = createBrotherFromRow(row)
 		if err != nil {
-			log.Fatal("Error!", err)
+			log.Println("Error!", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}
+    if brother.BrotherID == 0 {
+        http.Error(w, "Brother ID %d not found", brotherID)
+        log.Printf("Brother ID %d not found", brotherID)
+        return
+    }
 
 	// Build HTTP response
 	out, err := json.MarshalIndent(brother, "", "\t")
@@ -131,6 +146,7 @@ func (h *Handler) GetBrotherByRollCall(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
 
 // Add new brother entry to database
 func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
@@ -228,7 +244,8 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rollCall, ok := requestBody["rollCall"]
+	// rollCall, ok := requestBody["rollCall"]
+	brotherID, ok := requestBody["brotherID"]
 	if !ok {
         log.Printf("Key not found in request body: %s", err)
 		http.Error(w, "Key not found in request body", http.StatusBadRequest)
@@ -256,9 +273,9 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// remove trailling comma
-	query = query[:len(query)-1] + " WHERE rollCall = $1"
+	query = query[:len(query)-1] + " WHERE brotherID = $1"
 
-	_, err = h.db.ExecContext(ctx, query, rollCall)
+	_, err = h.db.ExecContext(ctx, query, brotherID)
 	if err != nil {
         log.Printf("Error while querying `%s`: %s", query, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -266,5 +283,5 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("Updated brother with rollCall %s successfully", rollCall)))
+	w.Write([]byte(fmt.Sprintf("Updated brother with brotherID %s successfully", brotherID)))
 }
