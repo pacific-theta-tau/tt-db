@@ -2,6 +2,13 @@ package models
 
 import("time")
 
+
+var AttendanceStatus = map[string]bool{
+    "active": true,
+    "absent": true,
+    "excused": true,
+}
+
 type Attendance struct {
     BrotherID         int    `json:"brotherID"`
     EventID           int    `json:"eventID"`
