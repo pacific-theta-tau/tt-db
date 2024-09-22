@@ -85,6 +85,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     // TODO: attendance endpoints
     r.Get("/api/attendance", handler.GetAllAttendanceRecords)
     r.Post("/api/attendance", handler.CreateAttendance)
+    r.Delete("/api/attendance", handler.DeleteAttendanceRecord)
 
 	return r
 }

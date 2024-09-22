@@ -151,3 +151,52 @@ func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Inserted new record into `attendance` table successfully!"))
 }
+
+func (h *Handler) DeleteAttendanceRecord(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    // Expected data in request body
+    var requestBody struct {
+        BrotherID   int `json:"brotherID"`
+        EventID     int `json:"eventID"`
+    }   
+    err := json.NewDecoder(r.Body).Decode(&requestBody)
+    if err != nil {
+        http.Error(w, "Invalid input", http.StatusBadRequest)
+        return
+    }
+    // Validate data provided in request body
+    validate := validator.New()
+	if err := validate.Struct(requestBody); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+    fmt.Printf("\tRequest Body: %+v", requestBody)
+
+    // Check for missing or zero values
+	if requestBody.BrotherID == 0 || requestBody.EventID == 0 {
+		http.Error(w, "Invalid brotherID or eventID", http.StatusBadRequest)
+		return
+	}
+
+    query := `
+    DELETE FROM attendance
+    WHERE brotherID = $1 AND eventID = $2
+    `
+    _, err = h.db.ExecContext(
+        ctx,
+        query,
+        requestBody.BrotherID,
+        requestBody.EventID,
+    )
+    if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Deleted attendance record successfully"))
+}
