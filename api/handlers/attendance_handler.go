@@ -52,9 +52,8 @@ func (h *Handler) GetAllAttendanceRecords(w http.ResponseWriter, r *http.Request
     `
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
-		// return error status code
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-        fmt.Print()
+        log.Print(err.Error())
 		return
 	}
 
@@ -74,18 +73,6 @@ func (h *Handler) GetAllAttendanceRecords(w http.ResponseWriter, r *http.Request
     log.Printf("\tData: \n%v")
 
 	// Build HTTP response
-    // use json.MarshalIndent for pretty printing.
-	// out, err := json.MarshalIndent(data, "", "\t")
-    //if err != nil {
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//	return
-	//}
-    //_, err = w.Write(out)
-    //if err != nil {
-    //    log.Printf("Error while creating response: %v", err)
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//}
-
     w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
@@ -125,7 +112,7 @@ func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
 
     // Check for missing or zero values
 	if input.BrotherID == 0 || input.EventID == 0 {
-		http.Error(w, "Invalid brotherID or eventID", http.StatusBadRequest)
+		http.Error(w, "Missing brotherID or eventID", http.StatusBadRequest)
 		return
 	}
 
@@ -200,3 +187,67 @@ func (h *Handler) DeleteAttendanceRecord(w http.ResponseWriter, r *http.Request)
     w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Deleted attendance record successfully"))
 }
+
+func (h *Handler) UpdateAttendanceRecord(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    var requestBody struct {
+        BrotherID           int `json:"brotherID"`
+        EventID             int `json:"eventID"`
+        AttendanceStatus    string `json:"attendanceStatus"`
+    }
+
+    // Unmarshal request body data
+    err := json.NewDecoder(r.Body).Decode(&requestBody)
+    if err != nil {
+        http.Error(w, "Invalid input", http.StatusBadRequest)
+        return
+    }
+
+    // Validate data provided in request body
+    validate := validator.New()
+	if err := validate.Struct(requestBody); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+    fmt.Printf("\tRequest Body: %+v", requestBody)
+
+    // Check for missing or zero values
+	if requestBody.BrotherID == 0 || requestBody.EventID == 0 {
+		http.Error(w, "Invalid brotherID or eventID", http.StatusBadRequest)
+		return
+	}
+    // validate attendance status
+    _, ok := models.AttendanceStatus[requestBody.AttendanceStatus]; if !ok {
+        // TODO: print valid statues dynamically instead of hardcoding
+        errMsg := "Invalid attendance status. Must be one of: 'present', 'absent', or 'excused'"
+        log.Println(errMsg)
+		http.Error(w, errMsg, http.StatusBadRequest)
+		return
+    }
+
+    query := `
+    UPDATE attendance
+    SET attendanceStatus = $1
+    WHERE brotherID = $2 AND eventID = $3
+    `
+    _, err = h.db.QueryContext(
+        ctx,
+        query,
+        requestBody.AttendanceStatus,
+        requestBody.BrotherID,
+        requestBody.EventID,
+    )
+    if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Updated attendance record successfully"))
+}
+
+
