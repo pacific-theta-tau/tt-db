@@ -66,7 +66,6 @@ func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 	// Build HTTP response
 	out, err := json.MarshalIndent(events, "", "\t")
 	if err != nil {
-		// log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -99,29 +98,25 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 
     event, err := queryEvent(h, ctx, eventID)
     if err != nil {
-        log.Printf("Failed to query event with eventID %d: %s", eventID, err)
-        http.Error(w, "Error while querying event", http.StatusNotFound)
+        errMsg := fmt.Sprintf("Failed to query event with eventID %d: %s", eventID, err.Error())
+        log.Println(errMsg)
+        http.Error(w, errMsg, http.StatusNotFound)
         return
     }
 
 	if event.EventID == 0 {
-        log.Printf("EventID %d not found", eventID)
-		http.Error(w, "Event not found", http.StatusNotFound)
+        errMsg := fmt.Sprintf("EventID %d not found", eventID)
+        log.Println(errMsg)
+		http.Error(w, errMsg, http.StatusNotFound)
 		return
 	}
 
 	// Build HTTP response
-	out, err := json.MarshalIndent(event, "", "\t")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(out)
-
+    err = json.NewEncoder(w).Encode(event)
 	if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -139,7 +134,7 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
 
 	row, err := h.db.QueryContext(ctx, query, eventID)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return models.Event{}, err
 	}
 	defer row.Close()
@@ -149,7 +144,7 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
 	for row.Next() {
 		event, err = createEventFromRow(row)
 		if err != nil {
-			log.Println("Error!", err)
+            log.Printf("Error while parsing rows from database: %s", err.Error())
 			return models.Event{}, err
 		}
 	}
@@ -177,17 +172,19 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
     // 1. fetch categoryID from categoryName
-    log.Printf("Querying for categoryID of %s", event.CategoryName)
+    log.Printf("\tQuerying for categoryID of %s", event.CategoryName)
     var categoryID int
     query := "SELECT categoryID FROM eventsCategory WHERE categoryName = $1"
     err = h.db.QueryRow(query, event.CategoryName).Scan(&categoryID)
     if err != nil {
-        http.Error(w, "Category not found", http.StatusNotFound)
+        errMsg := fmt.Sprintf("Category not found. %v", err.Error())
+        log.Println(errMsg)
+        http.Error(w, errMsg, http.StatusNotFound)
         return
     }
 
     // 2. Insert new event in `events` table
-    log.Println("Inserting new event")
+    log.Println("\tInserting new event")
     query = `
     INSERT INTO events (eventName, categoryID, eventLocation, eventDate)
     VALUES ($1, $2, $3, $4) returning *
@@ -202,9 +199,11 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
         event.EventDate,
     )
 
-    log.Println("Successfully inserted event to `events` table")
+    msg := "Created new event to `events` table successfully"
+    log.Println(msg)
+    w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK)
-    w.Write([]byte("Inserted new Event entry to `events` table"))
+    w.Write([]byte(msg))
 }
 
 // Update fields of event row by event ID
@@ -224,16 +223,15 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
 		return
 	}
-    log.Printf("request body: %+v", requestBody)
 
 	parsedEventID, ok := requestBody["eventID"].(float64)
 	if !ok {
-		http.Error(w, "Missing eventID in request body", http.StatusBadRequest)
-        log.Printf("\tError: Missing eventID in request body")
+        errMsg := "Missing eventID in request body"
+        log.Printf(errMsg)
+		http.Error(w, errMsg, http.StatusBadRequest)
 		return
 	}
     eventID := int(parsedEventID)
-    log.Printf("Request Body: %+v", requestBody)
 
     updateQuery := fmt.Sprintf("UPDATE %s SET", events_table)
     columns := []string{
