@@ -11,6 +11,7 @@ import (
     "strconv"
     "strings"
 	"time"
+
 	"github.com/pacific-theta-tau/tt-db/api/models"
 	"github.com/go-chi/chi"
     "github.com/go-playground/validator/v10"
@@ -33,6 +34,23 @@ func createEventFromRow(row *sql.Rows) (models.Event, error) {
 	}
 
 	return events, err
+}
+
+// Helper function to scan SQL row and create new event attendance instance
+func createEventAttendanceFromRow(row *sql.Rows) (models.EventAttendance, error) {
+	var eventAttendance models.EventAttendance
+	err := row.Scan(
+        &eventAttendance.BrotherID,
+        &eventAttendance.FirstName,
+        &eventAttendance.LastName,
+        &eventAttendance.RollCall,
+        &eventAttendance.AttendanceStatus,
+	)
+	if err != nil {
+		return models.EventAttendance{}, err
+	}
+
+	return eventAttendance, err
 }
 
 // Get data events table
@@ -134,7 +152,8 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
 
 	row, err := h.db.QueryContext(ctx, query, eventID)
 	if err != nil {
-		log.Println(err.Error())
+        errMsg := fmt.Sprintf("\t[queryEvent()] Error while querying event data for eventID %d: %s", eventID, err.Error())
+		log.Println(errMsg)
 		return models.Event{}, err
 	}
 	defer row.Close()
@@ -144,7 +163,7 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
 	for row.Next() {
 		event, err = createEventFromRow(row)
 		if err != nil {
-            log.Printf("Error while parsing rows from database: %s", err.Error())
+            log.Printf("\t[queryEvent()] Error while parsing rows from database: %s", err.Error())
 			return models.Event{}, err
 		}
 	}
@@ -300,3 +319,94 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     //w.Write([]byte(fmt.Sprintf("Updated event with eventID %s successfully", eventID)))
     json.NewEncoder(w).Encode(event)
 }
+
+
+
+/* Get event data and attendance
+endpoint: GET /api/events/{eventID}/attendance/
+Response format:
+    {
+        eventID: str,
+        eventName: str,
+        eventCategory: str,
+        eventDate: time.Time,
+        eventLocation: str,
+        attendance: [
+            {
+                brotherID: int,
+                firstName: str,
+                lastName: str,
+                rollCall: int,
+                attendanceStatus: str
+            },
+        ]
+    }
+*/
+func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
+    eventIDStr := chi.URLParam(r, "eventID")
+    eventID, err := strconv.Atoi(eventIDStr)
+    if err != nil {
+        errMsg := "Invalid event ID"
+        log.Printf(errMsg, err)
+        http.Error(w, errMsg, http.StatusBadRequest)
+        return
+    }
+
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    // Query event data
+    eventData, err := queryEvent(h, ctx, eventID)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while fetching event data for eventID %d: %s", eventID, err.Error())
+        log.Println(errMsg)
+        http.Error(w, errMsg, http.StatusBadRequest)
+    }
+
+    // Query attendance data for eventID and parse into a list
+	query := `
+    SELECT b.brotherID, b.firstName, b.lastName, b.rollCall, a.attendanceStatus
+    FROM attendance a
+    JOIN brothers b ON b.brotherID = a.brotherID
+    WHERE eventID = $1
+    `
+    log.Printf("\tEventID: %d", eventID)
+    rows, err := h.db.QueryContext(ctx, query, eventID)
+	if err != nil {
+        errMsg := fmt.Sprintf("Error while querying for attendance for eventID %d: %s", eventID, err.Error())
+		http.Error(w, errMsg, http.StatusInternalServerError)
+        log.Println(errMsg)
+		return
+	}
+
+    var attendanceList []*models.EventAttendance
+	for rows.Next() {
+        record, err := createEventAttendanceFromRow(rows)
+		if err != nil {
+            errMsg := fmt.Sprintf("Error while parsing attendance query for eventID %d: '%s'", eventID, err.Error())
+            log.Println(errMsg)
+			http.Error(w, errMsg, http.StatusInternalServerError)
+			return
+		}
+        attendanceList = append(attendanceList, &record)
+	}
+
+    // Build response
+    response := map[string]interface{}{
+        "eventID": eventData.EventID,
+        "eventName": eventData.EventName,
+        "eventCategory": eventData.CategoryName,
+        "eventDate": eventData.EventDate,
+        "eventLocation": eventData.EventLocation,
+        "attendance": attendanceList,
+    }
+    if err := json.NewEncoder(w).Encode(response); err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+	// Build HTTP response
+    w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
