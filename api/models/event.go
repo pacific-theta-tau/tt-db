@@ -10,3 +10,11 @@ type Event struct {
 	EventLocation	string 		`json:"eventLocation"`
 	EventDate		time.Time	`json:"eventDate"`
 }
+
+type EventAttendance struct {
+    BrotherID           int `json:"brotherID"`
+    FirstName           string `json:"firstName"`
+    LastName            string `json:"lastName"`
+    RollCall            int `json:"rollCall"`
+    AttendanceStatus    string `json:"attendanceStatus"`
+}
