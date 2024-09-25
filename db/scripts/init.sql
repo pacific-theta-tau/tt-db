@@ -33,20 +33,44 @@ CREATE TABLE IF NOT EXISTS attendance(
 	PRIMARY KEY (brotherID, eventID)  -- compound PK
 );
 
+CREATE TABLE IF NOT EXISTS semester(
+    semesterID SERIAL PRIMARY KEY,
+    semesterLabel VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS brotherStatus(
+    brotherID INT REFERENCES brothers(brotherID),
+    semesterID INT REFERENCES semester(semesterID),
+    status status,
+    PRIMARY KEY (brotherID, semesterID)
+);
+
 
 -- mock entries for testing
 INSERT INTO brothers (rollCall, firstName, lastName, status, className, email, phoneNumber, badStanding)
-VALUES (239, 'Nicolas', 'Ahn', 'Active', 'Chi', 'na@gmail.com', '(123) 456-7890', 0);
+VALUES
+    (1, 'John', 'Doe', 'Active', 'Chi', 'na@gmail.com', '(123) 456-7890', 0)
+;
 
 INSERT INTO eventsCategory (categoryID, categoryName)
 VALUES
-(1, 'Professional Development'),
-(2, 'Brotherhood'),
-(3, 'Community Service'); 
+    (1, 'Professional Development'),
+    (2, 'Brotherhood'),
+    (3, 'Community Service')
+;
 
 INSERT INTO events (eventName, categoryID, eventLocation, eventDate)
 VALUES 
     ('CO-OP Panel', 1, 'Regent Room', '1/28/24'),
-    ('Movies', 2, 'CTC', '3/14/24');
+    ('Movies', 2, 'CTC', '3/14/24')
+;
 
+INSERT INTO semester (semesterLabel) VALUES ('Spring 2023', 'Fall 2023', 'Spring 2024', 'Fall 2024');
 
+INSERT INTO brotherStatus (brotherID, semesterID, status)
+VALUES
+    (1, 1, 'Active'),
+    (1, 2, 'Co-op'),
+    (1, 3,' Active'),
+    (1, 4, 'Alumni')
+;
