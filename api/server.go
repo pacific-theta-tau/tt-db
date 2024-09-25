@@ -70,7 +70,8 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	})
 	// brothers endpoint
 	r.Get("/api/brothers", handler.GetAllBrothers)
-	r.Get("/api/brothers/{rollCall}", handler.GetBrotherByRollCall)
+	//r.Get("/api/brothers/{rollCall}", handler.GetBrotherByRollCall)
+	r.Get("/api/brothers/{id}", handler.GetBrotherByID)
 	r.Post("/api/brothers", handler.AddBrother)
 	r.Put("/api/brothers", handler.UpdateBrother)
 	r.Delete("/api/brothers", handler.RemoveBrother)
@@ -78,8 +79,16 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     // TODO: events endpoint
 	r.Get("/api/events", handler.GetAllEvents)
 	r.Get("/api/events/{eventID}", handler.GetEventByEventID)
+	r.Get("/api/events/{eventID}/attendance", handler.GetEventAttendance)
+    r.Post("/api/events", handler.InsertEvent)
+    r.Put("/api/events", handler.UpdateEventByID)
 
     // TODO: attendance endpoints
+    r.Get("/api/attendance", handler.GetAllAttendanceRecords)
+    r.Get("/api/attendance/{eventID}", handler.GetAttendanceFromEventID)
+    r.Post("/api/attendance", handler.CreateAttendance)
+    r.Put("/api/attendance", handler.UpdateAttendanceRecord)
+    r.Delete("/api/attendance", handler.DeleteAttendanceRecord)
 
 	return r
 }

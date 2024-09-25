@@ -50,7 +50,7 @@ services:
     profiles: [test]
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: docker/backend/Dockerfile
     # Overwrite Dockerfile command with the test command
     command: ["go", "test", "./..."]
     env_file: dev.env
@@ -59,7 +59,7 @@ services:
         condition: service_healthy
    
   frontend:
-    profiles: [dev, test]
+    profiles: [dev]
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile

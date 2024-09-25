@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { Brother, columns } from "./columns"
-import { DataTable } from "./data-table"
+import { useState, useEffect } from 'react';
+import { Event, eventsTableColumns } from './columns'
+import { DataTable } from './data-table'
 
-
-const DemoPage: React.FC = () => {
-    const [data, setData] = useState<Brother[]>([]);
+const EventsTable: React.FC = () => {
+    const [data, setData] = useState<Event[]>([]);   
     const [loading, setLoading] = useState<boolean | null>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const endpoint = "http://localhost:8080/api/brothers"
-        // const endpoint = "http://localhost:3000/data"
+        const endpoint = "http://localhost:8080/api/events"
         const fetchData = async () => {
-             try {
-                setLoading(true)
+            try {
                 const response = await fetch(endpoint, {
                     mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json',
                     }
                 });
+                
                 if (!response.ok) {
-                  throw new Error('Network response was not ok');
+                    throw new Error('Network response was not ok');
                 }
-                const result: Brother[] = await response.json();
+
+                const result: Event[] = await response.json();
                 console.log('result:', result)
                 setData(result);
             } catch (e) {
                 setError((e as Error).message);
                 console.log('Error fetching data:', error);
-                throw error;
+                throw error
             } finally {
                 setLoading(false);
             }
         }
-        fetchData()
-       }, []);
+
+        fetchData();
+    }, []);
 
     if (loading) {
         return <div>Loading...</div>
@@ -46,8 +46,8 @@ const DemoPage: React.FC = () => {
     }
 
     return (
-        <DataTable columns={columns} data={data} />
-   )
+        <DataTable columns={eventsTableColumns} data={data} />
+    )
 }
 
-export default DemoPage
+export default EventsTable

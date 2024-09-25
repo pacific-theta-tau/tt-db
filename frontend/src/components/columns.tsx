@@ -1,3 +1,4 @@
+// columns.tsx: contains column definitions for table components
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
@@ -26,7 +27,7 @@ export type Brother = {
     phoneNumber: string
 }
 
-export const columns: ColumnDef<Brother>[] = [
+export const brothersTableColumns: ColumnDef<Brother>[] = [
   {
 
     accessorKey: "rollCall",
@@ -102,3 +103,66 @@ export const columns: ColumnDef<Brother>[] = [
     }
 ]
 
+export type Event = {
+    eventID: string
+    eventName: string
+    categoryName: string
+    eventLocation: string
+    eventDate: string
+}
+
+export const eventsTableColumns: ColumnDef<Event>[] = [
+  {
+    accessorKey: "eventID",
+    header: "Event ID",
+  },
+{
+    accessorKey: "eventName",
+    header: "Event Name",
+  },
+{
+    accessorKey: "categoryName",
+    header: "CategoryName",
+  },
+{
+    accessorKey: "eventLocation",
+    header: "Event Location",
+  },
+{
+    accessorKey: "eventDate",
+    header: "Event Date",
+  },
+  {
+      id: "actions",
+    cell: ({ row }) => {
+      const event = row.original
+ 
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(event.eventID)} >
+              Copy Event ID
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(event.eventName)} >
+                Copy Event Name
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem>
+                View  Event
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
+    }
+]

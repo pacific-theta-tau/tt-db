@@ -1,11 +1,16 @@
-import DemoPage from './components/page'
+import BrothersTable from './components/brothers-table'
+import EventsTable from './components/events-table'
 import './App.css'
 
 function App() {
   return (
     <>
         <div className="container mx-auto py-10">
-            <DemoPage />
+            <BrothersTable />
+        </div>
+
+        <div className="container mx-auto py-10">
+            <EventsTable />
         </div>
      </>
   )
