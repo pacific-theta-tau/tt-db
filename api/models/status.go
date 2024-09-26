@@ -5,7 +5,7 @@ import (
 )
 
 type Status struct {
-    Semester string `json:"semesterStatus"`
+    Semester string `json:"semesterLabel"`
     Status string `json:"status"`
 }
 
@@ -21,4 +21,30 @@ func CreateStatusFromRow(row *sql.Rows) (Status, error) {
 	}
 
 	return status, err
+}
+
+type BrotherStatus struct {
+    BrotherID   int `json:"brotherID"`
+    RollCall    string `json:"rollCall"`
+    FirstName   string `json:"firstName"`
+    LastName    string `jsong:"lastName"`
+    Status      string `json:"status"`
+    Semester    string `json:"semesterLabel"`
+}
+
+func CreateBrotherStatusFromRow(row *sql.Rows) (BrotherStatus, error) {
+    var brotherStatus BrotherStatus
+    err := row.Scan(
+        &brotherStatus.BrotherID,
+        &brotherStatus.RollCall,
+        &brotherStatus.FirstName,
+        &brotherStatus.LastName,
+        &brotherStatus.Status,
+        &brotherStatus.Semester,
+    )
+    if err != nil {
+        return BrotherStatus{}, err
+    }
+
+    return brotherStatus, err
 }
