@@ -65,7 +65,7 @@ VALUES
     ('Movies', 2, 'CTC', '3/14/24')
 ;
 
-INSERT INTO semester (semesterLabel) VALUES ('Spring 2023', 'Fall 2023', 'Spring 2024', 'Fall 2024');
+INSERT INTO semester (semesterLabel) VALUES ('Spring 2023'), ('Fall 2023'), ('Spring 2024'), ('Fall 2024');
 
 INSERT INTO brotherStatus (brotherID, semesterID, status)
 VALUES
