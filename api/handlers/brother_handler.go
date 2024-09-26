@@ -378,3 +378,55 @@ func (h *Handler) GetBrotherStatusHistory(w http.ResponseWriter, r *http.Request
     }
 	w.WriteHeader(http.StatusOK)
 }
+
+// POST /api/brothers/{id}/statuses
+func (h *Handler) CreateBrotherStatus(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    // Expected request body data
+    var requestBody struct {
+        BrotherID   string `json:"brotherID"`,
+        SemesterID  string `json:"semesterID"`,
+        Status      string `json:"status"`
+    }
+    // Parse body
+    err := json.NewDecoder(r.Body).Decode(&requestBody)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while parsing request body data: %s", err)
+        log.Println(errMsg)
+        http.Error(w, errMsg, httr.StatusInternalServerError)
+        return
+    }
+    // Validate received data
+    validate := validator.New()
+    if err != validate.Struct(requestBody); err != nil {
+        errMsg := fmt.Sprintf("Invalid Input: %s", err)
+        log.Println(errMsg)
+        http.error(w, errMsg, http.StatusBadRequest)
+    }
+
+    // Create new row for brotherStatus
+    query := `
+    INSERT INTO brotherStatus (brotherID, semesterID, status)
+    VALUES ($1, $2, $3)
+    `
+    _, err := h.db.QueryContext(
+        ctx,
+        query,
+        requestBody.BrotherID,
+        requestBody.SemesterID,
+        requestBody.Status
+    )
+
+    if err != nil {
+        errMsg := fmt.Sprintf("Query error: %s", err)
+        log.Println(errMsg)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Created Brother Status successfully"))
+}

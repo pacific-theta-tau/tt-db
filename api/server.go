@@ -80,6 +80,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 
     // brotherStatus endpoints
     r.Get("/api/brothers/{id}/statuses", handler.GetBrotherStatusHistory)
+    r.Post("/api/brothers/{id}/statuses", handler.CreateBrotherStatus)
 
     // events endpoint
 	r.Get("/api/events", handler.GetAllEvents)
