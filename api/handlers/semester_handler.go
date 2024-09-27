@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"database/sql"
+	//"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,60 +11,39 @@ import (
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
 
-// GET /semesters?semester=[optional]
+// Get all semester labels. E.g.: "Spring 2024"
+/* GET /semesters?semester=[optional] */
 func (h *Handler) GetAllSemesterStatuses(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
-    semester := r.URL.Query().Get("semester")
 
-    // Query for all brother statuses
-    query := `
-    SELECT b.brotherID, b.rollCall, b.firstName, b.lastName, bs.status, s.semesterLabel
-    FROM brotherStatus bs
-    JOIN brothers b ON b.brotherID = bs.brotherID
-    JOIN semester s ON s.semesterID = bs.semesterID
-    `
-    var rows *sql.Rows
-    var err error
-    if semester == "" {
-        // Query without filter
-        rows, err = h.db.QueryContext(ctx, query)
-    } else {
-        // query filtering by semester
-        query += " WHERE semesterLabel = $1"
-        rows, err = h.db.QueryContext(
-            ctx,
-            query,
-            semester,
-        )
-    } 
-
-    // Error handling query
-    fmt.Printf("Querying for all semester statuses:\n%s\n", query)
+    query := `SELECT semesterID, semesterLabel FROM semester`
+    rows, err := h.db.QueryContext(ctx, query)
+    log.Printf("Querying for semester labels:\n%s", query)
     if err != nil {
-        errMsg := fmt.Sprintf("Error while querying for all brother statuses: %s", err.Error())
+        errMsg := fmt.Sprintf("Error while querying for semester data: `%s`\n", err.Error())
         log.Println(errMsg)
         http.Error(w, errMsg, http.StatusInternalServerError)
         return
     }
 
-    log.Println("Parsing brother objects\n")
-    // Parse query rows
-    var brotherStatuses []*models.BrotherStatus
-    for rows.Next(){
-        brotherStatus, err := models.CreateBrotherStatusFromRow(rows)
-		if err != nil {
-            errMsg := fmt.Sprintf("Error while parsing brotherStatus query: '%s'", err.Error())
-            log.Println(errMsg)
+    var semesterLabels []*models.Semester
+    for rows.Next() {
+        semester, err := models.CreateSemesterFromRow(rows)
+        if err != nil {
+            errMsg := fmt.Sprintf("Error creating Brother object from row: '%s'\n", err.Error())
+			log.Println(errMsg)
 			http.Error(w, errMsg, http.StatusInternalServerError)
 			return
-        }
-        brotherStatuses = append(brotherStatuses, &brotherStatus)
+		}
+
+        semesterLabels = append(semesterLabels, &semester)
     }
+    log.Println("Parsed semester data successfully")
 
     log.Println("Building response\n")
     // Build response
-    if err := json.NewEncoder(w).Encode(brotherStatuses); err != nil {
+    if err := json.NewEncoder(w).Encode(semesterLabels); err != nil {
         errMsg := fmt.Sprintf("Erro while encoding response: '%s'", err.Error())
         log.Println(errMsg)
         http.Error(w, errMsg, http.StatusInternalServerError)
@@ -81,20 +60,20 @@ func (h *Handler) CreateSemesterLabel(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
 
-    var semester struct {
-        semester    string `json:"semester"`
+    var requestBody struct {
+        Semester    string `json:"semester"`
     }
-    err := json.NewDecoder(r.Body).Decode(&semester)
+    err := json.NewDecoder(r.Body).Decode(&requestBody)
     if err != nil {
         errMsg := fmt.Sprintf("Error while parsing request body:\n%s\n", err.Error())
         log.Println(err)
         http.Error(w, errMsg, http.StatusInternalServerError)
     }
-    log.Printf("request body data: `%s%`", semester)
+    log.Printf("request body data: `%v%`", requestBody)
 
     query := `INSERT INTO semester (semesterLabel) VALUES ($1)`
     log.Printf("Query insert:\n%s\n", query)
-    _, err = h.db.QueryContext(ctx, query, semester.semester)
+    _, err = h.db.QueryContext(ctx, query, requestBody.Semester)
     if err != nil {
         errMsg := fmt.Sprintf("Query error:\n\t'%s'\n", err.Error())
         log.Println(errMsg)
