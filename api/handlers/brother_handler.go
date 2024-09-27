@@ -20,6 +20,7 @@ import (
 const brothers_table = "brothers"
 
 // Helper function to scan SQL row and create new Brother instance
+// TODO: move this to models/brother.go
 func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
 	var brother models.Brother
 	err := row.Scan(
@@ -75,7 +76,6 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	// Build HTTP response
 	out, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
-		// log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -85,7 +85,7 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(out)
 
 	if err != nil {
-        log.Printf("Error while creating response: %v", err)
+        log.Printf("Error while creating response: %v", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -97,7 +97,7 @@ func (h *Handler) GetBrotherByID(w http.ResponseWriter, r *http.Request) {
     brotherIDStr := chi.URLParam(r, "id")
     brotherID, err := strconv.Atoi(brotherIDStr)
     if err != nil {
-        log.Printf("Invalid brother ID: %v", err)
+        log.Printf("Invalid brother ID: %v", err.Error())
         http.Error(w, "Invalid event ID", http.StatusBadRequest)
         return
     }
@@ -109,7 +109,7 @@ func (h *Handler) GetBrotherByID(w http.ResponseWriter, r *http.Request) {
     row, err := h.db.QueryContext(ctx, query, brotherID)
 	fmt.Printf("row", row)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -119,7 +119,7 @@ func (h *Handler) GetBrotherByID(w http.ResponseWriter, r *http.Request) {
 	for row.Next() {
 		brother, err = createBrotherFromRow(row)
 		if err != nil {
-			log.Println("Error!", err)
+			log.Println("Error!", err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -133,7 +133,7 @@ func (h *Handler) GetBrotherByID(w http.ResponseWriter, r *http.Request) {
 	// Build HTTP response
 	out, err := json.MarshalIndent(brother, "", "\t")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err.Error())
 		return
 	}
 
@@ -232,14 +232,14 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-        log.Printf("Error reading request body %s", err)
+        log.Printf("Error reading request body %s", err.Error())
 		http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		return
 	}
 
 	var requestBody map[string]interface{}
 	if err = json.Unmarshal(body, &requestBody); err != nil {
-        log.Printf("Error decoding JSON: %s", err)
+        log.Printf("Error decoding JSON: %s", err.Error())
 		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
 		return
 	}
@@ -247,7 +247,7 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 	// rollCall, ok := requestBody["rollCall"]
 	brotherID, ok := requestBody["brotherID"]
 	if !ok {
-        log.Printf("Key not found in request body: %s", err)
+        log.Printf("Key not found in request body: %s", err.Error())
 		http.Error(w, "Key not found in request body", http.StatusBadRequest)
 		return
 	}
@@ -277,11 +277,164 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 
 	_, err = h.db.ExecContext(ctx, query, brotherID)
 	if err != nil {
-        log.Printf("Error while querying `%s`: %s", query, err)
+        log.Printf("Error while querying `%s`: %s", query, err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Updated brother with brotherID %s successfully", brotherID)))
+}
+
+
+// /api/brothers/{id}/statuses
+func (h *Handler) GetBrotherStatusHistory(w http.ResponseWriter, r *http.Request) {
+    log.Println("\n\nCalled get brother status history")
+    brotherIDStr := chi.URLParam(r, "id")
+    brotherID, err := strconv.Atoi(brotherIDStr)
+    if err != nil {
+        log.Printf("Invalid brother ID: %v", err.Error())
+        http.Error(w, "Invalid event ID", http.StatusBadRequest)
+        return
+    }
+
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    query := `
+    SELECT
+        brotherID, rollCall, firstName, lastName, status, className, email, phoneNumber, badStanding
+    FROM brothers b
+    WHERE b.brotherID = $1
+    `
+    log.Printf("Querying for brother:\n%s", query)
+    row, err := h.db.QueryContext(ctx, query, brotherID)
+	if err != nil {
+        errMsg := fmt.Sprintf("Error while querying for brother data: `%s`\n", err.Error())
+        log.Println(errMsg)
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
+    defer row.Close()
+
+	var brother models.Brother
+	for row.Next() {
+		brother, err = createBrotherFromRow(row)
+		if err != nil {
+            errMsg := fmt.Sprintf("Error creating Brother object from row: '%s'\n", err.Error())
+			log.Println(errMsg)
+			http.Error(w, errMsg, http.StatusInternalServerError)
+			return
+		}
+	}
+    if brother.BrotherID == 0 {
+        http.Error(w, "Brother ID %d not found", http.StatusBadRequest)
+        log.Printf("Brother ID %d not found", brotherID)
+        return
+    }
+    log.Println("Parsed brother data successfully\n")
+
+    // Query for status
+    query = `
+    SELECT s.semesterLabel, bs.status
+    FROM brotherStatus bs
+    JOIN semester s ON s.semesterID = bs.semesterID
+    WHERE brotherID = $1
+    `
+    log.Printf("Querying for status and semester:\n%s\n", query)
+    row, err = h.db.QueryContext(ctx, query, brotherID)
+    if err != nil {
+		fmt.Println(err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var brotherStatuses []*models.Status
+	for row.Next() {
+        status, err := models.CreateStatusFromRow(row)
+		if err != nil {
+            errMsg := fmt.Sprintf("Error creating Status object from row: %s", err.Error())
+			log.Println(errMsg)
+			http.Error(w, errMsg, http.StatusInternalServerError)
+			return
+		}
+        brotherStatuses= append(brotherStatuses, &status)
+	}
+    log.Println("Parsed semesterLabel and status successfully\n")
+    
+    // Write response
+    response := map[string]interface{}{
+        "brotherID": brother.BrotherID,
+        "firstName": brother.FirstName,
+        "lastName": brother.LastName,
+        "rollCall": brother.RollCall,
+        "class": brother.Class,
+        "statuses": brotherStatuses,
+    }
+    log.Printf("Response: %v\n", response)
+
+    w.Header().Set("Content-Type", "application/json")
+    if err = json.NewEncoder(w).Encode(response); err != nil {
+        errMsg := fmt.Sprintf("Error while encoding response: %s", err.Error())
+        log.Println(errMsg)
+        http.Error(w, errMsg, http.StatusInternalServerError)
+        return
+    }
+	w.WriteHeader(http.StatusOK)
+}
+
+// POST /api/brothers/{id}/statuses
+func (h *Handler) CreateBrotherStatus(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    // Expected request body data
+    var requestBody struct {
+        BrotherID   int `json:"brotherID"`
+        SemesterID  int `json:"semesterID"`
+        Status      string `json:"status"`
+    }
+    // Parse body
+    err := json.NewDecoder(r.Body).Decode(&requestBody)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while parsing request body data: %s", err.Error())
+        log.Println(errMsg)
+        http.Error(w, errMsg, http.StatusInternalServerError)
+        return
+    }
+    // Validate received data
+    validate := validator.New()
+    if err := validate.Struct(requestBody); err != nil {
+        errMsg := fmt.Sprintf("Invalid Input: %s", err.Error())
+        log.Println(errMsg)
+        http.Error(w, errMsg, http.StatusBadRequest)
+        return
+    }
+
+    // Create new row for brotherStatus
+    query := `
+    INSERT INTO brotherStatus (brotherID, semesterID, status)
+    VALUES ($1, $2, $3)
+    `
+    log.Printf("Insert query:\n%s\n", query)
+    _, err = h.db.QueryContext(
+        ctx,
+        query,
+        requestBody.BrotherID,
+        requestBody.SemesterID,
+        requestBody.Status,
+    )
+
+    if err != nil {
+        errMsg := fmt.Sprintf("Query error:\n\t'%s'\n", err.Error())
+        log.Println(errMsg)
+        log.Println("Sending HTTP error response\n")
+		http.Error(w, errMsg, http.StatusInternalServerError)
+        log.Println("After sending error response\n")
+		return
+	}
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Created Brother Status successfully"))
 }
