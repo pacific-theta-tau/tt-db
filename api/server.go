@@ -79,6 +79,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	r.Delete("/api/brothers", handler.RemoveBrother)
 
     // brotherStatus endpoints
+    r.Get("/api/statuses", handler.GetAllBrotherStatuses)
     r.Get("/api/brothers/{id}/statuses", handler.GetBrotherStatusHistory)
     r.Post("/api/brothers/{id}/statuses", handler.CreateBrotherStatus)
 
@@ -97,7 +98,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     r.Delete("/api/attendance", handler.DeleteAttendanceRecord)
 
     // semester endpoints
-    r.Get("/api/semesters", handler.GetAllSemesterStatuses)
+    r.Get("/api/semesters", handler.GetAllSemesterLabels)
     r.Post("/api/semesters", handler.CreateSemesterLabel)
 
 	return r

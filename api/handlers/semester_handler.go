@@ -13,7 +13,7 @@ import (
 
 // Get all semester labels. E.g.: "Spring 2024"
 /* GET /semesters?semester=[optional] */
-func (h *Handler) GetAllSemesterStatuses(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetAllSemesterLabels(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
