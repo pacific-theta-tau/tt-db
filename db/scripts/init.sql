@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS attendance(
 
 CREATE TABLE IF NOT EXISTS semester(
     semesterID SERIAL PRIMARY KEY,
-    semesterLabel VARCHAR(20)
+    semesterLabel VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS brotherStatus(
