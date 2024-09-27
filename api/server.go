@@ -96,5 +96,8 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     r.Put("/api/attendance", handler.UpdateAttendanceRecord)
     r.Delete("/api/attendance", handler.DeleteAttendanceRecord)
 
+    // semester endpoints
+    r.Get("/api/semesters", handler.GetAllSemesterStatuses)
+
 	return r
 }
