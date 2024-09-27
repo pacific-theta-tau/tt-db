@@ -11,7 +11,7 @@ import (
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
 
-// /semesters/
+// GET /semesters?semester=[optional]
 func (h *Handler) GetAllSemesterStatuses(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -73,3 +73,36 @@ func (h *Handler) GetAllSemesterStatuses(w http.ResponseWriter, r *http.Request)
     w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }
+
+
+// Create new semester label. E.g.: "Fall 2023", "Spring 2024"
+/* endpoint: POST /api/semesters */
+func (h *Handler) CreateSemesterLabel(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    var semester struct {
+        semester    string `json:"semester"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&semester)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while parsing request body:\n%s\n", err.Error())
+        log.Println(err)
+        http.Error(w, errMsg, http.StatusInternalServerError)
+    }
+    log.Printf("request body data: `%s%`", semester)
+
+    query := `INSERT INTO semester (semesterLabel) VALUES ($1)`
+    log.Printf("Query insert:\n%s\n", query)
+    _, err = h.db.QueryContext(ctx, query, semester.semester)
+    if err != nil {
+        errMsg := fmt.Sprintf("Query error:\n\t'%s'\n", err.Error())
+        log.Println(errMsg)
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Created new semester label successfully!"))
+} 

@@ -98,6 +98,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 
     // semester endpoints
     r.Get("/api/semesters", handler.GetAllSemesterStatuses)
+    r.Post("/api/semesters", handler.CreateSemesterLabel)
 
 	return r
 }
