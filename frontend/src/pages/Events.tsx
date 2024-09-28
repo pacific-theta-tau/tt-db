@@ -1,9 +1,12 @@
 import React from 'react';
+import EventsTable from '../components/events-table'
 
 
 const EventsPage: React.FC = () => {
     return (
-        <h1>Events Page</h1>
+        <div>
+            <EventsTable />
+        </div>
     );
 };
 

@@ -1,10 +1,12 @@
 import React from 'react';
+import BrothersTable from '../components/brothers-table'
 
+//const test: React.ForwardRefExoticComponent<LinkProps & ReactRefAttributes<HTMLAnchorElement>>
 
 const BrothersPage: React.FC = () => {
     return (
         <div>
-            <h1>Brother Page</h1>
+            <BrothersTable />
         </div>
     );
 };
