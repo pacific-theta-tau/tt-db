@@ -1,8 +1,10 @@
 // columns.tsx: contains column definitions for table components
 "use client"
 
+import React from 'react'
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
+import { Link } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,10 +16,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Brother = {
-    id: string
+    brotherID: string
     rollCall: number 
     firstName: string
     lastName: string
@@ -29,42 +32,30 @@ export type Brother = {
 
 export const brothersTableColumns: ColumnDef<Brother>[] = [
   {
-
     accessorKey: "rollCall",
     header: "Roll Call",
   },
   {
-
     accessorKey: "firstName",
     header: "First Name",
   },
-
   {
-
     accessorKey: "lastName",
     header: "Last Name",
   },
     {
-
     accessorKey: "status",
     header: "Status",
   },
-
-
   {
-
     accessorKey: "className",
     header: "Class Name",
   },
-
   {
-
     accessorKey: "email",
     header: "Email",
   },
-
   {
-
     accessorKey: "phoneNumber",
     header: "Phone Number",
   },
@@ -84,7 +75,7 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(brother.id)} >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(brother.brotherID)} >
               Copy Brother ID
             </DropdownMenuItem>
             <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
@@ -112,26 +103,36 @@ export type Event = {
 }
 
 export const eventsTableColumns: ColumnDef<Event>[] = [
-  {
-    accessorKey: "eventID",
-    header: "Event ID",
-  },
-{
-    accessorKey: "eventName",
-    header: "Event Name",
-  },
-{
-    accessorKey: "categoryName",
-    header: "CategoryName",
-  },
-{
-    accessorKey: "eventLocation",
-    header: "Event Location",
-  },
-{
-    accessorKey: "eventDate",
-    header: "Event Date",
-  },
+    {
+        accessorKey: "eventID",
+         header: "Event ID",
+    },
+    {
+        accessorKey: "eventName",
+        header: "Event Name",
+        cell: ({ row }) => {
+            const event = row.original
+            return (
+                <Link to={`/events/${event.eventID}/attendance`}>
+                    <Button variant="ghost">
+                        {event.eventName}
+                    </Button>
+                </Link>
+            )
+        },
+    },
+    {
+        accessorKey: "categoryName",
+        header: "Chair",
+    },
+    {
+        accessorKey: "eventLocation",
+        header: "Event Location",
+    },
+    {
+        accessorKey: "eventDate",
+        header: "Event Date",
+    },
   {
       id: "actions",
     cell: ({ row }) => {
@@ -158,7 +159,9 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
             <DropdownMenuSeparator />
 
             <DropdownMenuItem>
-                View  Event
+                <Link to={`events/${event.eventID}/attendance`}>
+                    View Event Attendance
+                </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
