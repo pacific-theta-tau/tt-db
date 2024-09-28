@@ -1,19 +1,22 @@
-import BrothersTable from './components/brothers-table'
-import EventsTable from './components/events-table'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+//import BrothersTable from './components/brothers-table'
+//import EventsTable from './components/events-table'
+import HomePage from './pages/Home'
+import BrothersPage from './pages/Brothers.tsx'
+import EventsPage from './pages/Events.tsx'
 import './App.css'
 
-function App() {
-  return (
-    <>
-        <div className="container mx-auto py-10">
-            <BrothersTable />
-        </div>
-
-        <div className="container mx-auto py-10">
-            <EventsTable />
-        </div>
-     </>
-  )
+const App: React.FC = () => {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/brothers" element={<BrothersPage />} />
+                <Route path="/events" element={<EventsPage />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App
