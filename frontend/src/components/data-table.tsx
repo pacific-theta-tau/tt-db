@@ -10,7 +10,15 @@ import {
     getPaginationRowModel,
     useReactTable,
     getSortedRowModel,
+    VisibilityState,
 } from "@tanstack/react-table"
+
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 import {
     Table,
@@ -32,21 +40,55 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [sorting, setSorting] = React.useState<SortingState>([])
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    state: {
-      sorting,
-    },
-  })
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        state: {
+            sorting,
+            columnVisibility,
+        },
+    })
 
   return (
   <div>
+    <div className="flex items-center py-4">
+        <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter(
+                    (column) => column.getCanHide()
+                  )
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    )
+                  })}
+              </DropdownMenuContent>
+        </DropdownMenu>
+    </div>
+
     <div className="rounded-md border">
       <Table>
         <TableHeader>
@@ -91,7 +133,7 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-    <div>
+        <div>
         <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
