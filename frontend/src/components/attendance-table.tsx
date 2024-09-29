@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { BrotherStatus, attendanceTableColumns } from './columns'
+import React, { useState, useEffect } from 'react';
+import { EventAttendance, eventAttendanceTableColumns } from './columns'
 import { DataTable } from './data-table'
 
 const AttendanceTable: React.FC = () => {
-    const [data, setData] = useState<BrotherStatus[]>([]);   
+    const [data, setData] = useState<EventAttendance[]>([]);   
     const [loading, setLoading] = useState<boolean | null>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +22,7 @@ const AttendanceTable: React.FC = () => {
                     throw new Error('Network response was not ok');
                 }
 
-                const result: BrotherStatus[] = await response.json();
+                const result: EventAttendance[] = await response.json();
                 console.log('result:', result)
                 setData(result);
             } catch (e) {
@@ -46,7 +46,7 @@ const AttendanceTable: React.FC = () => {
     }
 
     return (
-        <DataTable columns={attendanceTableColumns} data={data} />
+        <DataTable columns={ eventAttendanceTableColumns } data={data} />
     )
 }
 
