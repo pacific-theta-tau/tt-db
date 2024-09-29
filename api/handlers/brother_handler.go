@@ -263,6 +263,7 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 		"email",
 		"phoneNumber",
 		"badStanding",
+        "rollCall",
 	}
 	for _, column := range columns {
 		newColumnValue, ok := requestBody[column]
