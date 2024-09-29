@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,6 +15,11 @@ import {
 
 
 const NavBar: React.FC = () => {
+    const location = useLocation()
+    if (location.pathname === "/login" || location.pathname.startsWith("/404")) {
+        return null
+    }
+
     return (
             <NavigationMenu orientation="vertical">
                 <NavigationMenuList className="flex-col items-start">
