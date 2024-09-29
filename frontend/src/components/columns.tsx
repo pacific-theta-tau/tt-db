@@ -35,7 +35,17 @@ export type Brother = {
 export const brothersTableColumns: ColumnDef<Brother>[] = [
   {
     accessorKey: "rollCall",
-    header: "Roll Call",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+            Roll Call
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "firstName",
@@ -54,7 +64,17 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
   },
   {
     accessorKey: "lastName",
-    header: "Last Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+            Last Name 
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
     {
     accessorKey: "status",
