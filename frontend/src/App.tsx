@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home'
 import BrothersPage from './pages/Brothers'
 import EventsPage from './pages/Events'
+import EventAttendancePage from './pages/EventAttendance'
 import NavBar from './components/navbar'
 import './App.css'
 
@@ -20,6 +21,7 @@ const App: React.FC = () => {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/brothers" element={<BrothersPage />} />
                         <Route path="/events" element={<EventsPage />} />
+                        <Route path="/events/:eventID/attendance" element={<EventAttendancePage />} />
                     </Routes>
                 </div>
             </div>
