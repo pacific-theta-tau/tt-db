@@ -71,6 +71,6 @@ INSERT INTO brotherStatus (brotherID, semesterID, status)
 VALUES
     (1, 1, 'Active'),
     (1, 2, 'Co-op'),
-    (1, 3,' Active'),
+    (1, 3, 'Active'),
     (1, 4, 'Alumni')
 ;
