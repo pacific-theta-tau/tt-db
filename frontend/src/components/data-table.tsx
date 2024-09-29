@@ -11,6 +11,9 @@ import {
     useReactTable,
     getSortedRowModel,
     VisibilityState,
+    getFilteredRowModel,
+    Row,
+    FilterFn
 } from "@tanstack/react-table"
 
 import {
@@ -31,6 +34,19 @@ import {
 
 import { Button } from "@/components/ui/button"
 
+import { Input } from "@/components/ui/input"
+
+
+// Custom global filter function to allow filtering for both numbers and strings
+const customFilterFn: FilterFn<any> = (row: Row<any>, columnId: string, filterValue: string) => {
+    const search = filterValue.toLowerCase();
+    let value = row.getValue(columnId) as string;
+
+    if (typeof value === 'number') value = String(value);
+
+    return value?.toLowerCase().includes(search);
+};
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -42,6 +58,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [sorting, setSorting] = React.useState<SortingState>([])
+    const [globalFilter, setGlobalFilter] = React.useState<any>("")
+
     const table = useReactTable({
         data,
         columns,
@@ -50,15 +68,28 @@ export function DataTable<TData, TValue>({
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
+        onGlobalFilterChange: setGlobalFilter,
+        getFilteredRowModel: getFilteredRowModel(),
+        
+        globalFilterFn: customFilterFn,
         state: {
             sorting,
             columnVisibility,
+            globalFilter,
         },
     })
 
   return (
   <div>
     <div className="flex items-center py-4">
+      <div>
+        <Input
+          placeholder="Search..."
+          value={ globalFilter }
+          onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+          className="max-w-sm"
+        />
+      </div>
         <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
