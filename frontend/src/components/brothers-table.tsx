@@ -10,7 +10,6 @@ const BrothersTable: React.FC = () => {
 
     useEffect(() => {
         const endpoint = "http://localhost:8080/api/brothers"
-        // const endpoint = "http://localhost:3000/data"
         const fetchData = async () => {
              try {
                 setLoading(true)
