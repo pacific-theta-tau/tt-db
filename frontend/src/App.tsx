@@ -10,27 +10,31 @@ import NotFoundPage from './pages/NotFound'
 import NavBar from './components/navbar'
 import './App.css'
 
+import { ThemeProvider } from "@/components/theme-provider"
+
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
-            <div className="flex">
-                <div>
-                    <NavBar />
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <BrowserRouter>
+                <div className="flex">
+                    <div>
+                        <NavBar />
+                    </div>
+                    <div className="flex-grow p-8">
+                        <Routes>
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/brothers" element={<BrothersPage />} />
+                            <Route path="/events" element={<EventsPage />} />
+                            <Route path="/events/:eventID/attendance" element={<EventAttendancePage />} />
+                            <Route path="/404" element={<NotFoundPage />} />
+                            <Route path="*" element={<Navigate replace to ="/404" />} />
+                        </Routes>
+                    </div>
                 </div>
-                <div className="flex-grow p-8">
-                    <Routes>
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/brothers" element={<BrothersPage />} />
-                        <Route path="/events" element={<EventsPage />} />
-                        <Route path="/events/:eventID/attendance" element={<EventAttendancePage />} />
-                        <Route path="/404" element={<NotFoundPage />} />
-                        <Route path="*" element={<Navigate replace to ="/404" />} />
-                    </Routes>
-                </div>
-            </div>
-        </BrowserRouter>
+            </BrowserRouter>
+        </ThemeProvider>
     );
 }
 

@@ -13,6 +13,8 @@ import {
   navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu"
 
+import ThemeToggle from './theme-toggle'
+
 
 const NavBar: React.FC = () => {
     const location = useLocation()
@@ -39,6 +41,10 @@ const NavBar: React.FC = () => {
                         <Link to="/events">
                         <NavigationMenuLink className={navigationMenuTriggerStyle()}>Events</NavigationMenuLink>
                         </Link>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                        <ThemeToggle />
                     </NavigationMenuItem>
 
                 </NavigationMenuList>
