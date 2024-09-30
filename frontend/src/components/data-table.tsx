@@ -37,6 +37,7 @@ import {
 import { Button } from "@/components/ui/button"
 
 import { Input } from "@/components/ui/input"
+import AddRowSheet from './add-row-sheet'
 
 
 // Custom global filter function to allow filtering for both numbers and strings
@@ -120,12 +121,8 @@ export function DataTable<TData, TValue>({
                   })}
               </DropdownMenuContent>
         </DropdownMenu>
-        <Button
-            className="ml-2"
-            onClick={() => console.log("Add row!")}
-        >
-            <Plus className="mr-2 h-4 w-4" /> Add row
-        </Button>
+
+        <AddRowSheet />
     </div>
 
     <div className="rounded-md border">
