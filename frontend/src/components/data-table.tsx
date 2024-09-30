@@ -16,6 +16,8 @@ import {
     FilterFn
 } from "@tanstack/react-table"
 
+import { Plus } from 'lucide-react'
+
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -82,14 +84,14 @@ export function DataTable<TData, TValue>({
   return (
   <div>
     <div className="flex items-center py-4">
-      <div>
-        <Input
-          placeholder="Search..."
-          value={ globalFilter }
-          onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-          className="max-w-sm"
-        />
-      </div>
+        <div>
+            <Input
+                placeholder="Search..."
+                value={ globalFilter }
+                onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+                className="max-w-sm"
+            />
+        </div>
         <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
@@ -118,6 +120,12 @@ export function DataTable<TData, TValue>({
                   })}
               </DropdownMenuContent>
         </DropdownMenu>
+        <Button
+            className="ml-2"
+            onClick={() => console.log("Add row!")}
+        >
+            <Plus className="mr-2 h-4 w-4" /> Add row
+        </Button>
     </div>
 
     <div className="rounded-md border">
