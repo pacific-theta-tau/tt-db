@@ -6,8 +6,14 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useToast } from "@/hooks/use-toast"
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -17,7 +23,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+
+import { Button } from "@/components/ui/button"
+
 import { Input } from "@/components/ui/input"
+
+const statuses: readonly [string, ...string[]] = [
+    'Active',
+    'Pre-Alumnus',
+    'Alumnus',
+    'Co-op',
+    'Transferred',
+    'Expelled',
+]
 
 const formSchema = z.object({
     firstName: z.string({
@@ -26,6 +44,15 @@ const formSchema = z.object({
     lastName: z.string({
         required_error: "You must provide a last name"
     }),
+    rollCall: z.number({
+        required_error: "You must provide a roll call"
+    }),
+    status: z.enum(statuses, {
+                required_error: "You need to select status.",
+            }),
+    className: z.string(),
+    email: z.string(),
+    phoneNumber: z.string(),
 })
 
 export function BrotherForm() {
@@ -33,8 +60,8 @@ export function BrotherForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      email: "",
+      phoneNumber: "",
     },
   })
 
@@ -59,12 +86,12 @@ export function BrotherForm() {
           name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>First Name</FormLabel>
+              <FormLabel>First Name *</FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+                {}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -75,7 +102,7 @@ export function BrotherForm() {
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Last Name</FormLabel>
+              <FormLabel>Last Name *</FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} />
               </FormControl>
@@ -83,6 +110,90 @@ export function BrotherForm() {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="rollCall"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Roll Call *</FormLabel>
+              <FormControl>
+                <Input
+                    type="number" {...field}
+                    onChange={event => field.onChange(+event.target.value)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status *</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                          <SelectTrigger className="w-[180px]">
+                              <SelectValue placeholder="Select Status" />
+                          </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                        {statuses.map((status) => (
+                          <SelectItem value={status}>{status}</SelectItem>
+                        ))}
+                  </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+ 
+         <FormField
+          control={form.control}
+          name="className"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Class</FormLabel>
+              <FormControl>
+                <Input placeholder="" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+ 
+         <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+ 
+         <FormField
+          control={form.control}
+          name="phoneNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input placeholder="" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+
+
         <Button type="submit">Submit</Button>
       </form>
     </Form>

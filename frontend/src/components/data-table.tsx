@@ -37,7 +37,7 @@ import {
 import { Button } from "@/components/ui/button"
 
 import { Input } from "@/components/ui/input"
-import AddRowSheet from './add-row-sheet'
+import AddRowSheet from './sheet/add-row-sheet'
 
 
 // Custom global filter function to allow filtering for both numbers and strings

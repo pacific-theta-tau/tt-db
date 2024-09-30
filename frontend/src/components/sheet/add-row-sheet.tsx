@@ -24,9 +24,9 @@ export default function AddRowSheet({ fields }: FieldComponentProps<TProps>) {
       </SheetTrigger>
       <SheetContent className="w-[400px] sm:w-[540px]">
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
+          <SheetTitle>Create new Brother record</SheetTitle>
           <SheetDescription>
-            Add brother information below then click "Done" to create new record.
+            Add the information below then click "Submit" to create new record.
           </SheetDescription>
         </SheetHeader>
             <BrotherForm />
