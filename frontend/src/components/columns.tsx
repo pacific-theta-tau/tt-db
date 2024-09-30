@@ -6,7 +6,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import { Link } from "react-router-dom"
 
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,6 +40,7 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="px-0"
         >
             Roll Call
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -55,6 +56,7 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="px-0"
         >
           First Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -69,6 +71,7 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="px-0"
         >
             Last Name 
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -147,7 +150,7 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
             const event = row.original
             return (
                 <Link to={`/events/${event.eventID}/attendance`}>
-                    <Button variant="ghost">
+                    <Button variant="link" className="px-0">
                         {event.eventName}
                     </Button>
                 </Link>
