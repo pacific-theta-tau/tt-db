@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Brother, brothersTableColumns } from "./columns"
 import { DataTable } from "./data-table"
+import { Skeleton } from "@/components/ui/skeleton"
 
 
 const BrothersTable: React.FC = () => {
@@ -30,6 +31,8 @@ const BrothersTable: React.FC = () => {
                 console.log('Error fetching data:', error);
                 throw error;
             } finally {
+                /* uncomment line below to test skeleton during loading */
+                // await new Promise(f => setTimeout(f, 3000));
                 setLoading(false);
             }
         }
@@ -37,7 +40,13 @@ const BrothersTable: React.FC = () => {
        }, []);
 
     if (loading) {
-        return <div>Loading...</div>
+        // Load dummy empty data and skeleton
+        const loadingData = Array(5).fill({}) 
+        const loadingTableColumns = brothersTableColumns.map((column) => ({
+            ...column,
+            cell: () => <Skeleton className="h-12"/>,
+          }))
+        return <DataTable columns={ loadingTableColumns } data={loadingData} />
     }
 
     if (error) {
