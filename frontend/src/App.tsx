@@ -11,11 +11,13 @@ import NavBar from './components/navbar'
 import './App.css'
 
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 
 
 const App: React.FC = () => {
     return (
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <Toaster />
             <BrowserRouter>
                 <div className="flex">
                     <div>
