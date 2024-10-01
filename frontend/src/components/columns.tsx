@@ -318,3 +318,23 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
         },
     }
 ]
+
+// Used for search table in Attendance Table's "add row" sheet
+export const rollCallSearchColumns: ColumnDef<Brother>[] = [
+    {
+        accessorKey: 'rollCall',
+        header: 'Roll Call',
+    },
+    {
+        accessorKey: 'firstName',
+         header: 'First Name',
+    },
+    {
+        accessorKey: 'lastName',
+        header: 'Last Name',
+    },
+    {
+        accessorKey: 'class',
+        header: 'Class',
+    }
+]
