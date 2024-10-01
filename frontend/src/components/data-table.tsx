@@ -16,8 +16,6 @@ import {
     FilterFn
 } from "@tanstack/react-table"
 
-import { Plus } from 'lucide-react'
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,

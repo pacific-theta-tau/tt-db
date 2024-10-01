@@ -1,8 +1,6 @@
 // add-row-sheet.tsx: Sheet+form that opens when "Add row" button is clicked in data table pages
 import React from 'react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Sheet,
   SheetClose,
@@ -13,9 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-
-import FieldComponent, { FieldComponentProps } from './fields'
-import { BrotherForm } from './row-form'
 
 
 const AddRowSheet: React.FC<{
