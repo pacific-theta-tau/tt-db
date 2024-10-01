@@ -56,7 +56,16 @@ const BrothersTable: React.FC = () => {
     }
 
     return (
-        <DataTable columns={brothersTableColumns} data={data} AddSheet={() => <AddRowSheet title="" description="" FormType={<BrotherForm />}/>} />
+        <DataTable
+            columns={brothersTableColumns}
+            data={data}
+            AddSheet={
+                () => <AddRowSheet
+                        title=""
+                        description=""
+                        FormType={<BrotherForm />}
+                      />}
+        />
    )
 }
 
