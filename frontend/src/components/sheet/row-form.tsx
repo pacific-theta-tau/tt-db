@@ -66,16 +66,39 @@ export function BrotherForm() {
   })
 
   const { toast } = useToast()
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data)
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    const endpoint = "http://localhost:8080/api/brothers"
+    let result: any
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        result  = await response.json();
+        console.log('result:', result)
+    } catch (error) {
+        console.log('Error fetching data:', error);
+        throw error;
+    } finally {
+        /* uncomment line below to test skeleton during loading */
+        // await new Promise(f => setTimeout(f, 3000));
+        console.log(result)
+        toast({
+            title: "You submitted the following values:",
+            description: (
+                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+                </pre>
+            ),
+        })
+    }
   }
 
   return (
