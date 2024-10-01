@@ -37,7 +37,6 @@ import {
 import { Button } from "@/components/ui/button"
 
 import { Input } from "@/components/ui/input"
-import AddRowSheet from './sheet/add-row-sheet'
 
 
 // Custom global filter function to allow filtering for both numbers and strings
@@ -53,11 +52,13 @@ const customFilterFn: FilterFn<any> = (row: Row<any>, columnId: string, filterVa
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  AddSheet?: React.ComponentType
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  AddSheet 
 }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -122,7 +123,7 @@ export function DataTable<TData, TValue>({
               </DropdownMenuContent>
         </DropdownMenu>
 
-        <AddRowSheet />
+        { AddSheet ? <AddSheet /> : null }
     </div>
 
     <div className="rounded-md border">

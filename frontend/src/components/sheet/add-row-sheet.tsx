@@ -1,3 +1,4 @@
+// add-row-sheet.tsx: Sheet+form that opens when "Add row" button is clicked in data table pages
 import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,7 +17,12 @@ import {
 import FieldComponent, { FieldComponentProps } from './fields'
 import { BrotherForm } from './row-form'
 
-export default function AddRowSheet({ fields }: FieldComponentProps<TProps>) {
+
+const AddRowSheet: React.FC<{
+    title: string;
+    description: string;
+    FormType: React.JSX.Element
+}> = ({ title, description, FormType }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -24,12 +30,12 @@ export default function AddRowSheet({ fields }: FieldComponentProps<TProps>) {
       </SheetTrigger>
       <SheetContent className="w-[400px] sm:w-[540px]">
         <SheetHeader>
-          <SheetTitle>Create new Brother record</SheetTitle>
+          <SheetTitle>{title}</SheetTitle>
           <SheetDescription>
-            Add the information below then click "Submit" to create new record.
+            {description}
           </SheetDescription>
         </SheetHeader>
-            <BrotherForm />
+            { FormType }
         <SheetFooter>
             {/**/}
         </SheetFooter>
@@ -37,3 +43,5 @@ export default function AddRowSheet({ fields }: FieldComponentProps<TProps>) {
     </Sheet>
   )
 }
+
+export default AddRowSheet
