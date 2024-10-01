@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Event, eventsTableColumns } from './columns'
 import { DataTable } from './data-table'
 import { Skeleton } from '@/components/ui/skeleton'
+import AddRowSheet from './sheet/add-row-sheet'
+import { EventsForm } from './sheet/forms/events-form'
 
 const EventsTable: React.FC = () => {
     const [data, setData] = useState<Event[]>([]);   
@@ -55,7 +57,17 @@ const EventsTable: React.FC = () => {
     }
 
     return (
-        <DataTable columns={eventsTableColumns} data={data} />
+        <DataTable
+            columns={eventsTableColumns}
+            data={data}
+            AddSheet={
+                () => <AddRowSheet
+                    title="Add new event record"
+                    description="Input the event information below then click submit"
+                    FormType={<EventsForm />}
+                />
+            }
+        />
     )
 }
 
