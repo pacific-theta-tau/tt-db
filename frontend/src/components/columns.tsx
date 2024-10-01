@@ -140,12 +140,20 @@ export type Event = {
 
 export const eventsTableColumns: ColumnDef<Event>[] = [
     {
-        accessorKey: "eventID",
-         header: "Event ID",
-    },
-    {
         accessorKey: "eventName",
-        header: "Event Name",
+         header: ({ column }) => {
+             return (
+                 <Button
+                     variant="ghost"
+                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                     className="px-0"
+                 >
+                    Event Name 
+                 <ArrowUpDown className="ml-2 h-4 w-4" />
+                 </Button>
+                )
+         },
+
         cell: ({ row }) => {
             const event = row.original
             return (
@@ -167,7 +175,18 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
     },
     {
         accessorKey: "eventDate",
-        header: "Event Date",
+        header: ({ column }) => {
+            return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                        className="px-0"
+                    >
+                        Event Date 
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                   )
+        },
     },
   {
       id: "actions",
@@ -218,15 +237,48 @@ export type EventAttendance = {
 export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
     {
         accessorKey: "firstName",
-         header: "First Name",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="px-0"
+                >
+                    First Name
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+           )
+        },
     },
     {
         accessorKey: "lastName",
-        header: "Last Name",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="px-0"
+            >
+                Last Name 
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
     },
     {
         accessorKey: "rollCall",
-        header: "Roll Call",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="px-0"
+            >
+                Roll Call 
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
     },
     {
         accessorKey: "attendanceStatus",
