@@ -109,8 +109,6 @@ export function EventAttendanceForm() {
        }, []);
 
 
-    const columns: ColumnDef<Brother>[] = rollCallSearchColumns
-  
     const table = useReactTable({
         data: searchData,
         columns: rollCallSearchColumns,
@@ -124,7 +122,7 @@ export function EventAttendanceForm() {
 
     const handleSelectMember = (rollCallSearch: Brother) => {
         setRollCall(rollCallSearch.rollCall)
-        form.setValue("rollCall", rollCall)
+        form.setValue("rollCall", rollCallSearch.rollCall)
         setIsDialogOpen(false)
     }
 
