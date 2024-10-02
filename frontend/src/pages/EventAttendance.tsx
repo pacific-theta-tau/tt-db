@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { EventAttendance, eventAttendanceTableColumns } from "../components/columns"
 import { DataTable } from "../components/data-table"
 import { Skeleton } from '@/components/ui/skeleton'
+import AddRowSheet from '@/components/sheet/add-row-sheet';
+import { EventAttendanceForm } from '@/components/sheet/forms/event-attendance-form';
 
 const EventAttendancePage: React.FC = () => {
     const { eventID } = useParams<{ eventID: string }>();
@@ -56,7 +58,16 @@ const EventAttendancePage: React.FC = () => {
     }
 
     return (
-        <DataTable columns={eventAttendanceTableColumns} data={data} />
+        <DataTable
+            columns={eventAttendanceTableColumns}
+            data={data}
+            AddSheet={
+                () => <AddRowSheet
+                        title=""
+                        description=""
+                        FormType={<EventAttendanceForm />}
+                      />}
+        />
     )
 };
 

@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS brothers(
     rollCall INTEGER NOT NULL,
     firstName TEXT NOT NULL, 
     lastName TEXT NOT NULL, 
+    major TEXT NOT NULL,
     status status NOT NULL, 
     className TEXT DEFAULT '', 
     email TEXT DEFAULT '',
@@ -47,9 +48,11 @@ CREATE TABLE IF NOT EXISTS brotherStatus(
 
 
 -- mock entries for testing
-INSERT INTO brothers (rollCall, firstName, lastName, status, className, email, phoneNumber, badStanding)
+INSERT INTO brothers (rollCall, firstName, lastName, major, status, className, email, phoneNumber, badStanding)
 VALUES
-    (1, 'John', 'Doe', 'Active', 'Chi', 'na@gmail.com', '(123) 456-7890', 0)
+    (1, 'John', 'Doe', 'Computer Science', 'Alumnus', 'Omicron', 'john@gmail.com', '(123) 456-7890', 0),
+    (2, 'Peter', 'Parker', 'Electrical Engineering', 'Co-op', 'Alpha', 'peter@yahoo.com', '(209)', 0),
+    (3, 'Nick', 'Ahn', 'Computer Science', 'Alumnus', 'Chi', 'na@gmail.com', '(209)', 0)
 ;
 
 INSERT INTO eventsCategory (categoryID, categoryName)
@@ -72,5 +75,12 @@ VALUES
     (1, 1, 'Active'),
     (1, 2, 'Co-op'),
     (1, 3, 'Active'),
-    (1, 4, 'Alumni')
+    (1, 4, 'Alumnus'),
+
+    (2, 3, 'Active'),
+    (2, 4, 'Co-op'),
+
+    (3, 2, 'Active'),
+    (3, 3, 'Alumnus'),
+    (3, 4, 'Alumnus')
 ;

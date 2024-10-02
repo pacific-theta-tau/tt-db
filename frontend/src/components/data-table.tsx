@@ -50,11 +50,13 @@ const customFilterFn: FilterFn<any> = (row: Row<any>, columnId: string, filterVa
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  AddSheet?: React.ComponentType
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  AddSheet 
 }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -82,14 +84,14 @@ export function DataTable<TData, TValue>({
   return (
   <div>
     <div className="flex items-center py-4">
-      <div>
-        <Input
-          placeholder="Search..."
-          value={ globalFilter }
-          onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-          className="max-w-sm"
-        />
-      </div>
+        <div>
+            <Input
+                placeholder="Search..."
+                value={ globalFilter }
+                onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+                className="max-w-sm"
+            />
+        </div>
         <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
@@ -118,6 +120,8 @@ export function DataTable<TData, TValue>({
                   })}
               </DropdownMenuContent>
         </DropdownMenu>
+
+        { AddSheet ? <AddSheet /> : null }
     </div>
 
     <div className="rounded-md border">

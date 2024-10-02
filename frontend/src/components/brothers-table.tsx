@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Brother, brothersTableColumns } from "./columns"
 import { DataTable } from "./data-table"
 import { Skeleton } from "@/components/ui/skeleton"
+import { BrotherForm } from './sheet/forms/brothers-form'
+import AddRowSheet from './sheet/add-row-sheet';
 
 
 const BrothersTable: React.FC = () => {
@@ -54,7 +56,16 @@ const BrothersTable: React.FC = () => {
     }
 
     return (
-        <DataTable columns={brothersTableColumns} data={data} />
+        <DataTable
+            columns={brothersTableColumns}
+            data={data}
+            AddSheet={
+                () => <AddRowSheet
+                        title=""
+                        description=""
+                        FormType={<BrotherForm />}
+                      />}
+        />
    )
 }
 
