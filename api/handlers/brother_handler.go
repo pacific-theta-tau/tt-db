@@ -28,6 +28,7 @@ func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
 		&brother.RollCall,
 		&brother.FirstName,
 		&brother.LastName,
+		&brother.Major,
 		&brother.Status,
 		&brother.Class,
 		&brother.Email,
@@ -167,8 +168,8 @@ func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := `
-	INSERT INTO brothers (rollCall, firstName, lastName, status, className, email, phoneNumber, badStanding)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning *
+	INSERT INTO brothers (rollCall, firstName, lastName, major, status, className, email, phoneNumber, badStanding)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *
 	`
 	_, err = h.db.ExecContext(
 		ctx,
@@ -176,6 +177,7 @@ func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
 		brother.RollCall,
 		brother.FirstName,
 		brother.LastName,
+		brother.Major,
 		brother.Status,
 		brother.Class,
 		brother.Email,
@@ -258,11 +260,13 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 	columns := []string{
 		"firstName",
 		"lastName",
+        "major",
 		"status",
 		"class",
 		"email",
 		"phoneNumber",
 		"badStanding",
+        "rollCall",
 	}
 	for _, column := range columns {
 		newColumnValue, ok := requestBody[column]
@@ -303,7 +307,7 @@ func (h *Handler) GetBrotherStatusHistory(w http.ResponseWriter, r *http.Request
 
     query := `
     SELECT
-        brotherID, rollCall, firstName, lastName, status, className, email, phoneNumber, badStanding
+        brotherID, rollCall, firstName, lastName, major, status, className, email, phoneNumber, badStanding
     FROM brothers b
     WHERE b.brotherID = $1
     `

@@ -1,43 +1,129 @@
 // data-table.tsx: component to be used to build Brothers and Events data tables
 "use client"
 
+import React from 'react'
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
+    ColumnDef,
+    SortingState,
+    flexRender,
+    getCoreRowModel,
+    getPaginationRowModel,
+    useReactTable,
+    getSortedRowModel,
+    VisibilityState,
+    getFilteredRowModel,
+    Row,
+    FilterFn
 } from "@tanstack/react-table"
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table"
 
 import { Button } from "@/components/ui/button"
 
+import { Input } from "@/components/ui/input"
+
+
+// Custom global filter function to allow filtering for both numbers and strings
+const customFilterFn: FilterFn<any> = (row: Row<any>, columnId: string, filterValue: string) => {
+    const search = filterValue.toLowerCase();
+    let value = row.getValue(columnId) as string;
+
+    if (typeof value === 'number') value = String(value);
+
+    return value?.toLowerCase().includes(search);
+};
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  AddSheet?: React.ComponentType
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  AddSheet 
 }: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  })
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [globalFilter, setGlobalFilter] = React.useState<any>("")
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        onGlobalFilterChange: setGlobalFilter,
+        getFilteredRowModel: getFilteredRowModel(),
+        
+        globalFilterFn: customFilterFn,
+        state: {
+            sorting,
+            columnVisibility,
+            globalFilter,
+        },
+    })
 
   return (
   <div>
+    <div className="flex items-center py-4">
+        <div>
+            <Input
+                placeholder="Search..."
+                value={ globalFilter }
+                onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+                className="max-w-sm"
+            />
+        </div>
+        <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter(
+                    (column) => column.getCanHide()
+                  )
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    )
+                  })}
+              </DropdownMenuContent>
+        </DropdownMenu>
+
+        { AddSheet ? <AddSheet /> : null }
+    </div>
+
     <div className="rounded-md border">
       <Table>
         <TableHeader>
@@ -82,7 +168,7 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-    <div>
+        <div>
         <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
