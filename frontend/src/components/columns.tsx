@@ -26,6 +26,7 @@ export type Brother = {
     rollCall: number 
     firstName: string
     lastName: string
+    major: string
     status: string
     className: string
     email: string
@@ -33,68 +34,83 @@ export type Brother = {
 }
 
 export const brothersTableColumns: ColumnDef<Brother>[] = [
-  {
-    accessorKey: "rollCall",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="px-0"
-        >
-            Roll Call
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },
-  {
-    accessorKey: "firstName",
-    //header: "First Name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="px-0"
-        >
-          First Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },
-  {
-    accessorKey: "lastName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="px-0"
-        >
-            Last Name 
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },
     {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
-    accessorKey: "className",
-    header: "Class Name",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "phoneNumber",
-    header: "Phone Number",
-  },
+        accessorKey: "rollCall",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="px-0"
+                >
+                    Roll Call
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+               )
+        },
+    },
+    {
+        accessorKey: "firstName",
+        //header: "First Name",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="px-0"
+                >
+                    First Name
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+               )
+        },
+    },
+    {
+    accessorKey: "lastName",
+         header: ({ column }) => {
+             return (
+                 <Button
+                     variant="ghost"
+                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                     className="px-0"
+                 >
+                     Last Name 
+                 <ArrowUpDown className="ml-2 h-4 w-4" />
+                 </Button>
+                )
+         },
+    },
+    {
+        accessorKey: "major",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="px-0"
+                >
+                    Major 
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+               )
+        },
+    },
+    {
+        accessorKey: "status",
+        header: "Status",
+    },
+    {
+        accessorKey: "className",
+        header: "Class Name",
+    },
+    {
+        accessorKey: "email",
+        header: "Email",
+    },
+    {
+        accessorKey: "phoneNumber",
+        header: "Phone Number",
+    },
   {
       id: "actions",
     cell: ({ row }) => {
