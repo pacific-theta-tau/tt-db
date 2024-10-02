@@ -6,6 +6,7 @@ type Brother struct {
     RollCall    int    `json:"rollCall" validate:"required"`
 	FirstName   string `json:"firstName" validate:"required"`
 	LastName    string `json:"lastName" validate:"required"`
+	Major       string `json:"major" validate:"required"`
 	Status      string `json:"status" validate:"required"`
 	Class       string `json:"className"`
 	Email       string `json:"email"`
