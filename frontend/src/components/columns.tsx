@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import { MoreHorizontal, Clipboard, Pencil, Trash2 } from "lucide-react"
 import { Link } from "react-router-dom"
 
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -111,11 +111,15 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(brother.brotherID)} >
-              Copy Brother ID
+            <DropdownMenuItem onClick={ () => console.log("Edit row") } >
+                <Pencil className="h-4 w-4"/> Edit
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={ () => console.log("Delete row") } >
+                <Trash2 className="h-4 w-4"/> Delete
+            </DropdownMenuItem>
+
             <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
-                Copy Full Name
+                 <Clipboard className="h-4 w-4"/> Copy Full Name
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
@@ -204,17 +208,21 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(event.eventID)} >
-              Copy Event ID
+            <DropdownMenuItem onClick={ () => console.log("Edit Row")} >
+                <Pencil className="h-4 w-4"/> Edit
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={ () => console.log("Edit Column") } >
+                <Trash2 className="h-4 w-4"/> Delete
+            </DropdownMenuItem>
+
             <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(event.eventName)} >
-                Copy Event Name
+                <Clipboard className="h-4 w-4" /> Copy Event Name
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 
             <DropdownMenuItem>
-                <Link to={`events/${event.eventID}/attendance`}>
+                <Link to={`/events/${event.eventID}/attendance`}>
                     View Event Attendance
                 </Link>
             </DropdownMenuItem>
@@ -300,11 +308,15 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                    <DropdownMenuItem onClick={() => navigator.clipboard.writeText(String(attendance.brotherID))} >
-                        Copy Brother ID
+                    <DropdownMenuItem onClick={ () => console.log("Edit row")} >
+                        <Pencil className="h-4 w-4"/> Edit 
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={ () => console.log("Delete row")} >
+                        <Trash2 className="h-4 w-4"/> Delete
+                    </DropdownMenuItem>
+
                     <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(attendance.firstName + " " + attendance.lastName)} >
-                        Copy Full Name
+                        <Clipboard className="h-4 w-4" /> Copy Full Name
                     </DropdownMenuItem>
 
                     <DropdownMenuSeparator />
