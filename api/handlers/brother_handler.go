@@ -61,8 +61,10 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	var brothers []*models.Brother
 	for rows.Next() {
 		brother, err := createBrotherFromRow(rows)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+        if err != nil {
+            errMsg := fmt.Sprintf("Error creating Brother object from row: '%s'\n", err.Error())
+			log.Println(errMsg)
+			http.Error(w, errMsg, http.StatusInternalServerError)
 			return
 		}
 		brothers = append(brothers, &brother)
@@ -441,4 +443,45 @@ func (h *Handler) CreateBrotherStatus(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Created Brother Status successfully"))
+}
+
+// GET /api/brothers/majors/count
+func (h *Handler) getMajorCounts(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    query := `
+    SELECT major, COUNT(*) AS count
+    FROM members
+    GROUP BY major;
+    `
+    rows, err := h.db.QueryContext(ctx, query)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error during query: '%s'\n", err.Error())
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        http.Error(w, errMsg, http.StatusInternalServerError)
+        return
+	}
+
+    type MajorCount struct {
+        Major   string `json:"major"`
+        Count   int `json:"count"`
+    }
+    var majorCounts []*MajorCount
+    for rows.Next() {
+        var curRow MajorCount
+        err = rows.Scan(
+            &curRow.Major,
+            &curRow.Count,
+        )   
+        if err != nil {
+            errMsg := fmt.Sprintf("Error parsing major count query result from row: '%s'\n", err.Error())
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+			http.Error(w, errMsg, http.StatusInternalServerError)
+			return
+		}
+        majorCounts = append(majorCounts, &curRow)
+    }
+
+    models.RespondWithSuccess(w, http.StatusOK, majorCounts)
 }
