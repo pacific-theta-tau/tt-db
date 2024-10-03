@@ -445,21 +445,47 @@ func (h *Handler) CreateBrotherStatus(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Created Brother Status successfully"))
 }
 
+// GET /api/brothers/count
+func (h *Handler) GetBrothersCount(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    // query for total row counts in brothers table
+    query := `
+    SELECT COUNT(*) AS count
+    FROM brothers
+    `
+    row := h.db.QueryRowContext(ctx, query)
+
+    // parse query result
+    var count int 
+    err := row.Scan(
+        &count,
+    )  
+    if err != nil {
+        errMsg := fmt.Sprintf("Error parsing brothers count query result from row: '%s'\n", err.Error())
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+    }
+
+    data := map[string]int{"count": count}
+    models.RespondWithSuccess(w, http.StatusOK, data)
+}
+
 // GET /api/brothers/majors/count
-func (h *Handler) getMajorCounts(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetBrothersMajorsCount(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
     query := `
     SELECT major, COUNT(*) AS count
-    FROM members
+    FROM brothers
     GROUP BY major;
     `
     rows, err := h.db.QueryContext(ctx, query)
     if err != nil {
         errMsg := fmt.Sprintf("Error during query: '%s'\n", err.Error())
         models.RespondWithError(w, http.StatusInternalServerError, errMsg)
-        http.Error(w, errMsg, http.StatusInternalServerError)
         return
 	}
 
@@ -477,7 +503,6 @@ func (h *Handler) getMajorCounts(w http.ResponseWriter, r *http.Request) {
         if err != nil {
             errMsg := fmt.Sprintf("Error parsing major count query result from row: '%s'\n", err.Error())
             models.RespondWithError(w, http.StatusInternalServerError, errMsg)
-			http.Error(w, errMsg, http.StatusInternalServerError)
 			return
 		}
         majorCounts = append(majorCounts, &curRow)
