@@ -89,7 +89,7 @@ const testChartData = [
     { major: "electricalengineering", count: 20, fill: "var(--color-electricalengineering)" },
 ]
 
-export function Component() {
+export function PieChartMajorsDistribution() {
     const [chartData, setChartData] = React.useState<MajorCount[]>([]);
     const [totalCount, setTotalCount] = React.useState(0);
     const [loading, setLoading] = React.useState<boolean>(true);
