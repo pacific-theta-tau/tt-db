@@ -1,12 +1,14 @@
 // Home.tsx (default export)
 import React from 'react';
-import { Link } from 'react-router-dom';
-import NavBar from '../components/navbar';
+import { Component } from '@/components/graphs/major-pie-chart';
+import { Component2 } from '@/components/graphs/pie-test';
 
 const HomePage: React.FC = () => {
     return (
         <div>
             <h1>Home Page</h1>
+            <Component />
+            <Component2 />
         </div>
        );
 };
