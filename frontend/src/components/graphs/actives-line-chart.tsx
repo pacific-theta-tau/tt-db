@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react'
 import { TrendingDown } from "lucide-react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { getData, ApiResponse } from "@/api/api"
 
 import {
   Card,
@@ -20,9 +21,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
+
+const DEBUG = true
 export const description = "A linear line chart"
 
-interface activesData {
+interface ActivesCount {
     semester: string,
     count: number,
 }
@@ -36,17 +39,53 @@ const testChartData = [
 ]
 
 const chartConfig = {
-  actives: {
+  count: {
     label: "Actives",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig
 
 export function LineChartActives() {
-    const [chartData, setChartData] = useState<activesData[]>([])
+    const [chartData, setChartData] = useState<ActivesCount[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | null>(null)
+
     useEffect(() => {
-        setChartData(testChartData)
+        let result
+        const fetchData = async () => {
+            try {
+                // "Get the total count of active members grouped by semester"
+                let endpoint = "/api/brothers/statuses/count"
+                result = await getData< ApiResponse<ActivesCount[]> >(endpoint, {status: "Active"})
+                setChartData(result.data)
+            } catch (error: any) {
+                setError(error.message)
+                console.log(error.message)
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (DEBUG) {
+            console.log("Using test chart data")
+            setChartData(testChartData)
+            setError(null)
+            setLoading(false)
+        } else {
+            fetchData()
+        }
     }, [])
+
+
+    if (loading) {
+        // Load dummy empty data and skeleton
+        return <div>Loading...</div>
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
   return (
     <Card>
       <CardHeader>
@@ -78,7 +117,7 @@ export function LineChartActives() {
             <Line
               dataKey="count"
               type="linear"
-              stroke="var(--color-actives)"
+              stroke="var(--color-count)"
               strokeWidth={2}
               dot={false}
             />

@@ -1,14 +1,13 @@
 // Home.tsx (default export)
 import React from 'react';
-import { Component } from '@/components/graphs/major-pie-chart';
-import { Component2 } from '@/components/graphs/pie-test';
+import { PieChartMajorsDistribution } from '@/components/graphs/major-pie-chart';
+import  { LineChartActives } from '@/components/graphs/actives-line-chart';
 
 const HomePage: React.FC = () => {
     return (
-        <div>
-            <h1>Home Page</h1>
-            <Component />
-            <Component2 />
+        <div className="flex flex-row">
+            <PieChartMajorsDistribution />
+            <LineChartActives />
         </div>
        );
 };
