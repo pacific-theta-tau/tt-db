@@ -61,8 +61,8 @@ const BrothersTable: React.FC = () => {
             data={data}
             AddSheet={
                 () => <AddRowSheet
-                        title=""
-                        description=""
+                        title="Add new member record"
+                        description="Refresh the page once you hit submit"
                         FormType={<BrotherForm />}
                       />}
         />
