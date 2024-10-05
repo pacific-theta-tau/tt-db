@@ -1,12 +1,13 @@
 // Home.tsx (default export)
 import React from 'react';
-import { Link } from 'react-router-dom';
-import NavBar from '../components/navbar';
+import { PieChartMajorsDistribution } from '@/components/graphs/major-pie-chart';
+import  { LineChartActives } from '@/components/graphs/actives-line-chart';
 
 const HomePage: React.FC = () => {
     return (
-        <div>
-            <h1>Home Page</h1>
+        <div className="flex flex-row">
+            <PieChartMajorsDistribution />
+            <LineChartActives />
         </div>
        );
 };

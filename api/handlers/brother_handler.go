@@ -61,8 +61,10 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	var brothers []*models.Brother
 	for rows.Next() {
 		brother, err := createBrotherFromRow(rows)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+        if err != nil {
+            errMsg := fmt.Sprintf("Error creating Brother object from row: '%s'\n", err.Error())
+			log.Println(errMsg)
+			http.Error(w, errMsg, http.StatusInternalServerError)
 			return
 		}
 		brothers = append(brothers, &brother)
@@ -441,4 +443,135 @@ func (h *Handler) CreateBrotherStatus(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Created Brother Status successfully"))
+}
+
+// GET /api/brothers/count
+func (h *Handler) GetBrothersCount(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    // query for total row counts in brothers table
+    query := `
+    SELECT COUNT(*) AS count
+    FROM brothers
+    `
+    row := h.db.QueryRowContext(ctx, query)
+
+    // parse query result
+    var count int 
+    err := row.Scan(
+        &count,
+    )  
+    if err != nil {
+        errMsg := fmt.Sprintf("Error parsing brothers count query result from row: '%s'\n", err.Error())
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+    }
+
+    data := map[string]int{"count": count}
+    models.RespondWithSuccess(w, http.StatusOK, data)
+}
+
+// GET /api/brothers/majors/count
+func (h *Handler) GetBrothersMajorsCount(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    query := `
+    SELECT major, COUNT(*) AS count
+    FROM brothers
+    GROUP BY major;
+    `
+    rows, err := h.db.QueryContext(ctx, query)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error during query: '%s'\n", err.Error())
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+	}
+
+    type MajorCount struct {
+        Major   string `json:"major"`
+        Count   int `json:"count"`
+    }
+    var majorCounts []*MajorCount
+    for rows.Next() {
+        var curRow MajorCount
+        err = rows.Scan(
+            &curRow.Major,
+            &curRow.Count,
+        )   
+        if err != nil {
+            errMsg := fmt.Sprintf("Error parsing major count query result from row: '%s'\n", err.Error())
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+			return
+		}
+        majorCounts = append(majorCounts, &curRow)
+    }
+
+    models.RespondWithSuccess(w, http.StatusOK, majorCounts)
+}
+
+func (h *Handler) GetBrotherStatusCount(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    // Get query params
+    queryStatus := ""
+    status := r.URL.Query().Get("status")
+    log.Printf("Received query param status: %s", status)
+    if status != "" {
+        queryStatus = fmt.Sprintf("WHERE bs.status = '%s'", status)
+    }
+
+    querySemester := ""
+    semester := r.URL.Query().Get("semester")
+    if semester != "" {
+        querySemester = fmt.Sprintf("WHERE s.semesterLabel = %s", semester)
+    }
+    // Check for "all"
+
+    query := fmt.Sprintf(`
+    SELECT s.semesterLabel, COUNT(*) AS count
+    FROM brotherStatus bs
+    JOIN semester s ON bs.semesterID = s.semesterID
+    %s
+    %s
+    GROUP BY s.semesterLabel;
+    `, queryStatus, querySemester)
+    log.Printf("Query:\n%s", query)
+    //{
+    //    data: [
+    //        {'semester': 'Fall 2022', actives: 20, co-op: 20, etc...}
+    //    ]
+    //}
+    rows, err := h.db.QueryContext(ctx, query)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error during query: '%s'\n", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+	}
+
+    type SemesterCount struct {
+        Semester    string `json:"semester"`
+        Count       int `json:"count"`
+    }
+    var semesterCounts []*SemesterCount
+    for rows.Next() {
+        var curRow SemesterCount
+        err = rows.Scan(
+            &curRow.Semester,
+            &curRow.Count,
+        )   
+        if err != nil {
+            errMsg := fmt.Sprintf("Error parsing major count query result from row: '%s'\n", err.Error())
+            log.Println(errMsg)
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+			return
+		}
+        semesterCounts = append(semesterCounts, &curRow)
+    }
+    log.Printf("Semester counts: %v:", semesterCounts)
+
+    models.RespondWithSuccess(w, http.StatusOK, semesterCounts)
 }

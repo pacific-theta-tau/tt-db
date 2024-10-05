@@ -30,6 +30,17 @@ import { Button } from "@/components/ui/button"
 
 import { Input } from "@/components/ui/input"
 
+
+const majors: readonly [string, ...string[]] = [
+    'Civil Engineering',
+    'Bioengineering',
+    'Computer Engineering',
+    'Computer Science',
+    'Electrical Engineering',
+    'Engineering Physics',
+    'Mechanical Engineering',
+]
+
 const statuses: readonly [string, ...string[]] = [
     'Active',
     'Pre-Alumnus',
@@ -46,15 +57,18 @@ const formSchema = z.object({
     lastName: z.string({
         required_error: "You must provide a last name"
     }),
+    major: z.string({
+        required_error: "You must provide a major",
+    }),
     rollCall: z.number({
         required_error: "You must provide a roll call"
     }),
     status: z.enum(statuses, {
                 required_error: "You need to select status.",
             }),
-    className: z.string(),
-    email: z.string(),
-    phoneNumber: z.string(),
+    className: z.string().optional(),
+    email: z.string().optional(),
+    phoneNumber: z.string().optional(),
 })
 
 export function BrotherForm() {
@@ -134,6 +148,29 @@ export function BrotherForm() {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="major"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Major *</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                          <SelectTrigger className="w-[180px]">
+                              <SelectValue placeholder="Select Major" />
+                          </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                        {majors.map((major) => (
+                          <SelectItem value={major}>{major}</SelectItem>
+                        ))}
+                  </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="rollCall"
