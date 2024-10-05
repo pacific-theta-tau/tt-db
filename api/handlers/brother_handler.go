@@ -510,3 +510,68 @@ func (h *Handler) GetBrothersMajorsCount(w http.ResponseWriter, r *http.Request)
 
     models.RespondWithSuccess(w, http.StatusOK, majorCounts)
 }
+
+func (h *Handler) GetBrotherStatusCount(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+    // Get query params
+    queryStatus := ""
+    status := r.URL.Query().Get("status")
+    log.Printf("Received query param status: %s", status)
+    if status != "" {
+        queryStatus = fmt.Sprintf("WHERE bs.status = '%s'", status)
+    }
+
+    querySemester := ""
+    semester := r.URL.Query().Get("semester")
+    if semester != "" {
+        querySemester = fmt.Sprintf("WHERE s.semesterLabel = %s", semester)
+    }
+    // Check for "all"
+
+    query := fmt.Sprintf(`
+    SELECT s.semesterLabel, COUNT(*) AS count
+    FROM brotherStatus bs
+    JOIN semester s ON bs.semesterID = s.semesterID
+    %s
+    %s
+    GROUP BY s.semesterLabel;
+    `, queryStatus, querySemester)
+    log.Printf("Query:\n%s", query)
+    //{
+    //    data: [
+    //        {'semester': 'Fall 2022', actives: 20, co-op: 20, etc...}
+    //    ]
+    //}
+    rows, err := h.db.QueryContext(ctx, query)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error during query: '%s'\n", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+	}
+
+    type SemesterCount struct {
+        Semester    string `json:"semester"`
+        Count       int `json:"count"`
+    }
+    var semesterCounts []*SemesterCount
+    for rows.Next() {
+        var curRow SemesterCount
+        err = rows.Scan(
+            &curRow.Semester,
+            &curRow.Count,
+        )   
+        if err != nil {
+            errMsg := fmt.Sprintf("Error parsing major count query result from row: '%s'\n", err.Error())
+            log.Println(errMsg)
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+			return
+		}
+        semesterCounts = append(semesterCounts, &curRow)
+    }
+    log.Printf("Semester counts: %v:", semesterCounts)
+
+    models.RespondWithSuccess(w, http.StatusOK, semesterCounts)
+}
