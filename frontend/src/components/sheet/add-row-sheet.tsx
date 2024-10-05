@@ -23,18 +23,18 @@ const AddRowSheet: React.FC<{
       <SheetTrigger asChild>
         <Button className="ml-2">Add row</Button>
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[540px]">
-        <SheetHeader>
-          <SheetTitle>{title}</SheetTitle>
-          <SheetDescription>
-            {description}
-          </SheetDescription>
-        </SheetHeader>
-            { FormType }
-        <SheetFooter>
-            {/**/}
-        </SheetFooter>
-      </SheetContent>
+          <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>{title}</SheetTitle>
+                  <SheetDescription>
+                    {description}
+                  </SheetDescription>
+                </SheetHeader>
+                    { FormType }
+                <SheetFooter>
+                    {/**/}
+                </SheetFooter>
+          </SheetContent>
     </Sheet>
   )
 }
