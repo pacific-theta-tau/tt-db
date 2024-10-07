@@ -17,6 +17,7 @@ import (
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
 
+
 const brothers_table = "brothers"
 
 // Helper function to scan SQL row and create new Brother instance
@@ -42,7 +43,12 @@ func createBrotherFromRow(row *sql.Rows) (models.Brother, error) {
 	return brother, err
 }
 
-// Get data from all brothers in the Brother's table
+//	@Summary		Get all Brothers data
+//	@Description	Get data from all Brother records in `Brothers` table
+//	@Tags			Brothers
+//	@Success		200		object		models.APIResponse{data=models.Brother}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers [get]
 func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 	log.Println("-- Called GetAllBrothers() --")
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
@@ -94,7 +100,13 @@ func (h *Handler) GetAllBrothers(w http.ResponseWriter, r *http.Request) {
 }
 
 // Query brothers by ID
-// GET /api/brothers/{id}
+//	@Summary		Get Brother record by ID
+//	@Description	Get Brother record by ID
+//	@Tags			Brothers
+//	@Param			id		path		int											true	"Brother ID"
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers/{id} [get]
 func (h *Handler) GetBrotherByID(w http.ResponseWriter, r *http.Request) {
     fmt.Println("\nGetBrrotherByID called")
     brotherIDStr := chi.URLParam(r, "id")
@@ -152,6 +164,13 @@ func (h *Handler) GetBrotherByID(w http.ResponseWriter, r *http.Request) {
 
 
 // Add new brother entry to database
+//	@Summary		Create Brother record
+//	@Description	Create a new Brother record row for `Brothers` table
+//	@Tags			Brothers
+//	@Param			body_params body	models.Brother true	"Values for new record"
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers [post]
 func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
@@ -196,7 +215,13 @@ func (h *Handler) AddBrother(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Inserted new Brother entry to 'brothers' table"))
 }
 
-// Delete brother from brothers table by Roll Call number
+//	@Summary		Delete Brother by Roll Call
+//	@Description	Delete Brother with by Roll Call
+//	@Tags			Brothers
+//	@Param			body_params body	string  true	"RollCall of Brother"
+//  @Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers/{id} [delete]
 func (h *Handler) RemoveBrother(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
@@ -230,6 +255,15 @@ func (h *Handler) RemoveBrother(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Removed brother from 'brothers' table successfully"))
 }
 
+
+//	@Summary		Update Brother record
+//	@Description	Update one or more fields for Brother record 
+//	@Tags			Brothers
+//	@Param			body_params body    models.Brother  true	"Values to update for Brother"
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers/{id} [put]
+/* PUT /api/brothers/{id} */
 func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -293,7 +327,15 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 }
 
 
-// /api/brothers/{id}/statuses
+// POST /api/brothers/{id}/statuses
+//	@Summary		Get status history of a Brother
+//	@Description	Get all status recorded for Brother
+//	@Tags			Brothers
+//	@Param			id		path		int     true	"Brother ID"
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers/{id}/statuses [get]
+/* /api/brothers/{id}/statuses */
 func (h *Handler) GetBrotherStatusHistory(w http.ResponseWriter, r *http.Request) {
     log.Println("\n\nCalled get brother status history")
     brotherIDStr := chi.URLParam(r, "id")
@@ -390,16 +432,27 @@ func (h *Handler) GetBrotherStatusHistory(w http.ResponseWriter, r *http.Request
 }
 
 // POST /api/brothers/{id}/statuses
+//	@Summary		Create status record for Brother
+//	@Description	Create a new status record for a Brother
+//	@Tags			Brothers
+//	@Accept			json
+//	@Produce		json
+//	@Param			body_params body		handlers.CreateBrotherStatus.RequestBody	true	"Values for new record"
+//	@Param			id		path		int											true	"Brother ID"
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers/{id}/statuses [post]
 func (h *Handler) CreateBrotherStatus(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
     // Expected request body data
-    var requestBody struct {
+    type RequestBody struct {
         BrotherID   int `json:"brotherID"`
         SemesterID  int `json:"semesterID"`
         Status      string `json:"status"`
     }
+    var requestBody RequestBody
     // Parse body
     err := json.NewDecoder(r.Body).Decode(&requestBody)
     if err != nil {
@@ -445,7 +498,13 @@ func (h *Handler) CreateBrotherStatus(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Created Brother Status successfully"))
 }
 
-// GET /api/brothers/count
+//	@Tags			Brothers
+//	@Summary		Get total Brothers count
+//	@description	Get major distribution counts across all members
+//	@Success		200	{object}	models.APIResponse{data=int}	"Success"
+//	@failure		400	{string}	string							"Error"
+//	@Router			/api/brothers/count [get]
+/* GET /api/brothers/count */
 func (h *Handler) GetBrothersCount(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -472,7 +531,13 @@ func (h *Handler) GetBrothersCount(w http.ResponseWriter, r *http.Request) {
     models.RespondWithSuccess(w, http.StatusOK, data)
 }
 
-// GET /api/brothers/majors/count
+//  GET /api/brothers/majors/count
+//	@Tags			Brothers
+//	@Summary		Get major counts
+//	@description	Get major distribution counts across all members
+//	@Success		200	{object}	models.APIResponse{data=handlers.GetBrotherStatusCount.SemesterCount}	"desc"
+//	@failure		400	{string}	string																	"error"
+//	@Router			/api/brothers/majors/count [get]
 func (h *Handler) GetBrothersMajorsCount(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -511,6 +576,14 @@ func (h *Handler) GetBrothersMajorsCount(w http.ResponseWriter, r *http.Request)
     models.RespondWithSuccess(w, http.StatusOK, majorCounts)
 }
 
+
+//	@Tags			Brothers
+//	@Summary		Get status counts
+//	@description	Get status counts for all semesters
+//	@Param			status	query		string																	false	"Status filter"	
+//	@Success		200		{object}	models.APIResponse{data=handlers.GetBrotherStatusCount.SemesterCount}   
+//	@failure		400		{string}	models.APIResponse														"error"
+//	@Router			/api/brothers/statuses/count [get]
 func (h *Handler) GetBrotherStatusCount(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()

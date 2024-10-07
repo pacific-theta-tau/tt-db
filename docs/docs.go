@@ -14,7 +14,448 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/api/brothers": {
+            "get": {
+                "description": "Get data from all Brother records in ` + "`" + `Brothers` + "`" + ` table",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Get all Brothers data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Brother"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new Brother record row for ` + "`" + `Brothers` + "`" + ` table",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Create Brother record",
+                "parameters": [
+                    {
+                        "description": "Values for new record",
+                        "name": "body_params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Brother"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brothers/count": {
+            "get": {
+                "description": "Get major distribution counts across all members",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Get total Brothers count",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brothers/majors/count": {
+            "get": {
+                "description": "Get major distribution counts across all members",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Get major counts",
+                "responses": {
+                    "200": {
+                        "description": "desc",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/handlers.GetBrotherStatusCount.SemesterCount"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brothers/statuses/count": {
+            "get": {
+                "description": "Get status counts for all semesters",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Get status counts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Status filter",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/handlers.GetBrotherStatusCount.SemesterCount"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brothers/{id}": {
+            "get": {
+                "description": "Get Brother record by ID",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Get Brother record by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brother ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update one or more fields for Brother record",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Update Brother record",
+                "parameters": [
+                    {
+                        "description": "Values to update for Brother",
+                        "name": "body_params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Brother"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Brother with by Roll Call",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Delete Brother by Roll Call",
+                "parameters": [
+                    {
+                        "description": "RollCall of Brother",
+                        "name": "body_params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brothers/{id}/statuses": {
+            "get": {
+                "description": "Get all status recorded for Brother",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Get status history of a Brother",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brother ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new status record for a Brother",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Create status record for Brother",
+                "parameters": [
+                    {
+                        "description": "Values for new record",
+                        "name": "body_params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateBrotherStatus.RequestBody"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Brother ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.CreateBrotherStatus.RequestBody": {
+            "type": "object",
+            "properties": {
+                "brotherID": {
+                    "type": "integer"
+                },
+                "semesterID": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.GetBrotherStatusCount.SemesterCount": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "semester": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.APIResponse": {
+            "description": "JSON response format for all API calls",
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "Omit if nil"
+                },
+                "message": {
+                    "description": "Omit if nil",
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Brother": {
+            "description": "Brother information",
+            "type": "object",
+            "required": [
+                "firstName",
+                "lastName",
+                "major",
+                "rollCall",
+                "status"
+            ],
+            "properties": {
+                "badStanding": {
+                    "type": "integer"
+                },
+                "brotherID": {
+                    "description": "Primary Key",
+                    "type": "integer"
+                },
+                "className": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "major": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "rollCall": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
