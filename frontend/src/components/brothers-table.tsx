@@ -4,6 +4,7 @@ import { DataTable } from "./data-table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BrotherForm } from './sheet/forms/brothers-form'
 import AddRowSheet from './sheet/add-row-sheet';
+import { ApiResponse, getData } from '../api/api'
 
 
 const BrothersTable: React.FC = () => {
@@ -16,20 +17,11 @@ const BrothersTable: React.FC = () => {
         const fetchData = async () => {
              try {
                 setLoading(true)
-                const response = await fetch(endpoint, {
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                if (!response.ok) {
-                  throw new Error('Network response was not ok');
-                }
-                const result: Brother[] = await response.json();
+                const result: ApiResponse<Brother[]> = await getData(endpoint)
                 console.log('result:', result)
-                setData(result);
-            } catch (e) {
-                setError((e as Error).message);
+                setData(result.data);
+            } catch (error: any) {
+                setError((error as Error).message);
                 console.log('Error fetching data:', error);
                 throw error;
             } finally {

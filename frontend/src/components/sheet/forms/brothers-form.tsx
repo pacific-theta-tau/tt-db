@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useToast } from "@/hooks/use-toast"
+import { ApiResponse, requestPOST } from '@/api/api'
 
 import {
   Select,
@@ -29,6 +30,7 @@ import {
 import { Button } from "@/components/ui/button"
 
 import { Input } from "@/components/ui/input"
+import { Brother } from '@/components/columns'
 
 
 const majors: readonly [string, ...string[]] = [
@@ -83,20 +85,10 @@ export function BrotherForm() {
   const { toast } = useToast()
   async function onSubmit(data: z.infer<typeof formSchema>) {
     const endpoint = "http://localhost:8080/api/brothers"
-    let result: any
+    let result: ApiResponse<Brother>
     try {
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        result  = await response.json();
+        const body = JSON.stringify(data)
+        result = await requestPOST(endpoint, body)
         console.log('result:', result)
     } catch (error) {
         console.log('Error fetching data:', error);
@@ -104,7 +96,6 @@ export function BrotherForm() {
     } finally {
         /* uncomment line below to test skeleton during loading */
         // await new Promise(f => setTimeout(f, 3000));
-        console.log(result)
         toast({
             title: "You submitted the following values:",
             description: (
