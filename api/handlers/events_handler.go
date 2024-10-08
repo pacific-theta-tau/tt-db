@@ -71,7 +71,9 @@ func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
 		// return error status code
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+        errMsg := fmt.Sprintf("Error while querying events for events table: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
@@ -80,26 +82,15 @@ func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		event, err := createEventFromRow(rows)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+            errMsg := fmt.Sprintf("Error while parsing rows for events table: %s", err.Error())
+            log.Println(errMsg)
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 			return
 		}
 		events = append(events, &event)
 	}
 
-	// Build HTTP response
-	out, err := json.MarshalIndent(events, "", "\t")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(out)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+    models.RespondWithSuccess(w, http.StatusOK, events)
 }
 
 // Query Event by their eventID
@@ -117,12 +108,17 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 	requestEventID := chi.URLParam(r, "eventID")
 	if requestEventID == "" {
 		// If eventID is empty, return an error response
-		http.Error(w, "eventID parameter is required", http.StatusBadRequest)
-		return
+        errMsg := fmt.Sprintf("Missing eventID parameter in query params")
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
 	}
+
     eventID, err := strconv.Atoi(requestEventID)
     if err != nil {
-        fmt.Println("Error:", err)
+        errMsg := fmt.Sprintf("Error while parsing eventID in query params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusInternalServerError, errMsg)
         return
     }
 
@@ -130,26 +126,19 @@ func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         errMsg := fmt.Sprintf("Failed to query event with eventID %d: %s", eventID, err.Error())
         log.Println(errMsg)
-        http.Error(w, errMsg, http.StatusNotFound)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
         return
     }
 
 	if event.EventID == 0 {
         errMsg := fmt.Sprintf("EventID %d not found", eventID)
         log.Println(errMsg)
-		http.Error(w, errMsg, http.StatusNotFound)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
 
 	// Build HTTP response
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-    err = json.NewEncoder(w).Encode(event)
-	if err != nil {
-        w.WriteHeader(http.StatusInternalServerError)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    models.RespondWithSuccess(w, http.StatusOK, event)
 }
 
 // Helper function to query event by eventID
@@ -198,14 +187,19 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
     var event models.Event
     err := json.NewDecoder(r.Body).Decode(&event)
     if err != nil {
-        http.Error(w, fmt.Sprint("Error decoding request body", err.Error()), http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Error decoding request body", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
     }
 
     // Validate events struct
     validate := validator.New() 
     if err := validate.Struct(event); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+        errMsg := fmt.Sprintf("Error validating body params. Missing values: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
 	}
 
     // 1. fetch categoryID from categoryName
@@ -216,7 +210,7 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         errMsg := fmt.Sprintf("Category not found. %v", err.Error())
         log.Println(errMsg)
-        http.Error(w, errMsg, http.StatusNotFound)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
         return
     }
 
@@ -238,9 +232,7 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
 
     msg := "Created new event to `events` table successfully"
     log.Println(msg)
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    w.Write([]byte(msg))
+    models.RespondWithSuccess(w, http.StatusOK, "")
 }
 
 // Update fields of event row by event ID
@@ -257,13 +249,17 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
 
     body, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Error reading request body", http.StatusInternalServerError)
-		return
+        errMsg := fmt.Sprintf("Error while reading request body: %s", err.Error())
+        log.Printf(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg) 
+        return
 	}
 
 	var requestBody map[string]interface{}
 	if err = json.Unmarshal(body, &requestBody); err != nil {
-		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+        errMsg := "Error decoding JSON"
+        log.Printf(errMsg)
+        models.RespondWithFail(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
@@ -271,7 +267,7 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
 	if !ok {
         errMsg := "Missing eventID in request body"
         log.Printf(errMsg)
-		http.Error(w, errMsg, http.StatusBadRequest)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
     eventID := int(parsedEventID)
@@ -296,8 +292,9 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
             categoryIdQuery := "SELECT categoryID FROM eventsCategory WHERE categoryName = $1"
             err = h.db.QueryRow(categoryIdQuery, newColumnValue).Scan(&categoryID)
             if err != nil {
-                http.Error(w, "Category not found", http.StatusNotFound)
-                log.Printf("\tError while querying category: Category not found")
+                errMsg := fmt.Sprintf("\tError while querying for Category - not found: %s", err.Error())
+                log.Println(errMsg)
+                models.RespondWithFail(w, http.StatusBadRequest, errMsg)
                 return
             }
             updateQuery += fmt.Sprintf(" %s = %d,", "categoryID", categoryID)
@@ -326,24 +323,25 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
         &queryResult.CategoryName,
     )
     if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
+        errMsg := fmt.Sprintf("Error while querying update: %s", err.Error())
+        log.Printf(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
     }
     log.Printf("query result: %+v", queryResult)
 
     // query modified row
-    // TODO: refactor this
+    // TODO: use RETURNING row clause instead of querying for the modified row
     event, err := queryEvent(h, ctx, eventID)
     if err != nil {
-        log.Printf("Failed to query event with eventID %d: %s", eventID, err)
+        errMsg := fmt.Sprintf("Failed to query event with eventID %d after update query: %s", eventID, err)
+        log.Printf(errMsg)
+        models.RespondWithFail(w, http.StatusInternalServerError, errMsg)
+        return
     }
 
-    // API Response
-    w.WriteHeader(http.StatusOK)
-    //w.Write([]byte(fmt.Sprintf("Updated event with eventID %s successfully", eventID)))
-    json.NewEncoder(w).Encode(event)
+    models.RespondWithSuccess(w, http.StatusOK, event)
 }
-
 
 
 //	@Summary		Get event and attendance data
@@ -360,6 +358,7 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
         errMsg := "Invalid event ID"
         log.Printf(errMsg, err)
         http.Error(w, errMsg, http.StatusBadRequest)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
         return
     }
 
@@ -371,7 +370,8 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         errMsg := fmt.Sprintf("Error while fetching event data for eventID %d: %s", eventID, err.Error())
         log.Println(errMsg)
-        http.Error(w, errMsg, http.StatusBadRequest)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
     }
 
     // Query attendance data for eventID and parse into a list
@@ -385,8 +385,8 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
     rows, err := h.db.QueryContext(ctx, query, eventID)
 	if err != nil {
         errMsg := fmt.Sprintf("Error while querying for attendance for eventID %d: %s", eventID, err.Error())
-		http.Error(w, errMsg, http.StatusInternalServerError)
         log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
@@ -396,7 +396,7 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
             errMsg := fmt.Sprintf("Error while parsing attendance query for eventID %d: '%s'", eventID, err.Error())
             log.Println(errMsg)
-			http.Error(w, errMsg, http.StatusInternalServerError)
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 			return
 		}
         attendanceList = append(attendanceList, &record)
@@ -420,13 +420,6 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
         EventLocation: eventData.EventLocation,
         Attendance: attendanceList,
     }
-    if err := json.NewEncoder(w).Encode(response); err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
-
-	// Build HTTP response
-    w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+    models.RespondWithSuccess(w, http.StatusOK, response)
 }
 
