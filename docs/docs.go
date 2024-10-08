@@ -367,6 +367,217 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/events": {
+            "get": {
+                "description": "Get data from all rows in events table",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get all event records",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Event"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update event record by eventID",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Update event record",
+                "parameters": [
+                    {
+                        "description": "Event ID",
+                        "name": "eventid",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Event"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create new event record",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Create new event record",
+                "parameters": [
+                    {
+                        "description": "Values for new event record",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Event"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Event"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/events/{eventid}": {
+            "get": {
+                "description": "Get event information by eventID",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get event data",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "eventid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Event"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/events/{eventid}/attendance": {
+            "get": {
+                "description": "Get event and attendance data by eventID",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get event and attendance data",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "eventid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/handlers.GetEventAttendance.EventDataAndAttendance"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -391,6 +602,33 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "semester": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.GetEventAttendance.EventDataAndAttendance": {
+            "type": "object",
+            "properties": {
+                "attendance": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.EventAttendance"
+                    }
+                },
+                "eventCategory": {
+                    "type": "string"
+                },
+                "eventDate": {
+                    "type": "string"
+                },
+                "eventID": {
+                    "description": "primary",
+                    "type": "integer"
+                },
+                "eventLocation": {
+                    "type": "string"
+                },
+                "eventName": {
                     "type": "string"
                 }
             }
@@ -452,6 +690,49 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Event": {
+            "description": "Event information",
+            "type": "object",
+            "properties": {
+                "categoryName": {
+                    "type": "string"
+                },
+                "eventDate": {
+                    "type": "string"
+                },
+                "eventID": {
+                    "description": "primary",
+                    "type": "integer"
+                },
+                "eventLocation": {
+                    "type": "string"
+                },
+                "eventName": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EventAttendance": {
+            "description": "Event Attendance information of a Brother",
+            "type": "object",
+            "properties": {
+                "attendanceStatus": {
+                    "type": "string"
+                },
+                "brotherID": {
+                    "type": "integer"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "rollCall": {
+                    "type": "integer"
                 }
             }
         }

@@ -53,7 +53,12 @@ func createEventAttendanceFromRow(row *sql.Rows) (models.EventAttendance, error)
 	return eventAttendance, err
 }
 
-// Get data events table
+//	@Summary		Get all event records
+//	@Description	Get data from all rows in events table
+//	@Tags			Events
+//	@Success		200		object		models.APIResponse{data=models.Event}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events [get]
 func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -98,6 +103,13 @@ func (h *Handler) GetAllEvents(w http.ResponseWriter, r *http.Request) {
 }
 
 // Query Event by their eventID
+//	@Summary		Get event data 
+//	@Description	Get event information by eventID
+//	@Tags			Events
+//	@Param			eventid		path		int											true	"Event ID"
+//	@Success		200		object		models.APIResponse{data=models.Event}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events/{eventid} [get]
 func (h *Handler) GetEventByEventID(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
@@ -172,7 +184,13 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
 }
 
 // Add new event to events table
-// POST /api/events
+//	@Summary		Create new event record
+//	@Description	Create new event record
+//	@Tags			Events
+//	@Param			body body models.Event true	"Values for new event record"
+//	@Success		200		{object}		models.APIResponse{data=models.Event}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events [post]
 func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
     defer cancel()
@@ -226,7 +244,13 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
 }
 
 // Update fields of event row by event ID
-// PUT /api/events
+//	@Summary		Update event record
+//	@Description	Update event record by eventID
+//	@Tags			Events
+//	@Param			eventid		body int											true	"Event ID"
+//	@Success		200		object		models.APIResponse{data=models.Event}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events [put]
 func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     ctx, cancel :=  context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
@@ -322,26 +346,13 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
 
 
 
-/* Get event data and attendance
-endpoint: GET /api/events/{eventID}/attendance/
-Response format:
-    {
-        eventID: str,
-        eventName: str,
-        eventCategory: str,
-        eventDate: time.Time,
-        eventLocation: str,
-        attendance: [
-            {
-                brotherID: int,
-                firstName: str,
-                lastName: str,
-                rollCall: int,
-                attendanceStatus: str
-            },
-        ]
-    }
-*/
+//	@Summary		Get event and attendance data
+//	@Description	Get event and attendance data by eventID
+//	@Tags			Events
+//	@Param			eventid		path		int											true	"Event ID"
+//	@Success		200		object		models.APIResponse{data=handlers.GetEventAttendance.EventDataAndAttendance}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events/{eventid}/attendance [get]
 func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
     eventIDStr := chi.URLParam(r, "eventID")
     eventID, err := strconv.Atoi(eventIDStr)
@@ -391,14 +402,23 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
         attendanceList = append(attendanceList, &record)
 	}
 
+    // TODO: include category name
+    type EventDataAndAttendance struct {
+        EventID			int			`json:"eventID"`  //primary
+        EventName		string 		`json:"eventName"`
+        EventCategory   string      `json:"eventCategory"` 
+        EventLocation	string 		`json:"eventLocation"`
+        EventDate		time.Time	`json:"eventDate"`
+        Attendance      []*models.EventAttendance
+    }
     // Build response
-    response := map[string]interface{}{
-        "eventID": eventData.EventID,
-        "eventName": eventData.EventName,
-        "eventCategory": eventData.CategoryName,
-        "eventDate": eventData.EventDate,
-        "eventLocation": eventData.EventLocation,
-        "attendance": attendanceList,
+    response := EventDataAndAttendance{
+        EventID: eventData.EventID,
+        EventName: eventData.EventName,
+        EventCategory: eventData.CategoryName,
+        EventDate: eventData.EventDate,
+        EventLocation: eventData.EventLocation,
+        Attendance: attendanceList,
     }
     if err := json.NewEncoder(w).Encode(response); err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)

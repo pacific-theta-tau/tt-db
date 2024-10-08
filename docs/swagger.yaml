@@ -15,6 +15,24 @@ definitions:
       semester:
         type: string
     type: object
+  handlers.GetEventAttendance.EventDataAndAttendance:
+    properties:
+      attendance:
+        items:
+          $ref: '#/definitions/models.EventAttendance'
+        type: array
+      eventCategory:
+        type: string
+      eventDate:
+        type: string
+      eventID:
+        description: primary
+        type: integer
+      eventLocation:
+        type: string
+      eventName:
+        type: string
+    type: object
   models.APIResponse:
     description: JSON response format for all API calls
     properties:
@@ -56,6 +74,35 @@ definitions:
     - major
     - rollCall
     - status
+    type: object
+  models.Event:
+    description: Event information
+    properties:
+      categoryName:
+        type: string
+      eventDate:
+        type: string
+      eventID:
+        description: primary
+        type: integer
+      eventLocation:
+        type: string
+      eventName:
+        type: string
+    type: object
+  models.EventAttendance:
+    description: Event Attendance information of a Brother
+    properties:
+      attendanceStatus:
+        type: string
+      brotherID:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      rollCall:
+        type: integer
     type: object
 info:
   contact: {}
@@ -280,4 +327,128 @@ paths:
       summary: Get status counts
       tags:
       - Brothers
+  /api/events:
+    get:
+      description: Get data from all rows in events table
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Event'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all event records
+      tags:
+      - Events
+    post:
+      description: Create new event record
+      parameters:
+      - description: Values for new event record
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Event'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Event'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create new event record
+      tags:
+      - Events
+    put:
+      description: Update event record by eventID
+      parameters:
+      - description: Event ID
+        in: body
+        name: eventid
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Event'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update event record
+      tags:
+      - Events
+  /api/events/{eventid}:
+    get:
+      description: Get event information by eventID
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventid
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Event'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get event data
+      tags:
+      - Events
+  /api/events/{eventid}/attendance:
+    get:
+      description: Get event and attendance data by eventID
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventid
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/handlers.GetEventAttendance.EventDataAndAttendance'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get event and attendance data
+      tags:
+      - Events
 swagger: "2.0"
