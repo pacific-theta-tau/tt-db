@@ -5,6 +5,7 @@ import { DataTable } from "../components/data-table"
 import { Skeleton } from '@/components/ui/skeleton'
 import AddRowSheet from '@/components/sheet/add-row-sheet';
 import { EventAttendanceForm } from '@/components/sheet/forms/event-attendance-form';
+import { getData, ApiResponse } from '@/api/api'
 
 const EventAttendancePage: React.FC = () => {
     const { eventID } = useParams<{ eventID: string }>();
@@ -17,17 +18,8 @@ const EventAttendancePage: React.FC = () => {
         const fetchData = async () => {
              try {
                 setLoading(true)
-                const response = await fetch(endpoint, {
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const responseData = await response.json()
-                const result: EventAttendance[] = responseData.attendance !== null ? responseData.attendance : []
+                const response: ApiResponse<EventAttendance[]> = await getData(endpoint)
+                const result: EventAttendance[] = response.data !== null ? response.data : []
                 console.log('result:', result)
                 setData(result);
             } catch (e) {
@@ -63,8 +55,8 @@ const EventAttendancePage: React.FC = () => {
             data={data}
             AddSheet={
                 () => <AddRowSheet
-                        title=""
-                        description=""
+                        title="Add attendance record"
+                        description="Refresh page once you hit submit"
                         FormType={<EventAttendanceForm />}
                       />}
         />
