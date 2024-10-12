@@ -75,6 +75,22 @@ definitions:
     - rollCall
     - status
     type: object
+  models.BrotherStatus:
+    description: Brother Status information for a semester
+    properties:
+      brotherID:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      rollCall:
+        type: string
+      semesterLabel:
+        type: string
+      status:
+        type: string
+    type: object
   models.Event:
     description: Event information
     properties:
@@ -302,6 +318,31 @@ paths:
       summary: Get major counts
       tags:
       - Brothers
+  /api/brothers/statuses:
+    get:
+      description: Get all status records per brother
+      parameters:
+      - description: Semester filter
+        in: query
+        name: semester
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.BrotherStatus'
+              type: object
+        "400":
+          description: error
+          schema:
+            type: string
+      summary: Get all status records per brother
+      tags:
+      - Brothers
   /api/brothers/statuses/count:
     get:
       description: Get status counts for all semesters
@@ -451,4 +492,26 @@ paths:
       summary: Get event and attendance data
       tags:
       - Events
+  /api/statuses:
+    get:
+      description: 'Get all valid status labels (e.g.: "Active")'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get status labels
+      tags:
+      - Statuses
 swagger: "2.0"

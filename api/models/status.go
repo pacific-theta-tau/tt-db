@@ -29,7 +29,8 @@ type BrotherStatus struct {
     BrotherID   int `json:"brotherID"`
     RollCall    string `json:"rollCall"`
     FirstName   string `json:"firstName"`
-    LastName    string `jsong:"lastName"`
+    LastName    string `json:"lastName"`
+    Major       string `json:"major"`
     Status      string `json:"status"`
     Semester    string `json:"semesterLabel"`
 }
@@ -41,6 +42,7 @@ func CreateBrotherStatusFromRow(row *sql.Rows) (BrotherStatus, error) {
         &brotherStatus.RollCall,
         &brotherStatus.FirstName,
         &brotherStatus.LastName,
+        &brotherStatus.Major,
         &brotherStatus.Status,
         &brotherStatus.Semester,
     )

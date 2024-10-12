@@ -152,6 +152,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/brothers/statuses": {
+            "get": {
+                "description": "Get all status records per brother",
+                "tags": [
+                    "Brothers"
+                ],
+                "summary": "Get all status records per brother",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Semester filter",
+                        "name": "semester",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.BrotherStatus"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/brothers/statuses/count": {
             "get": {
                 "description": "Get status counts for all semesters",
@@ -578,6 +621,44 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/statuses": {
+            "get": {
+                "description": "Get all valid status labels (e.g.: \"Active\")",
+                "tags": [
+                    "Statuses"
+                ],
+                "summary": "Get status labels",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -687,6 +768,30 @@ const docTemplate = `{
                 },
                 "rollCall": {
                     "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.BrotherStatus": {
+            "description": "Brother Status information for a semester",
+            "type": "object",
+            "properties": {
+                "brotherID": {
+                    "type": "integer"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "rollCall": {
+                    "type": "string"
+                },
+                "semesterLabel": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "string"
