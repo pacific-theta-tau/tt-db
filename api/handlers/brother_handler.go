@@ -575,7 +575,7 @@ func (h *Handler) GetAllBrotherStatuses(w http.ResponseWriter, r *http.Request) 
 
     // Query for all brother statuses
     query := `
-    SELECT b.brotherID, b.rollCall, b.firstName, b.lastName, bs.status, s.semesterLabel
+    SELECT b.brotherID, b.rollCall, b.firstName, b.lastName, b.major, bs.status, s.semesterLabel
     FROM brotherStatus bs
     JOIN brothers b ON b.brotherID = bs.brotherID
     JOIN semester s ON s.semesterID = bs.semesterID
@@ -600,7 +600,7 @@ func (h *Handler) GetAllBrotherStatuses(w http.ResponseWriter, r *http.Request) 
     if err != nil {
         errMsg := fmt.Sprintf("Error while querying for all brother statuses: %s", err.Error())
         log.Println(errMsg)
-        http.Error(w, errMsg, http.StatusInternalServerError)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
         return
     }
 
@@ -612,22 +612,14 @@ func (h *Handler) GetAllBrotherStatuses(w http.ResponseWriter, r *http.Request) 
         if err != nil {
             errMsg := fmt.Sprintf("Error while parsing brotherStatus query: '%s'", err.Error())
             log.Println(errMsg)
-            http.Error(w, errMsg, http.StatusInternalServerError)
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
             return
         }
         brotherStatuses = append(brotherStatuses, &brotherStatus)
     }
 
-    log.Println("Building response\n")
     // Build response
-    if err := json.NewEncoder(w).Encode(brotherStatuses); err != nil {
-        errMsg := fmt.Sprintf("Erro while encoding response: '%s'", err.Error())
-        log.Println(errMsg)
-        http.Error(w, errMsg, http.StatusInternalServerError)
-        return
-    }
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
+    models.RespondWithSuccess(w, http.StatusOK, brotherStatuses)
 }
 
 
