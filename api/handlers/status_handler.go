@@ -13,6 +13,12 @@ import (
 )
 
 // GET /api/statuses
+//	@Summary		Get status labels
+//	@Description	Get all valid status labels (e.g.: "Active")
+//	@Tags			Statuses
+//	@Success		200		object		models.APIResponse{data=[]string}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/statuses [get]
 func (h *Handler) GetAllStatusLabels(w http.ResponseWriter, r *http.Request) {
     // Hardcoded since we don't plan to modify brotherStatus table in databse
     statusLabels := [6]string{"Active", "Pre-Alumnus", "Alumnus", "Co-op", "Transferred", "Expelled"}
@@ -37,7 +43,7 @@ func (h *Handler) CreateStatusForBrother(w http.ResponseWriter, r *http.Request)
     if err != nil {
         errMsg := fmt.Sprintf("Error while parsing request body data: %s", err.Error())
         log.Println(errMsg)
-        http.Error(w, errMsg, http.StatusInternalServerError)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
         return
     }
 
@@ -46,7 +52,7 @@ func (h *Handler) CreateStatusForBrother(w http.ResponseWriter, r *http.Request)
     if err := validate.Struct(requestBody); err != nil {
         errMsg := fmt.Sprintf("Invalid Input: %s", err.Error())
         log.Println(errMsg)
-        http.Error(w, errMsg, http.StatusBadRequest)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
         return
     }
 
@@ -65,14 +71,9 @@ func (h *Handler) CreateStatusForBrother(w http.ResponseWriter, r *http.Request)
     if err != nil {
         errMsg := fmt.Sprintf("Query error:\n\t'%s'\n", err.Error())
         log.Println(errMsg)
-        log.Println("Sending HTTP error response\n")
-		http.Error(w, errMsg, http.StatusInternalServerError)
-        log.Println("After sending error response\n")
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Created Brother Status successfully"))
-
+    models.RespondWithSuccess(w, http.StatusCreated, "")
 }
