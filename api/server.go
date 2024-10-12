@@ -99,10 +99,12 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     // brothers count
 	r.Get("/api/brothers/count", handler.GetBrothersCount)
 	r.Get("/api/brothers/majors/count", handler.GetBrothersMajorsCount)
+    r.Get("/api/brothers/statuses", handler.GetAllBrotherStatuses)
 	r.Get("/api/brothers/statuses/count", handler.GetBrotherStatusCount)
 
     // brotherStatus endpoints
-    r.Get("/api/statuses", handler.GetAllBrotherStatuses)
+    // r.Get("/api/statuses", handler.GetAllBrotherStatuses)
+    r.Get("/api/statuses", handler.GetAllStatusLabels)
     r.Get("/api/brothers/{id}/statuses", handler.GetBrotherStatusHistory)
     r.Post("/api/brothers/{id}/statuses", handler.CreateBrotherStatus)
 
