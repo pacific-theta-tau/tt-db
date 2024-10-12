@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/Login'
 import HomePage from './pages/Home'
 import BrothersPage from './pages/Brothers'
+import ActivesPage from './pages/Actives'
 import EventsPage from './pages/Events'
 import EventAttendancePage from './pages/EventAttendance'
 import NotFoundPage from './pages/NotFound'
@@ -28,6 +29,7 @@ const App: React.FC = () => {
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/" element={<HomePage />} />
                             <Route path="/brothers" element={<BrothersPage />} />
+                            <Route path="/actives/:semester" element={<ActivesPage />} />
                             <Route path="/events" element={<EventsPage />} />
                             <Route path="/events/:eventID/attendance" element={<EventAttendancePage />} />
                             <Route path="/404" element={<NotFoundPage />} />

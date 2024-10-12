@@ -366,3 +366,121 @@ export const rollCallSearchColumns: ColumnDef<Brother>[] = [
         header: 'Class',
     }
 ]
+
+
+export type BrotherStatus = {
+    rollCall: number,
+    firstName: string,
+    lastName: string,
+    major: string,
+    class: string,
+    status: string
+}
+
+export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
+     {
+        accessorKey: "rollCall",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="px-0"
+                >
+                    Roll Call
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+               )
+        },
+    },
+    {
+        accessorKey: "firstName",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="px-0"
+                >
+                    First Name
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+               )
+        },
+    },
+    {
+        accessorKey: "lastName",
+         header: ({ column }) => {
+             return (
+                 <Button
+                     variant="ghost"
+                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                     className="px-0"
+                 >
+                     Last Name 
+                 <ArrowUpDown className="ml-2 h-4 w-4" />
+                 </Button>
+                )
+         },
+    },
+    {
+        accessorKey: "major",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="px-0"
+                >
+                    Major 
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+               )
+        },
+    },
+    {
+        accessorKey: "status",
+        header: "Status",
+    },
+    {
+        accessorKey: "class",
+        header: "Class Name",
+    },
+    {
+          id: "actions",
+        cell: ({ row }) => {
+          const brother = row.original
+     
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+                <DropdownMenuItem onClick={ () => console.log("Edit row") } >
+                    <Pencil className="h-4 w-4"/> Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={ () => console.log("Delete row") } >
+                    <Trash2 className="h-4 w-4"/> Delete
+                </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
+                     <Clipboard className="h-4 w-4"/> Copy Full Name
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem>
+                    View Brother
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )
+        },
+    }   
+]
