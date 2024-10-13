@@ -240,7 +240,7 @@ func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
 //	@Description	Update event record by eventID
 //	@Tags			Events
 //	@Param			eventid		body int											true	"Event ID"
-//	@Success		200		object		models.APIResponse{data=models.Event}
+//	@Success		200		object		models.APIResponse
 //	@Failure		400		{object}	models.APIResponse
 //	@Router			/api/events [put]
 func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {

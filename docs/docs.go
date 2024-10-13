@@ -15,6 +15,148 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/attendance": {
+            "get": {
+                "description": "Get attendance data for all events",
+                "tags": [
+                    "Attendance"
+                ],
+                "summary": "Get all attendance records",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Attendance"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update attendance record",
+                "tags": [
+                    "Attendance"
+                ],
+                "summary": "Update attendance record",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create attendance record",
+                "tags": [
+                    "Attendance"
+                ],
+                "summary": "Create attendance record",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete attendance record",
+                "tags": [
+                    "Attendance"
+                ],
+                "summary": "Delete attendance record",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/attendance/{id}": {
+            "get": {
+                "description": "Get data from all Brother records in ` + "`" + `Brothers` + "`" + ` table",
+                "tags": [
+                    "Attendance"
+                ],
+                "summary": "Get all Brothers data",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "EventID",
+                        "name": "eventID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Brother"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/brothers": {
             "get": {
                 "description": "Get data from all Brother records in ` + "`" + `Brothers` + "`" + ` table",
@@ -466,19 +608,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/models.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/models.Event"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/models.APIResponse"
                         }
                     },
                     "400": {
@@ -622,6 +752,100 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/semesters": {
+            "get": {
+                "description": "Get all semester labels (e.g. \"Spring 2024\")",
+                "tags": [
+                    "Semesters"
+                ],
+                "summary": "Get semester labels",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create semester label (e.g. Spring 2024)",
+                "tags": [
+                    "Semesters"
+                ],
+                "summary": "Create semester label",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/semesters/{semesterLabel}/statuses": {
+            "get": {
+                "description": "Get all brother statuses for a semester",
+                "tags": [
+                    "Semesters"
+                ],
+                "summary": "Get Brother statuses for a semester",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Attendance"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/statuses": {
             "get": {
                 "description": "Get all valid status labels (e.g.: \"Active\")",
@@ -730,6 +954,41 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Attendance": {
+            "type": "object",
+            "properties": {
+                "attendanceStatus": {
+                    "type": "string"
+                },
+                "brotherID": {
+                    "type": "integer"
+                },
+                "eventCategory": {
+                    "type": "string"
+                },
+                "eventDate": {
+                    "type": "string"
+                },
+                "eventID": {
+                    "type": "integer"
+                },
+                "eventLocation": {
+                    "type": "string"
+                },
+                "eventName": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "rollCall": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Brother": {
             "description": "Brother information",
             "type": "object",
@@ -785,6 +1044,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "lastName": {
+                    "type": "string"
+                },
+                "major": {
                     "type": "string"
                 },
                 "rollCall": {

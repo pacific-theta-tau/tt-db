@@ -41,6 +41,12 @@ func createAttendanceFromRow(row *sql.Rows) (models.Attendance, error) {
 
 
 // GET /api/attendance
+//	@Summary		Get all attendance records
+//	@Description	Get attendance data for all events
+//	@Tags			Attendance
+//	@Success		200		object		models.APIResponse{data=models.Attendance}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/attendance [get]
 func (h *Handler) GetAllAttendanceRecords(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -87,6 +93,13 @@ func (h *Handler) GetAllAttendanceRecords(w http.ResponseWriter, r *http.Request
 
 
 // GET /api/attendance/{eventID}
+//	@Summary		Get all Brothers data
+//	@Description	Get data from all Brother records in `Brothers` table
+//	@Tags			Attendance
+//  @Param          eventID      path        int true "EventID"
+//	@Success		200		object		models.APIResponse{data=models.Brother}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/attendance/{id} [get]
 func (h *Handler) GetAttendanceFromEventID(w http.ResponseWriter, r *http.Request) {
     eventIDStr := chi.URLParam(r, "eventID")
     eventID, err := strconv.Atoi(eventIDStr)
@@ -144,6 +157,12 @@ func (h *Handler) GetAttendanceFromEventID(w http.ResponseWriter, r *http.Reques
 }
 
 
+//	@Summary		Create attendance record
+//	@Description	Create attendance record
+//	@Tags		    Attendance	
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/attendance [post]
 func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
@@ -198,6 +217,13 @@ func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Inserted new record into `attendance` table successfully!"))
 }
 
+
+//	@Summary		Delete attendance record
+//	@Description	Delete attendance record
+//	@Tags		    Attendance	
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/attendance [delete]
 func (h *Handler) DeleteAttendanceRecord(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
@@ -247,6 +273,13 @@ func (h *Handler) DeleteAttendanceRecord(w http.ResponseWriter, r *http.Request)
 	w.Write([]byte("Deleted attendance record successfully"))
 }
 
+
+//	@Summary		Update attendance record
+//	@Description	Update attendance record
+//	@Tags		    Attendance	
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/attendance [put]
 func (h *Handler) UpdateAttendanceRecord(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()

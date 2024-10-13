@@ -14,6 +14,12 @@ import (
 
 // Get all semester labels. E.g.: "Spring 2024"
 /* GET /semesters?semester=[optional] */
+//	@Summary		Get semester labels
+//	@Description	Get all semester labels (e.g. "Spring 2024")
+//	@Tags		    Semesters
+//	@Success		200		object		models.APIResponse{data=[]string}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/semesters [get]
 func (h *Handler) GetAllSemesterLabels(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -53,6 +59,12 @@ func (h *Handler) GetAllSemesterLabels(w http.ResponseWriter, r *http.Request) {
 
 // Create new semester label. E.g.: "Fall 2023", "Spring 2024"
 /* endpoint: POST /api/semesters */
+//	@Summary		Create semester label
+//	@Description	Create semester label (e.g. Spring 2024)
+//	@Tags		    Semesters 
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/semesters [post]
 func (h *Handler) CreateSemesterLabel(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
@@ -83,6 +95,13 @@ func (h *Handler) CreateSemesterLabel(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Created new semester label successfully!"))
 } 
 
+
+//	@Summary		Get Brother statuses for a semester
+//	@Description	Get all brother statuses for a semester
+//	@Tags		    Semesters
+//	@Success		200		object		models.APIResponse{data=models.Attendance}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/semesters/{semesterLabel}/statuses [get]
 func (h *Handler) GetAllBrotherStatusesForSemester(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
