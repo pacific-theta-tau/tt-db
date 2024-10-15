@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-playground/validator/v10"
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
 
@@ -30,7 +31,7 @@ func (h *Handler) GetAllSemesterLabels(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         errMsg := fmt.Sprintf("Error while querying for semester data: `%s`\n", err.Error())
         log.Println(errMsg)
-        http.Error(w, errMsg, http.StatusInternalServerError)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
         return
     }
 
@@ -42,16 +43,13 @@ func (h *Handler) GetAllSemesterLabels(w http.ResponseWriter, r *http.Request) {
         if err != nil {
             errMsg := fmt.Sprintf("Error creating Semester label slice from row: '%s'\n", err.Error())
 			log.Println(errMsg)
-			http.Error(w, errMsg, http.StatusInternalServerError)
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 			return
 		}
 
         semesterLabels = append(semesterLabels, &label)
     }
-    log.Println("Parsed semester data successfully")
-    log.Println(semesterLabels)
 
-    log.Println("Building response\n")
     // Build response
     models.RespondWithSuccess(w, http.StatusOK, semesterLabels)
 }
@@ -76,7 +74,7 @@ func (h *Handler) CreateSemesterLabel(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         errMsg := fmt.Sprintf("Error while parsing request body:\n%s\n", err.Error())
         log.Println(err)
-        http.Error(w, errMsg, http.StatusInternalServerError)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
     }
     log.Printf("request body data: `%v%`", requestBody)
 
@@ -86,13 +84,11 @@ func (h *Handler) CreateSemesterLabel(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         errMsg := fmt.Sprintf("Query error:\n\t'%s'\n", err.Error())
         log.Println(errMsg)
-		http.Error(w, errMsg, http.StatusInternalServerError)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Created new semester label successfully!"))
+    models.RespondWithSuccess(w, http.StatusCreated, "")
 } 
 
 
@@ -123,6 +119,7 @@ func (h *Handler) GetAllBrotherStatusesForSemester(w http.ResponseWriter, r *htt
     JOIN semester s ON s.semesterID = bs.semesterID
     WHERE semesterLabel = $1
     `
+    log.Printf("Query:\n%s\n", query)
     rows, err := h.db.QueryContext(ctx, query, semester)
     if err != nil {
         errMsg := fmt.Sprintf("Error while querying brother statuses for semester %s: %s", semester, err.Error())
@@ -145,3 +142,69 @@ func (h *Handler) GetAllBrotherStatusesForSemester(w http.ResponseWriter, r *htt
 
     models.RespondWithSuccess(w, http.StatusOK, brotherStatuses)
 }
+
+//	@Summary		Create Brother statuses for a semester
+//	@Description	Create all brother statuses for a semester
+//	@Tags		    Semesters
+//	@Success		200		object		models.APIResponse{data=models.Attendance}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/semesters/{semesterLabel}/statuses [post]
+func (h *Handler) CreateBrotherStatusForSemester(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    // urlParams: if none provided, get for all semesters
+    semester := chi.URLParam(r, "semester")
+    log.Printf("Semester url param: %s", semester)
+    if semester == "" {
+        errMsg := "Missing semester in query params"
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
+    }
+
+    //body params
+    type RequestBody struct {
+        BrotherID   string `json:"brotherID"`
+        Status      string `json:"status"`
+    }
+    var bodyParams RequestBody
+    err := json.NewDecoder(r.Body).Decode(&bodyParams)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while decoding body params: %s", err)
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+    }
+
+    // Validate data provided in request body
+    validate := validator.New()
+	if err := validate.Struct(bodyParams); err != nil {
+        errMsg := fmt.Sprintf("Missing or Invalid request body params: %s", err)
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+		return
+	}
+
+    query := `
+    INSERT INTO brotherStatus (brotherID, semesterID, status)
+    VALUES
+        ($1, $2, $3)
+    RETURNING *
+    `
+    _, err = h.db.QueryContext(
+        ctx,
+        query,
+        bodyParams.BrotherID,
+        semester,
+        bodyParams.Status,
+    )
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while querying brother statuses for semester %s: %s", semester, err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+    }
+    
+    models.RespondWithSuccess(w, http.StatusOK, "")
+}
+

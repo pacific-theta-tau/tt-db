@@ -126,6 +126,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     r.Get("/api/semesters", handler.GetAllSemesterLabels)
     r.Post("/api/semesters", handler.CreateSemesterLabel)
     r.Get("/api/semesters/{semester}/statuses", handler.GetAllBrotherStatusesForSemester)
+    r.Post("/api/semesters/{semester}/statuses", handler.CreateBrotherStatusForSemester)
 
 	return r
 }
