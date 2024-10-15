@@ -357,7 +357,6 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         errMsg := "Invalid event ID"
         log.Printf(errMsg, err)
-        http.Error(w, errMsg, http.StatusBadRequest)
         models.RespondWithFail(w, http.StatusBadRequest, errMsg)
         return
     }

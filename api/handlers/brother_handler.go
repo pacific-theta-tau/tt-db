@@ -336,8 +336,9 @@ func (h *Handler) GetBrotherStatusHistory(w http.ResponseWriter, r *http.Request
     brotherIDStr := chi.URLParam(r, "id")
     brotherID, err := strconv.Atoi(brotherIDStr)
     if err != nil {
-        log.Printf("Invalid brother ID: %v", err.Error())
-        http.Error(w, "Invalid event ID", http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Invalid brother ID: %v", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
         return
     }
 
@@ -694,3 +695,4 @@ func (h *Handler) GetBrotherStatusCount(w http.ResponseWriter, r *http.Request) 
 
     models.RespondWithSuccess(w, http.StatusOK, semesterCounts)
 }
+

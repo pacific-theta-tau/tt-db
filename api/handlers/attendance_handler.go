@@ -60,8 +60,9 @@ func (h *Handler) GetAllAttendanceRecords(w http.ResponseWriter, r *http.Request
     `
 	rows, err := h.db.QueryContext(ctx, query)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-        log.Print(err.Error())
+        errMsg := fmt.Sprintf("Error while querying for Attendance records: %s", err.Error())
+        log.Print(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
@@ -70,7 +71,8 @@ func (h *Handler) GetAllAttendanceRecords(w http.ResponseWriter, r *http.Request
 	for rows.Next() {
 		record, err := createAttendanceFromRow(rows)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+            errMsg := fmt.Sprintf("Error while parsing Attendance records: %s", err.Error())
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 			return
 		}
         attendance = append(attendance, &record)
@@ -106,7 +108,7 @@ func (h *Handler) GetAttendanceFromEventID(w http.ResponseWriter, r *http.Reques
     if err != nil {
         errMsg := "Invalid event ID"
         log.Printf(errMsg, err)
-        http.Error(w, errMsg, http.StatusBadRequest)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
         return
     }
 
@@ -124,8 +126,9 @@ func (h *Handler) GetAttendanceFromEventID(w http.ResponseWriter, r *http.Reques
     log.Printf("\tEventID: %d", eventID)
     rows, err := h.db.QueryContext(ctx, query, eventID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-        log.Print(err.Error())
+        errMsg := fmt.Sprintf("Error while querying for Attendance Record: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
@@ -134,7 +137,9 @@ func (h *Handler) GetAttendanceFromEventID(w http.ResponseWriter, r *http.Reques
 	for rows.Next() {
 		record, err := createAttendanceFromRow(rows)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+            errMsg := fmt.Sprintf("Error while parsing Attendance Record: %s", err.Error())
+            log.Println(errMsg)
+            models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 			return
 		}
         attendance = append(attendance, &record)
@@ -144,16 +149,8 @@ func (h *Handler) GetAttendanceFromEventID(w http.ResponseWriter, r *http.Reques
     data := attendance
 
 	// Build HTTP response
-    w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-    if len(data) == 0 {
-        json.NewEncoder(w).Encode(struct{}{})
-        return
-    }
-    
-    json.NewEncoder(w).Encode(data)
-
+    // TODO: test
+    models.RespondWithSuccess(w, http.StatusOK, data)
 }
 
 
@@ -175,14 +172,18 @@ func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
     }
     err := json.NewDecoder(r.Body).Decode(&input)
     if err != nil {
-        http.Error(w, "Invalid input", http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Error while parsing request body params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
         return
     }
 
     // Validate data provided in request body
     validate := validator.New()
 	if err := validate.Struct(input); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Invalid body params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
 
@@ -190,7 +191,9 @@ func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
 
     // Check for missing or zero values
 	if input.BrotherID == 0 || input.EventID == 0 {
-		http.Error(w, "Missing brotherID or eventID", http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Missing brotherID or eventID", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
 
@@ -200,7 +203,7 @@ func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
     RETURNING *
     `
     
-    result, err := h.db.ExecContext(
+    _, err = h.db.ExecContext(
         ctx,
         query,
         &input.BrotherID,
@@ -208,13 +211,13 @@ func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
         &input.AttendanceStatus,
     )
     if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+        errMsg := fmt.Sprintf("Error while inserting attendance record to table: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
-    fmt.Println(result)
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Inserted new record into `attendance` table successfully!"))
+    models.RespondWithSuccess(w, http.StatusCreated, "")
 }
 
 
@@ -235,13 +238,17 @@ func (h *Handler) DeleteAttendanceRecord(w http.ResponseWriter, r *http.Request)
     }   
     err := json.NewDecoder(r.Body).Decode(&requestBody)
     if err != nil {
-        http.Error(w, "Invalid input", http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Error while parsing request body params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
         return
     }
     // Validate data provided in request body
     validate := validator.New()
 	if err := validate.Struct(requestBody); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Invalid or missing params in request body params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
 
@@ -249,7 +256,9 @@ func (h *Handler) DeleteAttendanceRecord(w http.ResponseWriter, r *http.Request)
 
     // Check for missing or zero values
 	if requestBody.BrotherID == 0 || requestBody.EventID == 0 {
-		http.Error(w, "Invalid brotherID or eventID", http.StatusBadRequest)
+        errMsg := "Missing BrotherID and/or EventID in request body params"
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
 
@@ -264,13 +273,13 @@ func (h *Handler) DeleteAttendanceRecord(w http.ResponseWriter, r *http.Request)
         requestBody.EventID,
     )
     if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+        errMsg := fmt.Sprintf("Error while deleting attendance record: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Deleted attendance record successfully"))
+    models.RespondWithSuccess(w, http.StatusOK, "")
 }
 
 
@@ -293,14 +302,18 @@ func (h *Handler) UpdateAttendanceRecord(w http.ResponseWriter, r *http.Request)
     // Unmarshal request body data
     err := json.NewDecoder(r.Body).Decode(&requestBody)
     if err != nil {
-        http.Error(w, "Invalid input", http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Failed to parse request body params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusBadRequest, errMsg)
         return
     }
 
     // Validate data provided in request body
     validate := validator.New()
 	if err := validate.Struct(requestBody); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Invalid request body params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
 
@@ -308,7 +321,9 @@ func (h *Handler) UpdateAttendanceRecord(w http.ResponseWriter, r *http.Request)
 
     // Check for missing or zero values
 	if requestBody.BrotherID == 0 || requestBody.EventID == 0 {
-		http.Error(w, "Invalid brotherID or eventID", http.StatusBadRequest)
+        errMsg := fmt.Sprintf("Invalid brotherID or eventID", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
     // validate attendance status
@@ -316,7 +331,7 @@ func (h *Handler) UpdateAttendanceRecord(w http.ResponseWriter, r *http.Request)
         // TODO: print valid statues dynamically instead of hardcoding
         errMsg := "Invalid attendance status. Must be one of: 'present', 'absent', or 'excused'"
         log.Println(errMsg)
-		http.Error(w, errMsg, http.StatusBadRequest)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
     }
 
@@ -333,12 +348,12 @@ func (h *Handler) UpdateAttendanceRecord(w http.ResponseWriter, r *http.Request)
         requestBody.EventID,
     )
     if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+        errMsg := fmt.Sprintf("Error while updating attendance record: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
 		return
 	}
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Updated attendance record successfully"))
+    models.RespondWithSuccess(w, http.StatusOK, "")
 }
 
