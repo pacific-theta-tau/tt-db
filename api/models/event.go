@@ -2,7 +2,7 @@ package models
 
 import("time")
 
-// TODO: decide which fields are nullable.
+//  @Description Event information
 type Event struct {
 	EventID			int			`json:"eventID"`  //primary
 	EventName		string 		`json:"eventName"`
@@ -11,6 +11,7 @@ type Event struct {
 	EventDate		time.Time	`json:"eventDate"`
 }
 
+//  @Description Event Attendance information of a Brother
 type EventAttendance struct {
     BrotherID           int `json:"brotherID"`
     FirstName           string `json:"firstName"`

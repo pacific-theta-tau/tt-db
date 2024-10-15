@@ -1,6 +1,6 @@
 package models
 
-// TODO: decide which fields are nullable.
+//  @Description Brother information
 type Brother struct {
     BrotherID   int    `json:"brotherID"`  // Primary Key
     RollCall    int    `json:"rollCall" validate:"required"`

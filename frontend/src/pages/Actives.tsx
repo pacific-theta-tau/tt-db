@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Brother, brothersTableColumns } from "./columns"
-import { DataTable } from "./data-table"
-import { Skeleton } from "@/components/ui/skeleton"
-import { BrotherForm } from './sheet/forms/brothers-form'
-import AddRowSheet from './sheet/add-row-sheet';
-import { ApiResponse, getData } from '../api/api'
+import { useParams } from 'react-router-dom';
+import { brotherStatusTableColumns, BrotherStatus } from "../components/columns"
+import { DataTable } from "../components/data-table"
+import { Skeleton } from '@/components/ui/skeleton'
+import AddRowSheet from '@/components/sheet/add-row-sheet';
+import { getData, ApiResponse } from '@/api/api'
+import { BrotherStatusForm } from '@/components/sheet/forms/brothers-status-form';
 
 
-const BrothersTable: React.FC = () => {
-    const [data, setData] = useState<Brother[]>([]);
+const ActivesPage: React.FC = () => {
+    const [data, setData] = useState<BrotherStatus[]>([]);
     const [loading, setLoading] = useState<boolean | null>(true);
     const [error, setError] = useState<string | null>(null);
+    const { semester } = useParams<{ semester: string }>();
 
     useEffect(() => {
-        const endpoint = "http://localhost:8080/api/brothers"
+        const endpoint = `http://localhost:8080/api/semesters/${semester}/statuses`
         const fetchData = async () => {
              try {
                 setLoading(true)
-                const result: ApiResponse<Brother[]> = await getData(endpoint)
-                console.log('result:', result)
+                const result: ApiResponse<BrotherStatus[]> = await getData(endpoint)
+                console.log('brother status for semester:', result)
                 setData(result.data);
             } catch (error: any) {
                 setError((error as Error).message);
@@ -36,7 +38,7 @@ const BrothersTable: React.FC = () => {
     if (loading) {
         // Load dummy empty data and skeleton
         const loadingData = Array(5).fill({}) 
-        const loadingTableColumns = brothersTableColumns.map((column) => ({
+        const loadingTableColumns = brotherStatusTableColumns.map((column) => ({
             ...column,
             cell: () => <Skeleton className="h-12"/>,
           }))
@@ -49,16 +51,16 @@ const BrothersTable: React.FC = () => {
 
     return (
         <DataTable
-            columns={brothersTableColumns}
+            columns={brotherStatusTableColumns}
             data={data}
             AddSheet={
                 () => <AddRowSheet
                         title="Add new member record"
                         description="Refresh the page once you hit submit"
-                        FormType={<BrotherForm />}
+                        FormType={<BrotherStatusForm />}
                       />}
         />
    )
 }
 
-export default BrothersTable 
+export default ActivesPage;

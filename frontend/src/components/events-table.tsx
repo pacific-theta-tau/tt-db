@@ -4,6 +4,7 @@ import { DataTable } from './data-table'
 import { Skeleton } from '@/components/ui/skeleton'
 import AddRowSheet from './sheet/add-row-sheet'
 import { EventsForm } from './sheet/forms/events-form'
+import { ApiResponse, getData } from '@/api/api';
 
 const EventsTable: React.FC = () => {
     const [data, setData] = useState<Event[]>([]);   
@@ -14,20 +15,10 @@ const EventsTable: React.FC = () => {
         const endpoint = "http://localhost:8080/api/events"
         const fetchData = async () => {
             try {
-                const response = await fetch(endpoint, {
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const result: Event[] = await response.json();
+                setLoading(true)
+                const result: ApiResponse<Event[]> = await getData(endpoint)
                 console.log('result:', result)
-                setData(result);
+                setData(result.data);
             } catch (e) {
                 setError((e as Error).message);
                 console.log('Error fetching data:', error);
@@ -63,7 +54,7 @@ const EventsTable: React.FC = () => {
             AddSheet={
                 () => <AddRowSheet
                     title="Add new event record"
-                    description="Input the event information below then click submit"
+                    description="Refresh the page once you hit submit to see updated table"
                     FormType={<EventsForm />}
                 />
             }

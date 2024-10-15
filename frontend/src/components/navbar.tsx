@@ -16,7 +16,20 @@ import {
 import ThemeToggle from './theme-toggle'
 
 
+function getSeasonYear(): string {
+  const today = new Date();
+  const month = today.getMonth(); // Months are 0-indexed: January is 0, December is 11
+  const year = today.getFullYear();
+
+  // Determine the season based on the month
+  const season = month < 6 ? 'Spring' : 'Fall';
+
+  return encodeURIComponent(`${season} ${year}`);
+}
+
 const NavBar: React.FC = () => {
+    const semester = getSeasonYear()
+    console.log("semester:", semester)
     const location = useLocation()
     if (location.pathname === "/login" || location.pathname.startsWith("/404")) {
         return null
@@ -34,6 +47,12 @@ const NavBar: React.FC = () => {
                     <NavigationMenuItem>
                         <Link to="/brothers">
                         <NavigationMenuLink className={navigationMenuTriggerStyle()}>Members</NavigationMenuLink>
+                        </Link>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                        <Link to={`/actives/${semester}`}>
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>Actives</NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
 

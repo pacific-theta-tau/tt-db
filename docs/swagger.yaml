@@ -1,0 +1,681 @@
+definitions:
+  handlers.CreateBrotherStatus.RequestBody:
+    properties:
+      brotherID:
+        type: integer
+      semesterID:
+        type: integer
+      status:
+        type: string
+    type: object
+  handlers.GetBrotherStatusCount.SemesterCount:
+    properties:
+      count:
+        type: integer
+      semester:
+        type: string
+    type: object
+  handlers.GetEventAttendance.EventDataAndAttendance:
+    properties:
+      attendance:
+        items:
+          $ref: '#/definitions/models.EventAttendance'
+        type: array
+      eventCategory:
+        type: string
+      eventDate:
+        type: string
+      eventID:
+        description: primary
+        type: integer
+      eventLocation:
+        type: string
+      eventName:
+        type: string
+    type: object
+  models.APIResponse:
+    description: JSON response format for all API calls
+    properties:
+      data:
+        description: Omit if nil
+      message:
+        description: Omit if nil
+        type: string
+      status:
+        type: string
+    type: object
+  models.Attendance:
+    properties:
+      attendanceStatus:
+        type: string
+      brotherID:
+        type: integer
+      eventCategory:
+        type: string
+      eventDate:
+        type: string
+      eventID:
+        type: integer
+      eventLocation:
+        type: string
+      eventName:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      rollCall:
+        type: integer
+    type: object
+  models.Brother:
+    description: Brother information
+    properties:
+      badStanding:
+        type: integer
+      brotherID:
+        description: Primary Key
+        type: integer
+      className:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      major:
+        type: string
+      phoneNumber:
+        type: string
+      rollCall:
+        type: integer
+      status:
+        type: string
+    required:
+    - firstName
+    - lastName
+    - major
+    - rollCall
+    - status
+    type: object
+  models.BrotherStatus:
+    description: Brother Status information for a semester
+    properties:
+      brotherID:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      major:
+        type: string
+      rollCall:
+        type: string
+      semesterLabel:
+        type: string
+      status:
+        type: string
+    type: object
+  models.Event:
+    description: Event information
+    properties:
+      categoryName:
+        type: string
+      eventDate:
+        type: string
+      eventID:
+        description: primary
+        type: integer
+      eventLocation:
+        type: string
+      eventName:
+        type: string
+    type: object
+  models.EventAttendance:
+    description: Event Attendance information of a Brother
+    properties:
+      attendanceStatus:
+        type: string
+      brotherID:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      rollCall:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /api/attendance:
+    delete:
+      description: Delete attendance record
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Delete attendance record
+      tags:
+      - Attendance
+    get:
+      description: Get attendance data for all events
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Attendance'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all attendance records
+      tags:
+      - Attendance
+    post:
+      description: Create attendance record
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create attendance record
+      tags:
+      - Attendance
+    put:
+      description: Update attendance record
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update attendance record
+      tags:
+      - Attendance
+  /api/attendance/{id}:
+    get:
+      description: Get data from all Brother records in `Brothers` table
+      parameters:
+      - description: EventID
+        in: path
+        name: eventID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Brother'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all Brothers data
+      tags:
+      - Attendance
+  /api/brothers:
+    get:
+      description: Get data from all Brother records in `Brothers` table
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Brother'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all Brothers data
+      tags:
+      - Brothers
+    post:
+      description: Create a new Brother record row for `Brothers` table
+      parameters:
+      - description: Values for new record
+        in: body
+        name: body_params
+        required: true
+        schema:
+          $ref: '#/definitions/models.Brother'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create Brother record
+      tags:
+      - Brothers
+  /api/brothers/{id}:
+    delete:
+      description: Delete Brother with by Roll Call
+      parameters:
+      - description: RollCall of Brother
+        in: body
+        name: body_params
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Delete Brother by Roll Call
+      tags:
+      - Brothers
+    get:
+      description: Get Brother record by ID
+      parameters:
+      - description: Brother ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get Brother record by ID
+      tags:
+      - Brothers
+    put:
+      description: Update one or more fields for Brother record
+      parameters:
+      - description: Values to update for Brother
+        in: body
+        name: body_params
+        required: true
+        schema:
+          $ref: '#/definitions/models.Brother'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update Brother record
+      tags:
+      - Brothers
+  /api/brothers/{id}/statuses:
+    get:
+      description: Get all status recorded for Brother
+      parameters:
+      - description: Brother ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get status history of a Brother
+      tags:
+      - Brothers
+    post:
+      consumes:
+      - application/json
+      description: Create a new status record for a Brother
+      parameters:
+      - description: Values for new record
+        in: body
+        name: body_params
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateBrotherStatus.RequestBody'
+      - description: Brother ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create status record for Brother
+      tags:
+      - Brothers
+  /api/brothers/count:
+    get:
+      description: Get major distribution counts across all members
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  type: integer
+              type: object
+        "400":
+          description: Error
+          schema:
+            type: string
+      summary: Get total Brothers count
+      tags:
+      - Brothers
+  /api/brothers/majors/count:
+    get:
+      description: Get major distribution counts across all members
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/handlers.GetBrotherStatusCount.SemesterCount'
+              type: object
+        "400":
+          description: error
+          schema:
+            type: string
+      summary: Get major counts
+      tags:
+      - Brothers
+  /api/brothers/statuses:
+    get:
+      description: Get all status records per brother
+      parameters:
+      - description: Semester filter
+        in: query
+        name: semester
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.BrotherStatus'
+              type: object
+        "400":
+          description: error
+          schema:
+            type: string
+      summary: Get all status records per brother
+      tags:
+      - Brothers
+  /api/brothers/statuses/count:
+    get:
+      description: Get status counts for all semesters
+      parameters:
+      - description: Status filter
+        in: query
+        name: status
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/handlers.GetBrotherStatusCount.SemesterCount'
+              type: object
+        "400":
+          description: error
+          schema:
+            type: string
+      summary: Get status counts
+      tags:
+      - Brothers
+  /api/events:
+    get:
+      description: Get data from all rows in events table
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Event'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get all event records
+      tags:
+      - Events
+    post:
+      description: Create new event record
+      parameters:
+      - description: Values for new event record
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Event'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Event'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create new event record
+      tags:
+      - Events
+    put:
+      description: Update event record by eventID
+      parameters:
+      - description: Event ID
+        in: body
+        name: eventid
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update event record
+      tags:
+      - Events
+  /api/events/{eventid}:
+    get:
+      description: Get event information by eventID
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventid
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Event'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get event data
+      tags:
+      - Events
+  /api/events/{eventid}/attendance:
+    get:
+      description: Get event and attendance data by eventID
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventid
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/handlers.GetEventAttendance.EventDataAndAttendance'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get event and attendance data
+      tags:
+      - Events
+  /api/semesters:
+    get:
+      description: Get all semester labels (e.g. "Spring 2024")
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get semester labels
+      tags:
+      - Semesters
+    post:
+      description: Create semester label (e.g. Spring 2024)
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create semester label
+      tags:
+      - Semesters
+  /api/semesters/{semesterLabel}/statuses:
+    get:
+      description: Get all brother statuses for a semester
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Attendance'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get Brother statuses for a semester
+      tags:
+      - Semesters
+  /api/statuses:
+    get:
+      description: 'Get all valid status labels (e.g.: "Active")'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Get status labels
+      tags:
+      - Statuses
+swagger: "2.0"

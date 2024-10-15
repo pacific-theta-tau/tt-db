@@ -9,6 +9,7 @@ import (
 
 
 // API response format in JSend notation. See: https://github.com/omniti-labs/jsend
+// @Description JSON response format for all API calls
 type APIResponse struct {
     Status      string `json:"status"`
     Message     string `json:"message,omitnil"` //Omit if nil
