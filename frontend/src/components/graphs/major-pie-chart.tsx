@@ -23,7 +23,7 @@ import {
 import { getData, ApiResponse } from "@/api/api"
 
 
-const DEBUG = false
+const DEBUG = true 
 export const description = "A donut chart showing members by major"
 
 interface MajorCount {
@@ -148,7 +148,7 @@ export function PieChartMajorsDistribution() {
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto min-h-[200px] max-h-[400px]"
+          className="mx-auto min-h-[200px] max-h-[450px]"
         >
           <PieChart>
             <ChartTooltip

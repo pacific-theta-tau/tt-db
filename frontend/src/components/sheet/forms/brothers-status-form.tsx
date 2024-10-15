@@ -81,6 +81,7 @@ export function BrotherStatusForm() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const { toast } = useToast()
+    // current semester displayed in table
     const { semester } = useParams<{ semester: string }>();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -139,7 +140,7 @@ export function BrotherStatusForm() {
     }
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    const endpoint = `http://localhost:8080/api/semesters/${semester}/attendance`
+    const endpoint = `http://localhost:8080/api/semesters/${semester}/statuses`
     let result: any
     const body = {
             "brotherID": brotherID,
@@ -165,6 +166,7 @@ export function BrotherStatusForm() {
     } finally {
         /* uncomment line below to test skeleton during loading */
         // await new Promise(f => setTimeout(f, 3000));
+        console.log("body:", body)
         console.log(result)
         toast({
             title: "You submitted the following values:",
@@ -267,7 +269,7 @@ export function BrotherStatusForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Semester *</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={semester}>
                   <FormControl>
                           <SelectTrigger className="w-[180px]">
                               <SelectValue placeholder="Select Status" />
