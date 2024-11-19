@@ -91,5 +91,5 @@ module.exports = {
   		}
   	}
   },
-  plugins: [import("tailwindcss-animate"), import("postcss-import")],
+  plugins: [require("tailwindcss-animate"), require("postcss-import")],
 }
