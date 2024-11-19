@@ -70,6 +70,10 @@ const chartConfig = {
   engineeringmanagement: {
     label: "Engineering Management",
     color: "var(--chart-8)",
+  },
+  other: {
+    label: "Other",
+    color: "var(--chart-9)",
   }
 } satisfies ChartConfig
 

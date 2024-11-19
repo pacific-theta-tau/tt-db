@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({
   return (
   <div>
     <div className="flex items-center">
-        <div>
+        <div className="mb-2">
             <Input
                 placeholder="Search..."
                 value={ globalFilter }
@@ -94,7 +94,7 @@ export function DataTable<TData, TValue>({
         </div>
         <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="ml-auto">
+                <Button variant="outline" className="ml-auto mb-2">
                   Columns
                 </Button>
               </DropdownMenuTrigger>
@@ -121,7 +121,9 @@ export function DataTable<TData, TValue>({
               </DropdownMenuContent>
         </DropdownMenu>
 
-        { AddSheet ? <AddSheet /> : null }
+        <div className="mb-2">
+            { AddSheet ? <AddSheet /> : null }
+        </div>
     </div>
 
     <div className="rounded-md border">
