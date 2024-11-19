@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/sidebar"
 
 
-
 /*
  * Helper function to get current Semester + Year in URL format
  * */
@@ -79,17 +78,6 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-
-            { /* dynamically get the url for actives of current semester */ }
-                <SidebarMenuItem className="mx-2 mb-1">
-                  <SidebarMenuButton asChild>
-                    <Link to={`/actives/${semester}`}>
-                      <Users />
-                      <span>Actives</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
 
               <SidebarMenuItem className="mx-2 mb-1">
                   <ThemeToggle />
