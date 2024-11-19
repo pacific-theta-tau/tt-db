@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS events(
 CREATE TABLE IF NOT EXISTS attendance(
 	brotherID INT REFERENCES brothers(brotherID),
 	eventID INT REFERENCES events(eventID),
-	attendanceStatus VARCHAR(20) CHECK (attendanceStatus IN ('present', 'absent', 'excused')),
+	attendanceStatus VARCHAR(20) CHECK (attendanceStatus IN ('Present', 'Absent', 'Excused')),
 	PRIMARY KEY (brotherID, eventID)  -- compound PK
 );
 
