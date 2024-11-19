@@ -41,7 +41,7 @@ const testChartData = [
 const chartConfig = {
   count: {
     label: "Actives",
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-6)",
   },
 } satisfies ChartConfig
 
