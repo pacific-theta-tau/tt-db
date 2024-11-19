@@ -1,5 +1,5 @@
 -- initialize tables for dev postgres db
-CREATE TYPE status AS ENUM ('Active', 'Pre-Alumnus', 'Alumnus', 'Co-op', 'Transferred', 'Expelled');
+CREATE TYPE status AS ENUM ('Active', 'Pre-Alumnus', 'Alumnus', 'Co-op', 'Transferred', 'Expelled', 'Inactive', 'Out of Contact');
 
 CREATE TABLE IF NOT EXISTS brothers(
     brotherID SERIAL PRIMARY KEY,
