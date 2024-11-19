@@ -60,17 +60,6 @@ const statuses: readonly [string, ...string[]] = [
     'Expelled',
 ]
 
-const formSchema = z.object({
-    rollCall: z.number({
-        required_error: "You must provide a roll call"
-    }),
-    semester: z.string({
-        required_error: "You must provide a semester"
-    }),
-    status: z.enum(statuses, {
-        required_error: "You need to select status.",
-    }),
-})
 
 export function BrotherStatusForm() {
     const [rollCall, setRollCall] = useState(0)
@@ -82,13 +71,25 @@ export function BrotherStatusForm() {
 
     const { toast } = useToast()
     // current semester displayed in table
-    const { semester } = useParams<{ semester: string }>();
+    const { semester = "" } = useParams<{ semester: string }>();
 
+    const formSchema = z.object({
+        rollCall: z.number({
+            required_error: "You must provide a roll call"
+        }),
+        semester: z.string({
+            required_error: "You must provide a semester"
+        }).default(semester),
+        status: z.enum(statuses, {
+            required_error: "You need to select status.",
+        }),
+    })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
         },
     })
+
 
     useEffect(() => {
         // Set default semester field to be semester in URL param
@@ -98,6 +99,8 @@ export function BrotherStatusForm() {
 
         const endpoint = "http://localhost:8080/api/brothers"
         const endpoint2 = "http://localhost:8080/api/semesters"
+
+        // Setting search and semester dropdown data on page load
         const fetchData = async () => {
              try {
                 const responseSearch: ApiResponse<Brother[]> = await getData(endpoint)
@@ -143,7 +146,7 @@ export function BrotherStatusForm() {
     const endpoint = `http://localhost:8080/api/semesters/${semester}/statuses`
     let result: any
     const body = {
-            "brotherID": brotherID,
+            "brotherID": parseInt(brotherID),
             "status": data.status,
     }
     try {
@@ -296,7 +299,7 @@ export function BrotherStatusForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Status *</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={semester}>
                   <FormControl>
                           <SelectTrigger className="w-[180px]">
                               <SelectValue placeholder="Select Status" />
