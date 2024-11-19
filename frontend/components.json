@@ -5,7 +5,7 @@
   "tsx": true,
   "tailwind": {
     "config": "tailwind.config.js",
-    "css": "/home/nickel/Code/thetatau/TT-DB/frontend/src/App.css",
+    "css": "/home/nickel/Code/projects/thetatau/tt-db/frontend/src/App.css",
     "baseColor": "slate",
     "cssVariables": true,
     "prefix": ""

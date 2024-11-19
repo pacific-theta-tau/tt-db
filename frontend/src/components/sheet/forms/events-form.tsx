@@ -205,7 +205,7 @@ export function EventsForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Event Date</FormLabel>
-              <Popover>
+              <Popover modal={true}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button

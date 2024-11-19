@@ -1,22 +1,17 @@
 import * as React from "react";
 import { Link, useLocation } from "react-router-dom"
-
+import { Home } from 'lucide-react'
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
   navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu"
-
 import ThemeToggle from './theme-toggle'
 
 
-function getSeasonYear(): string {
+export function getSeasonYear(): string {
   const today = new Date();
   const month = today.getMonth(); // Months are 0-indexed: January is 0, December is 11
   const year = today.getFullYear();
