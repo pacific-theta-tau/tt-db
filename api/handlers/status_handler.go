@@ -21,7 +21,7 @@ import (
 //	@Router			/api/statuses [get]
 func (h *Handler) GetAllStatusLabels(w http.ResponseWriter, r *http.Request) {
     // Hardcoded since we don't plan to modify brotherStatus table in databse
-    statusLabels := [6]string{"Active", "Pre-Alumnus", "Alumnus", "Co-op", "Transferred", "Expelled"}
+    statusLabels := [8]string{"Active", "Pre-Alumnus", "Alumnus", "Co-op", "Transferred", "Expelled", "Inactive", "Out of Contact"}
     models.RespondWithSuccess(w, http.StatusOK, statusLabels)
 }
 
