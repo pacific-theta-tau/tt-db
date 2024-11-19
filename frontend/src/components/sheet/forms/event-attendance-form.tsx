@@ -12,6 +12,7 @@ import { Search } from "lucide-react"
 import { useReactTable, getCoreRowModel, getFilteredRowModel, flexRender, ColumnDef } from '@tanstack/react-table'
 import { rollCallSearchColumns } from '@/components/columns';
 import { Brother } from "@/components/columns"
+import { ApiResponse } from '@/api/api';
 
 
 // UI imports
@@ -94,9 +95,9 @@ export function EventAttendanceForm() {
                 if (!response.ok) {
                   throw new Error('Network response was not ok');
                 }
-                const result: Brother[] = await response.json();
+                const result: ApiResponse<Brother[]> = await response.json();
                 console.log('result:', result)
-                setSearchData(result);
+                setSearchData(result.data);
             } catch (error) {
                 console.log('Error fetching data:', error);
                 throw error;
