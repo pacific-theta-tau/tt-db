@@ -55,6 +55,28 @@ func (h *Handler) GetAllSemesterLabels(w http.ResponseWriter, r *http.Request) {
 }
 
 
+// Helper function to get semesterID related to a semesterLabel
+func (h *Handler) GetSemesterIdBySemesterLabel(semesterLabel string) (int, error) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    query := `
+    SELECT semesterID
+    FROM semester
+    WHERE semesterLabel = $1
+    `
+    var semesterID int
+    err := h.db.QueryRowContext(ctx, query, semesterLabel).Scan(&semesterID)
+    log.Printf("Querying for semester labels:\n%s", query)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while querying for semesterID: `%s`\n", err.Error())
+        log.Println(errMsg)
+        return -1, err
+    }
+    return semesterID, nil
+}
+
+
 // Create new semester label. E.g.: "Fall 2023", "Spring 2024"
 /* endpoint: POST /api/semesters */
 //	@Summary		Create semester label
@@ -146,6 +168,9 @@ func (h *Handler) GetAllBrotherStatusesForSemester(w http.ResponseWriter, r *htt
 //	@Summary		Create Brother statuses for a semester
 //	@Description	Create all brother statuses for a semester
 //	@Tags		    Semesters
+//	@Param			semesterLabel path string true	"semesterLabel"
+//	@Param			brotherID body int											true	"BrotherID"
+//	@Param			status body string true	"Status"
 //	@Success		200		object		models.APIResponse{data=models.Attendance}
 //	@Failure		400		{object}	models.APIResponse
 //	@Router			/api/semesters/{semesterLabel}/statuses [post]
@@ -154,22 +179,31 @@ func (h *Handler) CreateBrotherStatusForSemester(w http.ResponseWriter, r *http.
     defer cancel()
 
     // urlParams: if none provided, get for all semesters
-    semester := chi.URLParam(r, "semester")
-    log.Printf("Semester url param: %s", semester)
-    if semester == "" {
+    semesterLabel := chi.URLParam(r, "semester")
+    log.Printf("Semester url param: %s", semesterLabel)
+    if semesterLabel == "" {
         errMsg := "Missing semester in query params"
         log.Println(errMsg)
         models.RespondWithFail(w, http.StatusBadRequest, errMsg)
         return
     }
 
-    //body params
+    // Get SemesterID related to semesterLabel
+    semesterID, err := h.GetSemesterIdBySemesterLabel(semesterLabel)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while querying for semesterID", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
+    }
+
+    // Parse request body params
     type RequestBody struct {
-        BrotherID   string `json:"brotherID"`
+        BrotherID   int `json:"brotherID"`
         Status      string `json:"status"`
     }
     var bodyParams RequestBody
-    err := json.NewDecoder(r.Body).Decode(&bodyParams)
+    err = json.NewDecoder(r.Body).Decode(&bodyParams)
     if err != nil {
         errMsg := fmt.Sprintf("Error while decoding body params: %s", err)
         log.Println(errMsg)
@@ -185,6 +219,7 @@ func (h *Handler) CreateBrotherStatusForSemester(w http.ResponseWriter, r *http.
 		return
 	}
 
+    // Query INSERT
     query := `
     INSERT INTO brotherStatus (brotherID, semesterID, status)
     VALUES
@@ -195,16 +230,16 @@ func (h *Handler) CreateBrotherStatusForSemester(w http.ResponseWriter, r *http.
         ctx,
         query,
         bodyParams.BrotherID,
-        semester,
+        semesterID,
         bodyParams.Status,
     )
     if err != nil {
-        errMsg := fmt.Sprintf("Error while querying brother statuses for semester %s: %s", semester, err.Error())
+        errMsg := fmt.Sprintf("Error while querying brother statuses for semester %s: %s", semesterLabel, err.Error())
         log.Println(errMsg)
         models.RespondWithError(w, http.StatusInternalServerError, errMsg)
         return
     }
     
-    models.RespondWithSuccess(w, http.StatusOK, "")
+    models.RespondWithSuccess(w, http.StatusCreated, "")
 }
 
