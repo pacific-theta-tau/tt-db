@@ -1,3 +1,4 @@
+// app-sidebar.tsx: new navbar component. `navbar.tsx` is deprecated
 import React from 'react';
 import { Link, useLocation } from "react-router-dom"
 import { Home, Table, Users, } from "lucide-react"
@@ -61,7 +62,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <p className="font-bold pl-2">Pacific Theta Tau Database</p>
+        <p className="font-bold pl-2">Theta Tau DB</p>
       </SidebarHeader >
       <SidebarContent>
         <SidebarGroup />

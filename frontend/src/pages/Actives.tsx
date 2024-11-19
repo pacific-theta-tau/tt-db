@@ -6,13 +6,14 @@ import { Skeleton } from '@/components/ui/skeleton'
 import AddRowSheet from '@/components/sheet/add-row-sheet';
 import { getData, ApiResponse } from '@/api/api'
 import { BrotherStatusForm } from '@/components/sheet/forms/brothers-status-form';
+import { Dropdown } from 'react-day-picker';
 
 
 const ActivesPage: React.FC = () => {
     const [data, setData] = useState<BrotherStatus[]>([]);
     const [loading, setLoading] = useState<boolean | null>(true);
     const [error, setError] = useState<string | null>(null);
-    const { semester } = useParams<{ semester: string }>();
+    const { semester = "" } = useParams<{ semester: string }>();
 
     useEffect(() => {
         const endpoint = `http://localhost:8080/api/semesters/${semester}/statuses`
@@ -50,16 +51,22 @@ const ActivesPage: React.FC = () => {
     }
 
     return (
-        <DataTable
-            columns={brotherStatusTableColumns}
-            data={data}
-            AddSheet={
-                () => <AddRowSheet
-                        title="Add new member record"
-                        description="Refresh the page once you hit submit"
-                        FormType={<BrotherStatusForm />}
-                      />}
-        />
+        <div>
+            <div className="space-y-2 mb-4">
+                <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">{ semester.toString() } Actives</h1>
+                <p className="text-base text-muted-foreground">List of active members during {semester.toString()}</p>
+            </div>
+            <DataTable
+                columns={brotherStatusTableColumns}
+                data={data}
+                AddSheet={
+                    () => <AddRowSheet
+                            title="Add new member record"
+                            description="Refresh the page once you hit submit"
+                            FormType={<BrotherStatusForm />}
+                          />}
+            />
+        </div>
    )
 }
 
