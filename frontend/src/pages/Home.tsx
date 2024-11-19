@@ -5,9 +5,14 @@ import  { LineChartActives } from '@/components/graphs/actives-line-chart';
 
 const HomePage: React.FC = () => {
     return (
-        <div className="flex flex-row">
-            <PieChartMajorsDistribution />
-            <LineChartActives />
+        <div className="flex">
+            <div className="flex-1 p-2">
+                <PieChartMajorsDistribution />
+            </div>
+
+            <div className="flex-1 p-2">
+                <LineChartActives />
+            </div>
         </div>
        );
 };
