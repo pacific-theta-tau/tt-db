@@ -108,7 +108,7 @@ export function LineChartActives() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              // tickFormatter={(value) => value.slice(0, 4)}
+              tickFormatter={(value) => value.slice(0, 4)}
             />
             <ChartTooltip
               cursor={false}

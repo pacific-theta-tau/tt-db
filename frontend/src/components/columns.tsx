@@ -5,6 +5,7 @@ import React from 'react'
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, Clipboard, Pencil, Trash2 } from "lucide-react"
 import { Link } from "react-router-dom"
+import { ArrowUpDown } from "lucide-react"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -16,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { ArrowUpDown } from "lucide-react"
+import { DeleteAlertDialog } from '@/components/delete-alert-dialog'
 
 
 // This type is used to define the shape of our data.
@@ -115,6 +116,10 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
       id: "actions",
     cell: ({ row }) => {
       const brother = row.original
+      const deleteEndpoint = "/api/brothers"
+      const deleteBodyParams = {
+        "rollCall": brother.rollCall
+      }
  
       return (
         <DropdownMenu>
@@ -130,9 +135,18 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
             <DropdownMenuItem onClick={ () => console.log("Edit row") } >
                 <Pencil className="h-4 w-4"/> Edit
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={ () => console.log("Delete row") } >
-                <Trash2 className="h-4 w-4"/> Delete
-            </DropdownMenuItem>
+
+            <DeleteAlertDialog
+                endpoint={ deleteEndpoint }
+                body={ deleteBodyParams }
+                trigger={
+                    <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      <span>Delete</span>
+                    </DropdownMenuItem>
+                }>
+            </DeleteAlertDialog>
+
 
             <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
                  <Clipboard className="h-4 w-4"/> Copy Full Name
@@ -450,6 +464,10 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
           id: "actions",
         cell: ({ row }) => {
           const brother = row.original
+          const deleteEndpoint = "/api/brothers"
+          const deleteBodyParams = {
+            "rollCall": brother.rollCall
+          }
      
           return (
             <DropdownMenu>
@@ -465,9 +483,17 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
                 <DropdownMenuItem onClick={ () => console.log("Edit row") } >
                     <Pencil className="h-4 w-4"/> Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={ () => console.log("Delete row") } >
-                    <Trash2 className="h-4 w-4"/> Delete
-                </DropdownMenuItem>
+
+                <DeleteAlertDialog
+                    endpoint={ deleteEndpoint }
+                    body={ deleteBodyParams }
+                    trigger={
+                        <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")}>
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          <span>Delete</span>
+                        </DropdownMenuItem>
+                    }>
+                </DeleteAlertDialog>
 
                 <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
                      <Clipboard className="h-4 w-4"/> Copy Full Name
