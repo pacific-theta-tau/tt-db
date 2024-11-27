@@ -70,23 +70,29 @@ export const request = async <T>(
         })
     }
 
-    const response = await fetch(
-        url.toString(),
-        {
-            method: method? method : 'GET', // Default method = GET
-            body: JSON.stringify(body),
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
+    try {
+        const response = await fetch(
+            url.toString(),
+            {
+                method: method? method : 'GET', // Default method = GET
+                body: body? JSON.stringify(body) : body,
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             }
-        }
-    )
+        )
 
-    if (!response.ok) {
-        const errorMessage = `API request error: ${response.statusText}`
-        console.error(errorMessage)
+        if (response.status === 200 || response.status === 201) {
+            return (await response.json()) as T;
+        }
+
+        const errorBody = await response.json().catch(() => null);
+        const errorMessage = errorBody?.message || `HTTP error: ${response.status}`;
         throw new Error(errorMessage);
+    } catch (error: unknown) {
+        console.error('propagate throw');
+        throw error; 
     }
 
-    return response.json()
 }
