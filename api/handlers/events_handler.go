@@ -343,6 +343,56 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     models.RespondWithSuccess(w, http.StatusOK, event)
 }
 
+//	@Summary		Get event and attendance data
+//	@Description	Get event and attendance data by eventID
+//	@Tags			Events
+//	@Param			eventid		body int											true	"Event ID"
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events [delete]
+func (h *Handler) DeleteEventByEventID(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
+
+    var requestBody struct {
+        EventID int `json:"eventID"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+        errMsg := fmt.Sprint("Error decoding request body: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusInternalServerError, errMsg)
+        return
+	}
+
+    validate := validator.New()
+    if err := validate.Struct(requestBody); err != nil {
+        errMsg := fmt.Sprintf("Invalid Input: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
+    }
+
+	if requestBody.EventID == 0 { 
+        errMsg := fmt.Sprint("Invalid eventID 0")
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+		return
+	}
+
+	query := fmt.Sprintf("DELETE from %s WHERE eventID = $1", events_table)
+	_, err = h.db.ExecContext(ctx, query, requestBody.EventID)
+	if err != nil {
+        errMsg := fmt.Sprint("Error during query: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusInternalServerError, errMsg)
+		return
+	}
+
+    // TODO: return deleted row
+    models.RespondWithSuccess(w, http.StatusOK, "")
+}
+
 
 //	@Summary		Get event and attendance data
 //	@Description	Get event and attendance data by eventID
