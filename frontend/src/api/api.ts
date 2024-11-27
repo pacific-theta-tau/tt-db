@@ -62,6 +62,10 @@ export const request = async <T>(
     body?: Record<string, unknown>,
     queryParams?: any,
 ): Promise<T> => {
+    console.log("\n---Starting new request")
+    console.log("\tmethod:", method)
+    console.log("\tqueryParams:", queryParams)
+    console.log("\tbody:", body)
     const url = new URL(endpoint, BASEURL)
 
     if (queryParams) {
