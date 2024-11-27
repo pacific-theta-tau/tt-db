@@ -30,16 +30,18 @@ export const DeleteAlertDialog: React.FC<DeleteAlertDialogProps> = ({ trigger, e
         setIsLoading(true)
         console.log("HANDLE DELETE FUNCTION CALLED")
         try {
-            request(endpoint, "DELETE", body)
-            await new Promise( resolve => setTimeout(resolve, 5000) );
+            const data = await request(endpoint, "DELETE", body)
+            console.log(data)
+
             toast({
                 title: "Deleted Successfully",
                 description: "The row has been deleted successfully.",
             })
-        } catch (error) {
+        } catch (error: unknown) {
+            console.error('Error fetching data:', error);
             toast({
                 title: "Failed to delete row",
-                description: `Failed to delete the item. Please try again.\nError: ${error}`,
+                description: error instanceof Error ? error.message : "Failed to delete the item. Please try again.",
                 variant: "destructive",
             })
         } finally {

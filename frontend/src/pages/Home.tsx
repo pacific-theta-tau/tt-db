@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
             </section>
             <Separator className="my-4" />
             <section className="pb-2">
-                <h1 className="text-2xl font-normal leading-tight tracking-tighter pl-2 md:text-4xl lg:leading-[1.1]">
+                <h1 className="text-2xl font-normal leading-tight tracking-tighter pl-4 md:text-4xl lg:leading-[1.1]">
                     Analytics
                 </h1>
             </section>
