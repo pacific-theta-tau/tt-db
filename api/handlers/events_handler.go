@@ -45,6 +45,7 @@ func createEventAttendanceFromRow(row *sql.Rows) (models.EventAttendance, error)
         &eventAttendance.LastName,
         &eventAttendance.RollCall,
         &eventAttendance.AttendanceStatus,
+        &eventAttendance.EventID,
 	)
 	if err != nil {
 		return models.EventAttendance{}, err
@@ -343,8 +344,8 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     models.RespondWithSuccess(w, http.StatusOK, event)
 }
 
-//	@Summary		Get event and attendance data
-//	@Description	Get event and attendance data by eventID
+//	@Summary		Delete event record
+//	@Description	Delete event record by eventID
 //	@Tags			Events
 //	@Param			eventid		body int											true	"Event ID"
 //	@Success		200		object		models.APIResponse
@@ -425,10 +426,10 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
 
     // Query attendance data for eventID and parse into a list
 	query := `
-    SELECT b.brotherID, b.firstName, b.lastName, b.rollCall, a.attendanceStatus
+    SELECT b.brotherID, b.firstName, b.lastName, b.rollCall, a.attendanceStatus, a.eventID
     FROM attendance a
     JOIN brothers b ON b.brotherID = a.brotherID
-    WHERE eventID = $1
+    WHERE a.eventID = $1
     `
     log.Printf("\tEventID: %d", eventID)
     rows, err := h.db.QueryContext(ctx, query, eventID)

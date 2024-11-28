@@ -18,4 +18,5 @@ type EventAttendance struct {
     LastName            string `json:"lastName"`
     RollCall            int `json:"rollCall"`
     AttendanceStatus    string `json:"attendanceStatus"`
+    EventID             int `json:"eventID"`
 }
