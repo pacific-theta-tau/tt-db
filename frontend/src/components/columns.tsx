@@ -278,6 +278,7 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
 
 export type EventAttendance = {
     brotherID: number
+    eventID?: number
     firstName: string
     lastName: string
     rollCall: number
@@ -338,6 +339,11 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
         id: "actions",
         cell: ({ row }) => {
         const attendance = row.original
+        const deleteEndpoint = "/api/attendance"
+        const deleteBodyParams = {
+            "brotherID": attendance.brotherID,
+            "eventID": attendance.eventID
+        }
 
         return (
             <DropdownMenu>
@@ -351,14 +357,22 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                     <DropdownMenuItem onClick={ () => console.log("Edit row")} >
-                        <Pencil className="h-4 w-4"/> Edit 
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={ () => console.log("Delete row")} >
-                        <Trash2 className="h-4 w-4"/> Delete
+                        <Pencil className="mr-2 h-4 w-4"/>Edit 
                     </DropdownMenuItem>
 
+                    <DeleteAlertDialog
+                            endpoint={ deleteEndpoint }
+                            body={ deleteBodyParams }
+                            trigger={
+                                <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  <span>Delete</span>
+                                </DropdownMenuItem>
+                            }>
+                    </DeleteAlertDialog>
+
                     <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(attendance.firstName + " " + attendance.lastName)} >
-                        <Clipboard className="h-4 w-4" /> Copy Full Name
+                        <Clipboard className="mr-2 h-4 w-4" /> Copy Full Name
                     </DropdownMenuItem>
 
                     <DropdownMenuSeparator />
