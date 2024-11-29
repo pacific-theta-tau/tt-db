@@ -409,12 +409,15 @@ export const rollCallSearchColumns: ColumnDef<Brother>[] = [
 
 
 export type BrotherStatus = {
+    brotherID: number,
     rollCall: number,
     firstName: string,
     lastName: string,
     major: string,
     class: string,
-    status: string
+    status: string,
+    semesterID: number,
+    semesterLabel: string,
 }
 
 export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
@@ -489,11 +492,11 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
     {
           id: "actions",
         cell: ({ row }) => {
-          const brother = row.original
-          const deleteEndpoint = "/api/brothers"
-          const deleteBodyParams = {
-            "rollCall": brother.rollCall
-          }
+            const brotherStatus = row.original
+            const brotherID = brotherStatus.brotherID
+            const semesterID = brotherStatus.semesterID
+            const deleteEndpoint = `/v1/brothers/${brotherID}/statuses/${semesterID}`
+            console.log('brotherID:', brotherID, 'semesterID:', semesterID)
      
           return (
             <DropdownMenu>
@@ -507,22 +510,21 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                 <DropdownMenuItem onClick={ () => console.log("Edit row") } >
-                    <Pencil className="h-4 w-4"/> Edit
+                    <Pencil className="mr-2 h-4 w-4"/>Edit
                 </DropdownMenuItem>
 
                 <DeleteAlertDialog
-                    endpoint={ deleteEndpoint }
-                    body={ deleteBodyParams }
-                    trigger={
-                        <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")}>
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          <span>Delete</span>
-                        </DropdownMenuItem>
-                    }>
+                        endpoint={ deleteEndpoint }
+                        trigger={
+                            <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              <span>Delete</span>
+                            </DropdownMenuItem>
+                        }>
                 </DeleteAlertDialog>
 
-                <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
-                     <Clipboard className="h-4 w-4"/> Copy Full Name
+                <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brotherStatus.firstName + " " + brotherStatus.lastName)} >
+                     <Clipboard className="mr-2 h-4 w-4"/>Copy Full Name
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
