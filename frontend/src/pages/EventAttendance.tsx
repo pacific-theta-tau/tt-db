@@ -7,6 +7,15 @@ import AddRowSheet from '@/components/sheet/add-row-sheet';
 import { EventAttendanceForm } from '@/components/sheet/forms/event-attendance-form';
 import { getData, ApiResponse } from '@/api/api'
 
+type AttendanceData = {
+    attendance: EventAttendance[],
+    eventCategory: string,
+    eventDate: string,
+    eventID: number,
+    eventLocation: string,
+    eventName: string
+}
+
 const EventAttendancePage: React.FC = () => {
     const { eventID } = useParams<{ eventID: string }>();
     const [data, setData] = useState<EventAttendance[]>([]);
@@ -18,10 +27,12 @@ const EventAttendancePage: React.FC = () => {
         const fetchData = async () => {
              try {
                 setLoading(true)
-                const response: ApiResponse<EventAttendance[]> = await getData(endpoint)
-                const result: EventAttendance[] = response.data !== null ? response.data : []
-                console.log('result:', result)
-                setData(result);
+                const response: ApiResponse<AttendanceData> = await getData(endpoint)
+                const responseData: AttendanceData = response.data
+                // const result: AttendanceData[] = response.data !== null ? response.data : []
+                console.log('response:', response)
+                console.log('attendance:', responseData.attendance)
+                setData(responseData.attendance);
             } catch (e) {
                 setError((e as Error).message);
                 console.log('Error fetching data:', error);

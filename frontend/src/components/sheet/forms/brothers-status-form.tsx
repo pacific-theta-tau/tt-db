@@ -209,7 +209,7 @@ export function BrotherStatusForm() {
                             <Search className="h-4 w-4" />
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-[500px]">
+                        <DialogContent className="sm:max-w-[500px] overflow-y-scroll sm:max-h-[700px]">
                           <DialogHeader>
                             <DialogTitle>Search Brothers</DialogTitle>
                           </DialogHeader>

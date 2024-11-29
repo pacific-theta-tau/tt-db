@@ -41,7 +41,7 @@ const testChartData = [
 const chartConfig = {
   count: {
     label: "Actives",
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-6)",
   },
 } satisfies ChartConfig
 
@@ -108,7 +108,7 @@ export function LineChartActives() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              // tickFormatter={(value) => value.slice(0, 4)}
+              tickFormatter={(value) => value.slice(0, 4)}
             />
             <ChartTooltip
               cursor={false}

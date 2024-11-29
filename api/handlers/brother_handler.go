@@ -239,8 +239,6 @@ func (h *Handler) RemoveBrother(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Removed brother from 'brothers' table successfully"))
     // TODO: return deleted row
     models.RespondWithSuccess(w, http.StatusOK, "")
 }

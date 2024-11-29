@@ -45,6 +45,7 @@ func createEventAttendanceFromRow(row *sql.Rows) (models.EventAttendance, error)
         &eventAttendance.LastName,
         &eventAttendance.RollCall,
         &eventAttendance.AttendanceStatus,
+        &eventAttendance.EventID,
 	)
 	if err != nil {
 		return models.EventAttendance{}, err
@@ -180,7 +181,7 @@ func queryEvent(h* Handler, ctx context.Context, eventID int) (models.Event, err
 //	@Success		200		{object}		models.APIResponse{data=models.Event}
 //	@Failure		400		{object}	models.APIResponse
 //	@Router			/api/events [post]
-func (h* Handler) InsertEvent(w http.ResponseWriter, r *http.Request) {
+func (h* Handler) CreateEvent(w http.ResponseWriter, r *http.Request) {
     ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
     defer cancel()
 
@@ -343,6 +344,56 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     models.RespondWithSuccess(w, http.StatusOK, event)
 }
 
+//	@Summary		Delete event record
+//	@Description	Delete event record by eventID
+//	@Tags			Events
+//	@Param			eventid		body int											true	"Event ID"
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events [delete]
+func (h *Handler) DeleteEventByEventID(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
+
+    var requestBody struct {
+        EventID int `json:"eventID"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+        errMsg := fmt.Sprint("Error decoding request body: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusInternalServerError, errMsg)
+        return
+	}
+
+    validate := validator.New()
+    if err := validate.Struct(requestBody); err != nil {
+        errMsg := fmt.Sprintf("Invalid Input: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
+    }
+
+	if requestBody.EventID == 0 { 
+        errMsg := fmt.Sprint("Invalid eventID 0")
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+		return
+	}
+
+	query := fmt.Sprintf("DELETE from %s WHERE eventID = $1", events_table)
+	_, err = h.db.ExecContext(ctx, query, requestBody.EventID)
+	if err != nil {
+        errMsg := fmt.Sprint("Error during query: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusInternalServerError, errMsg)
+		return
+	}
+
+    // TODO: return deleted row
+    models.RespondWithSuccess(w, http.StatusOK, "")
+}
+
 
 //	@Summary		Get event and attendance data
 //	@Description	Get event and attendance data by eventID
@@ -375,10 +426,10 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
 
     // Query attendance data for eventID and parse into a list
 	query := `
-    SELECT b.brotherID, b.firstName, b.lastName, b.rollCall, a.attendanceStatus
+    SELECT b.brotherID, b.firstName, b.lastName, b.rollCall, a.attendanceStatus, a.eventID
     FROM attendance a
     JOIN brothers b ON b.brotherID = a.brotherID
-    WHERE eventID = $1
+    WHERE a.eventID = $1
     `
     log.Printf("\tEventID: %d", eventID)
     rows, err := h.db.QueryContext(ctx, query, eventID)
@@ -408,7 +459,7 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
         EventCategory   string      `json:"eventCategory"` 
         EventLocation	string 		`json:"eventLocation"`
         EventDate		time.Time	`json:"eventDate"`
-        Attendance      []*models.EventAttendance
+        Attendance      []*models.EventAttendance `json:"attendance"`
     }
     // Build response
     response := EventDataAndAttendance{
@@ -420,5 +471,81 @@ func (h *Handler) GetEventAttendance(w http.ResponseWriter, r *http.Request) {
         Attendance: attendanceList,
     }
     models.RespondWithSuccess(w, http.StatusOK, response)
+}
+
+
+// Add new attendance record for event
+//	@Summary		Create new event record
+//	@Description	Create new event record
+//	@Tags			Events
+//	@Param			eventid path int true	"eventID"
+//	@Success		200		{object}		models.APIResponse{data=models.Event}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events/{eventid}/attendance [post]
+func (h* Handler) CreateAttendanceRecordForEvent(w http.ResponseWriter, r *http.Request) {
+    // TODO: fix swagger docs
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+    defer cancel()
+
+    // Get event from URL Params
+    var eventID int
+    eventIDStr := chi.URLParam(r, "eventID")
+    eventID, err := strconv.Atoi(eventIDStr)
+    if err != nil {
+        errMsg := "Invalid event ID"
+        log.Printf(errMsg, err)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
+    }
+
+    // Parse request body params
+    var requestBody struct {
+        RollCall int `json:"rollCall"`
+        AttendanceStatus string `json:"attendanceStatus"`
+    }
+    err = json.NewDecoder(r.Body).Decode(&requestBody)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error decoding request body", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+    }
+    fmt.Printf("Event %d; Request Body: %v\n", eventID, requestBody)
+
+    // Validate request body params 
+    validate := validator.New() 
+    if err := validate.Struct(requestBody); err != nil {
+        errMsg := fmt.Sprintf("Error validating body params. Missing values: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
+	}
+
+    // Insert new attendance record for eventID
+    log.Println("\tInserting new attendance record\n")
+    query := `
+    INSERT INTO attendance (eventID, brotherID, attendanceStatus)
+    SELECT $1, b.brotherID, $2
+    FROM brothers b
+    WHERE b.rollCall = $3
+    `
+    log.Printf("query: %s\n", query)
+    _, err = h.db.ExecContext(
+        ctx,
+        query,
+        eventID,
+        requestBody.AttendanceStatus,
+        requestBody.RollCall,
+    )
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while querying: %s", err.Error())
+        log.Printf(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+		return
+    }
+
+    msg := "Created new attendance record to `attendance` table successfully"
+    log.Println(msg)
+    models.RespondWithSuccess(w, http.StatusCreated, "")
 }
 

@@ -23,7 +23,7 @@ import {
 import { getData, ApiResponse } from "@/api/api"
 
 
-const DEBUG = true 
+const DEBUG = false 
 export const description = "A donut chart showing members by major"
 
 interface MajorCount {
@@ -41,32 +41,40 @@ const chartConfig = {
   },
   bioengineering: {
     label: "Bioengineering",
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-1)",
   },
   civilengineering: {
     label: "Civil Engineering",
-    color: "hsl(var(--chart-2))",
+    color: "var(--chart-2)",
   },
   computerengineering: {
     label: "Computer Engineering",
-    color: "hsl(var(--chart-3))",
+    color: "var(--chart-3)",
   },
   computerscience: {
     label: "Computer Science",
-    color: "hsl(var(--chart-4))",
+    color: "var(--chart-4)",
   },
   electricalengineering: {
     label: "Electrical Engineering",
-    color: "hsl(var(--chart-5))",
+    color: "var(--chart-5)",
   },
   engineeringphysics: {
     label: "Engineering Physics",
-    color: "hsl(var(--chart-6))",
+    color: "var(--chart-6)",
   },
   mechanicalengineering: {
     label: "Mechanical Engineering",
-    color: "hsl(var(--chart-7))",
+    color: "var(--chart-7)",
   },
+  engineeringmanagement: {
+    label: "Engineering Management",
+    color: "var(--chart-8)",
+  },
+  other: {
+    label: "Other",
+    color: "var(--chart-9)",
+  }
 } satisfies ChartConfig
 
 // mapping of major to chart color to inject into ChartData
@@ -78,6 +86,7 @@ const majorColors: { [key: string]: string } = {
   electricalengineering: "var(--color-electricalengineering)",
   engineeringphysics: "var(--color-engineeringphysics)",
   mechanicalengineering: "var(--color-mechanicalengineering)",
+  engineeringmanagement: "var(--color-engineeringmanagement)"
 }
 
 // Dummy data used for debugging/testing. set `DEBUG=true` to use
@@ -106,7 +115,7 @@ export function PieChartMajorsDistribution() {
                     ...item,
                     // sadly the value of 'major' needs to match with their respective chartConfig keys (no spaces) so this is a solution for now
                     major: item.major.replace(/\s+/g, '').toLowerCase(),
-                    fill: majorColors[item.major.replace(/\s+/g, '').toLowerCase()] || "hsl(var(--chart-8))"
+                    fill: majorColors[item.major.replace(/\s+/g, '').toLowerCase()] || "var(--chart-9)"
                 }))
                 console.log("Processed Data:", processedData)
                 setChartData(processedData)

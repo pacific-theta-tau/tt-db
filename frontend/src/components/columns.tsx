@@ -5,6 +5,7 @@ import React from 'react'
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, Clipboard, Pencil, Trash2 } from "lucide-react"
 import { Link } from "react-router-dom"
+import { ArrowUpDown } from "lucide-react"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -16,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { ArrowUpDown } from "lucide-react"
+import { DeleteAlertDialog } from '@/components/delete-alert-dialog'
 
 
 // This type is used to define the shape of our data.
@@ -111,42 +112,55 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
         accessorKey: "phoneNumber",
         header: "Phone Number",
     },
-  {
-      id: "actions",
-    cell: ({ row }) => {
-      const brother = row.original
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const brother = row.original
+            const deleteEndpoint = "/api/brothers"
+            const deleteBodyParams = {
+                "rollCall": brother.rollCall
+            }
  
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={ () => console.log("Edit row") } >
-                <Pencil className="h-4 w-4"/> Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={ () => console.log("Delete row") } >
-                <Trash2 className="h-4 w-4"/> Delete
-            </DropdownMenuItem>
+                        <DropdownMenuItem onClick={ () => console.log("Edit row") } >
+                            <Pencil className="mr-2 h-4 w-4"/> Edit
+                        </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
-                 <Clipboard className="h-4 w-4"/> Copy Full Name
-            </DropdownMenuItem>
+                        <DeleteAlertDialog
+                            endpoint={ deleteEndpoint }
+                            body={ deleteBodyParams }
+                            trigger={
+                                <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  <span>Delete</span>
+                                </DropdownMenuItem>
+                            }>
+                        </DeleteAlertDialog>
 
-            <DropdownMenuSeparator />
 
-            <DropdownMenuItem>
-                View Brother
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+                        <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
+                             <Clipboard className="mr-2 h-4 w-4"/> Copy Full Name
+                        </DropdownMenuItem>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem>
+                            View Brother
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        },
     }
 ]
 
@@ -161,18 +175,18 @@ export type Event = {
 export const eventsTableColumns: ColumnDef<Event>[] = [
     {
         accessorKey: "eventName",
-         header: ({ column }) => {
-             return (
+        header: ({ column }) => {
+            return (
                  <Button
                      variant="ghost"
                      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                      className="px-0"
                  >
                     Event Name 
-                 <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                  </Button>
-                )
-         },
+            )
+        },
 
         cell: ({ row }) => {
             const event = row.original
@@ -197,61 +211,74 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
         accessorKey: "eventDate",
         header: ({ column }) => {
             return (
-                    <Button
+                <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                         className="px-0"
-                    >
-                        Event Date 
+                >
+                    Event Date 
                     <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-                   )
+                </Button>
+            )
         },
     },
-  {
-      id: "actions",
-    cell: ({ row }) => {
-      const event = row.original
- 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const event = row.original
+            const deleteEndpoint = "/api/events"
+            const deleteBodyParams = {
+                "eventID": parseInt(event.eventID)
+            }
+     
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={ () => console.log("Edit Row")} >
-                <Pencil className="h-4 w-4"/> Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={ () => console.log("Edit Column") } >
-                <Trash2 className="h-4 w-4"/> Delete
-            </DropdownMenuItem>
+                        <DropdownMenuItem onClick={ () => console.log("Edit Row")} >
+                            <Pencil className="mr-2 h-4 w-4"/> Edit
+                        </DropdownMenuItem>
+                        
+                        <DeleteAlertDialog
+                            endpoint={ deleteEndpoint }
+                            body={ deleteBodyParams }
+                            trigger={
+                                <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  <span>Delete</span>
+                                </DropdownMenuItem>
+                            }>
+                        </DeleteAlertDialog>
 
-            <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(event.eventName)} >
-                <Clipboard className="h-4 w-4" /> Copy Event Name
-            </DropdownMenuItem>
+                        <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(event.eventName)} >
+                            <Clipboard className="mr-2 h-4 w-4" /> Copy Event Name
+                        </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
+                        <DropdownMenuSeparator />
 
-            <DropdownMenuItem>
-                <Link to={`/events/${event.eventID}/attendance`}>
-                    View Event Attendance
-                </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+                        <DropdownMenuItem>
+                            <Link to={`/events/${event.eventID}/attendance`}>
+                                View Event Attendance
+                            </Link>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        },
     }
 ]
 
 
 export type EventAttendance = {
     brotherID: number
+    eventID?: number
     firstName: string
     lastName: string
     rollCall: number
@@ -312,6 +339,11 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
         id: "actions",
         cell: ({ row }) => {
         const attendance = row.original
+        const deleteEndpoint = "/api/attendance"
+        const deleteBodyParams = {
+            "brotherID": attendance.brotherID,
+            "eventID": attendance.eventID
+        }
 
         return (
             <DropdownMenu>
@@ -325,14 +357,22 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                     <DropdownMenuItem onClick={ () => console.log("Edit row")} >
-                        <Pencil className="h-4 w-4"/> Edit 
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={ () => console.log("Delete row")} >
-                        <Trash2 className="h-4 w-4"/> Delete
+                        <Pencil className="mr-2 h-4 w-4"/>Edit 
                     </DropdownMenuItem>
 
+                    <DeleteAlertDialog
+                            endpoint={ deleteEndpoint }
+                            body={ deleteBodyParams }
+                            trigger={
+                                <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  <span>Delete</span>
+                                </DropdownMenuItem>
+                            }>
+                    </DeleteAlertDialog>
+
                     <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(attendance.firstName + " " + attendance.lastName)} >
-                        <Clipboard className="h-4 w-4" /> Copy Full Name
+                        <Clipboard className="mr-2 h-4 w-4" /> Copy Full Name
                     </DropdownMenuItem>
 
                     <DropdownMenuSeparator />
@@ -369,12 +409,15 @@ export const rollCallSearchColumns: ColumnDef<Brother>[] = [
 
 
 export type BrotherStatus = {
+    brotherID: number,
     rollCall: number,
     firstName: string,
     lastName: string,
     major: string,
     class: string,
-    status: string
+    status: string,
+    semesterID: number,
+    semesterLabel: string,
 }
 
 export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
@@ -449,7 +492,11 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
     {
           id: "actions",
         cell: ({ row }) => {
-          const brother = row.original
+            const brotherStatus = row.original
+            const brotherID = brotherStatus.brotherID
+            const semesterID = brotherStatus.semesterID
+            const deleteEndpoint = `/v1/brothers/${brotherID}/statuses/${semesterID}`
+            console.log('brotherID:', brotherID, 'semesterID:', semesterID)
      
           return (
             <DropdownMenu>
@@ -463,14 +510,21 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                 <DropdownMenuItem onClick={ () => console.log("Edit row") } >
-                    <Pencil className="h-4 w-4"/> Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={ () => console.log("Delete row") } >
-                    <Trash2 className="h-4 w-4"/> Delete
+                    <Pencil className="mr-2 h-4 w-4"/>Edit
                 </DropdownMenuItem>
 
-                <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
-                     <Clipboard className="h-4 w-4"/> Copy Full Name
+                <DeleteAlertDialog
+                        endpoint={ deleteEndpoint }
+                        trigger={
+                            <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              <span>Delete</span>
+                            </DropdownMenuItem>
+                        }>
+                </DeleteAlertDialog>
+
+                <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brotherStatus.firstName + " " + brotherStatus.lastName)} >
+                     <Clipboard className="mr-2 h-4 w-4"/>Copy Full Name
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />

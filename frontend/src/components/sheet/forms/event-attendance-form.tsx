@@ -12,6 +12,7 @@ import { Search } from "lucide-react"
 import { useReactTable, getCoreRowModel, getFilteredRowModel, flexRender, ColumnDef } from '@tanstack/react-table'
 import { rollCallSearchColumns } from '@/components/columns';
 import { Brother } from "@/components/columns"
+import { ApiResponse } from '@/api/api';
 
 
 // UI imports
@@ -62,7 +63,7 @@ const formSchema = z.object({
         required_error: "You must provide a roll call"
     }),
     status: z.enum(statuses, {
-                required_error: "You need to select status.",
+        required_error: "You need to select status.",
     }),
 })
 
@@ -73,7 +74,7 @@ export function EventAttendanceForm() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const { toast } = useToast()
-    const { eventID } = useParams<{ eventID: string }>();
+    const { eventID = 0 } = useParams<{ eventID: string }>();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -94,9 +95,9 @@ export function EventAttendanceForm() {
                 if (!response.ok) {
                   throw new Error('Network response was not ok');
                 }
-                const result: Brother[] = await response.json();
+                const result: ApiResponse<Brother[]> = await response.json();
                 console.log('result:', result)
-                setSearchData(result);
+                setSearchData(result.data);
             } catch (error) {
                 console.log('Error fetching data:', error);
                 throw error;
@@ -127,16 +128,17 @@ export function EventAttendanceForm() {
     }
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    const endpoint = "http://localhost:8080/api/events" + eventID + "/attendance"
+    const endpoint = "http://localhost:8080/api/events/" + eventID + "/attendance"
+    //const endpoint = "http://localhost:8080/api/attendance"
     let result: any
     const body = {
             "eventID": eventID,
             "brotherID": "",
             "rollCall": rollCall,
-            "status": data.status,
+            //"attendanceStatus": data.status,
+            "attendanceStatus": data.status,
     }
     try {
-        
         const response = await fetch(endpoint, {
             method: 'POST',
             body: JSON.stringify(body),

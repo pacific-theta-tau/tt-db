@@ -1,5 +1,5 @@
 -- initialize tables for dev postgres db
-CREATE TYPE status AS ENUM ('Active', 'Pre-Alumnus', 'Alumnus', 'Co-op', 'Transferred', 'Expelled');
+CREATE TYPE status AS ENUM ('Active', 'Pre-Alumnus', 'Alumnus', 'Co-op', 'Transferred', 'Expelled', 'Inactive', 'Out of Contact');
 
 CREATE TABLE IF NOT EXISTS brothers(
     brotherID SERIAL PRIMARY KEY,
@@ -22,15 +22,15 @@ CREATE TABLE IF NOT EXISTS eventsCategory(
 CREATE TABLE IF NOT EXISTS events(
     eventID SERIAL PRIMARY KEY, 
     eventName TEXT NOT NULL,
-    categoryID INT REFERENCES eventsCategory(categoryID),
+    categoryID INT REFERENCES eventsCategory(categoryID) ON DELETE SET NULL ON UPDATE CASCADE,
     eventLocation Text NOT NULL,
     eventDate date NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS attendance(
-	brotherID INT REFERENCES brothers(brotherID),
-	eventID INT REFERENCES events(eventID),
-	attendanceStatus VARCHAR(20) CHECK (attendanceStatus IN ('present', 'absent', 'excused')),
+	brotherID INT REFERENCES brothers(brotherID) ON DELETE CASCADE ON UPDATE CASCADE,
+	eventID INT REFERENCES events(eventID) ON DELETE CASCADE ON UPDATE CASCADE,
+	attendanceStatus VARCHAR(20) CHECK (attendanceStatus IN ('Present', 'Absent', 'Excused')),
 	PRIMARY KEY (brotherID, eventID)  -- compound PK
 );
 
@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS semester(
 );
 
 CREATE TABLE IF NOT EXISTS brotherStatus(
-    brotherID INT REFERENCES brothers(brotherID),
-    semesterID INT REFERENCES semester(semesterID),
+    brotherID INT REFERENCES brothers(brotherID) ON DELETE CASCADE ON UPDATE CASCADE,
+    semesterID INT REFERENCES semester(semesterID) ON DELETE CASCADE ON UPDATE CASCADE,
     status status,
     PRIMARY KEY (brotherID, semesterID)
 );

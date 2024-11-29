@@ -4,9 +4,9 @@ import("time")
 
 
 var AttendanceStatus = map[string]bool{
-    "active": true,
-    "absent": true,
-    "excused": true,
+    "Present": true,
+    "Absent": true,
+    "Excused": true,
 }
 
 type Attendance struct {

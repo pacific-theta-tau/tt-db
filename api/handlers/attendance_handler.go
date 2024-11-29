@@ -187,7 +187,7 @@ func (h *Handler) CreateAttendance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    fmt.Printf("\tRequest Body: %+v", input)
+    log.Printf("\tRequest Body: %+v", input)
 
     // Check for missing or zero values
 	if input.BrotherID == 0 || input.EventID == 0 {
@@ -252,7 +252,7 @@ func (h *Handler) DeleteAttendanceRecord(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-    fmt.Printf("\tRequest Body: %+v", requestBody)
+    log.Printf("\tRequest Body: %+v", requestBody)
 
     // Check for missing or zero values
 	if requestBody.BrotherID == 0 || requestBody.EventID == 0 {
@@ -317,7 +317,7 @@ func (h *Handler) UpdateAttendanceRecord(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-    fmt.Printf("\tRequest Body: %+v", requestBody)
+    log.Printf("\tRequest Body: %+v", requestBody)
 
     // Check for missing or zero values
 	if requestBody.BrotherID == 0 || requestBody.EventID == 0 {
