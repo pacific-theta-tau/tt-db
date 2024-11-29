@@ -1,3 +1,4 @@
+// status_handler.go: Handle requests for getting active status from BrotherStatus table
 package handlers
 
 import (
@@ -8,9 +9,11 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
+
 
 // GET /api/statuses
 //	@Summary		Get status labels
@@ -76,4 +79,40 @@ func (h *Handler) CreateStatusForBrother(w http.ResponseWriter, r *http.Request)
 	}
 
     models.RespondWithSuccess(w, http.StatusCreated, "")
+}
+
+
+// POST /api/brothers/{brotherID}/statuses/{semesterID}
+//	@Summary		Deletes the status of brother for specified semester
+//	@Description	Deletes the status of the specified brother for the specified semester.
+//	@Tags			Statuses
+//  @Param  brotherID path   string 
+//  @Param  semesterID path   string 
+//	@Success		200		object		models.APIResponse{data=[]string}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers/{brotherID}/statuses/{semesterID} [delete]
+func (h* Handler) DeleteStatusByMemberAndSemesterHandler(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    brotherID := chi.URLParam(r, "brotherID")
+    semesterID := chi.URLParam(r, "semesterID")
+
+    if brotherID == "" || semesterID == "" {
+        errMsg := "brotherID and semesterID are required"
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusBadRequest, errMsg)
+        return
+    }
+
+    query := "DELETE FROM brotherStatus WHERE brotherID = $1 AND semesterID = $2"
+    _, err := h.db.ExecContext(ctx, query, brotherID, semesterID)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while querying:\n\t'%s'\n", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+		return
+	}
+
+    models.RespondWithSuccess(w, http.StatusOK, "Deleted row successfully")
 }

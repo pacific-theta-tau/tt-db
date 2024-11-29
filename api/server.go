@@ -107,6 +107,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     r.Get("/api/statuses", handler.GetAllStatusLabels)
     r.Get("/api/brothers/{id}/statuses", handler.GetBrotherStatusHistory)
     r.Post("/api/brothers/{id}/statuses", handler.CreateBrotherStatus)
+    r.Delete("/v1/brothers/{brotherID}/statuses/{semesterID}", handler.DeleteStatusByMemberAndSemesterHandler)
 
     // events endpoint
 	r.Get("/api/events", handler.GetAllEvents)
