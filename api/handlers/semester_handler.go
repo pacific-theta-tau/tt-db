@@ -82,6 +82,7 @@ func (h *Handler) GetSemesterIdBySemesterLabel(semesterLabel string) (int, error
 //	@Summary		Create semester label
 //	@Description	Create semester label (e.g. Spring 2024)
 //	@Tags		    Semesters 
+//	@Param			semester body	string  true	"Semester Label (e.g. `Fall 2023`)"
 //	@Success		200		object		models.APIResponse
 //	@Failure		400		{object}	models.APIResponse
 //	@Router			/api/semesters [post]
@@ -135,7 +136,7 @@ func (h *Handler) GetAllBrotherStatusesForSemester(w http.ResponseWriter, r *htt
     }
 
     query := `
-    SELECT b.rollCall, b.firstName, b.lastName, b.major, b.className, bs.status
+    SELECT b.brotherID, b.rollCall, b.firstName, b.lastName, b.major, b.className, bs.status, s.semesterID, s.semesterLabel
     FROM brotherStatus bs
     JOIN brothers b ON b.brotherID = bs.brotherID
     JOIN semester s ON s.semesterID = bs.semesterID
