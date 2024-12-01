@@ -17,24 +17,7 @@ import {
 } from "@/components/ui/sidebar"
 
 
-/*
- * Helper function to get current Semester + Year in URL format
- * */
-export function getSeasonYear(): string {
-  const today = new Date();
-  const month = today.getMonth(); // Months are 0-indexed: January is 0, December is 11
-  const year = today.getFullYear();
-
-  // Determine the season based on the month
-  const season = month < 6 ? 'Spring' : 'Fall';
-
-  return encodeURIComponent(`${season} ${year}`);
-}
-
 export function AppSidebar() {
-    const semester = getSeasonYear()
-    console.log("semester:", semester)
-
     // Menu items.
     let items = [
       {
@@ -49,7 +32,7 @@ export function AppSidebar() {
       },
       {
         title: "Actives",
-        url: `/actives/${semester ? semester : "Spring%202024"}`,
+        url: `/actives`,
         icon: Users,
       },
       {
