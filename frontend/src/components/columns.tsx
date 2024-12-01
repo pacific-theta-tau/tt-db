@@ -140,7 +140,7 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
                             endpoint={ deleteEndpoint }
                             body={ deleteBodyParams }
                             trigger={
-                                <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
@@ -250,7 +250,7 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
                             endpoint={ deleteEndpoint }
                             body={ deleteBodyParams }
                             trigger={
-                                <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
@@ -364,7 +364,7 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
                             endpoint={ deleteEndpoint }
                             body={ deleteBodyParams }
                             trigger={
-                                <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
@@ -496,7 +496,6 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
             const brotherID = brotherStatus.brotherID
             const semesterID = brotherStatus.semesterID
             const deleteEndpoint = `/v1/brothers/${brotherID}/statuses/${semesterID}`
-            console.log('brotherID:', brotherID, 'semesterID:', semesterID)
      
           return (
             <DropdownMenu>
@@ -516,7 +515,7 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
                 <DeleteAlertDialog
                         endpoint={ deleteEndpoint }
                         trigger={
-                            <DropdownMenuItem onClick={ () => console.log("dropdownmenuitem delete button click")} onSelect={(e) => e.preventDefault()}>
+                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                               <Trash2 className="mr-2 h-4 w-4" />
                               <span>Delete</span>
                             </DropdownMenuItem>
