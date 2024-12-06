@@ -73,7 +73,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	r.Use(middleware.Logger)
     corsHandler := cors.New(cors.Options{
         AllowedOrigins:   []string{"*"},     // Allow all origins
-        AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowedMethods:   []string{"GET", "PATCH", "POST", "PUT", "DELETE", "OPTIONS"},
         AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
         ExposedHeaders:   []string{"Link"},
         AllowCredentials: true,
@@ -94,7 +94,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	//r.Get("/api/brothers/{rollCall}", handler.GetBrotherByRollCall)
 	r.Get("/api/brothers/{id}", handler.GetBrotherByID)
 	r.Post("/api/brothers", handler.AddBrother)
-	r.Put("/api/brothers", handler.UpdateBrother)
+	r.Patch("/api/brothers/{id}", handler.UpdateBrother)
 	r.Delete("/api/brothers", handler.RemoveBrother)
     // brothers count
 	r.Get("/api/brothers/count", handler.GetBrothersCount)

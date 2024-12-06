@@ -52,18 +52,10 @@ const statuses: readonly [string, ...string[]] = [
 ]
 
 const formSchema = z.object({
-    firstName: z.string({
-        required_error: "You must provide a first name"
-    }),
-    lastName: z.string({
-        required_error: "You must provide a last name"
-    }),
-    major: z.string({
-        required_error: "You must provide a major",
-    }),
-    rollCall: z.number({
-        required_error: "You must provide a roll call"
-    }),
+    firstName: z.string().min(1, "You must provide a First Name"),
+    lastName: z.string().min(1, "You must provide a Last Name"),
+    major: z.string().min(1, "You must provide a Major"),
+    rollCall: z.number().min(1, "You must provide a Roll Call"),
     status: z.enum(statuses, {
                 required_error: "You need to select status.",
             }),
@@ -74,6 +66,7 @@ const formSchema = z.object({
 
 export function EditBrotherForm({rowData}: {rowData: Brother} ) {
     console.log(rowData)
+    const brotherID = rowData.brotherID
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -90,11 +83,12 @@ export function EditBrotherForm({rowData}: {rowData: Brother} ) {
 
   const { toast } = useToast()
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    const endpoint = "http://localhost:8080/api/brothers"
+    const endpoint = `http://localhost:8080/api/brothers/${brotherID}`
     let result: ApiResponse<Brother>
+    console.log('sending:', data)
     try {
         const body = data;
-        result = await request(endpoint, "PUT", body)
+        result = await request(endpoint, "PATCH", body)
         console.log('result:', result)
     } catch (error) {
         console.log('Error fetching data:', error);
