@@ -13,15 +13,19 @@ import {
 } from "@/components/ui/sheet"
 
 
-const AddRowSheet: React.FC<{
+const SideFormSheet: React.FC<{
     title: string;
     description: string;
     FormType: React.JSX.Element
-}> = ({ title, description, FormType }) => {
+    trigger?: React.ReactNode
+}> = ({ title, description, FormType, trigger }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="ml-2">Add row</Button>
+        { trigger ?
+            trigger : 
+            <Button className="ml-2">Add Row</Button>
+        }
       </SheetTrigger>
           <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
                 <SheetHeader>
@@ -39,4 +43,4 @@ const AddRowSheet: React.FC<{
   )
 }
 
-export default AddRowSheet
+export default SideFormSheet 

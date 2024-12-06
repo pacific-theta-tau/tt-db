@@ -19,6 +19,9 @@ import {
 
 import { DeleteAlertDialog } from '@/components/delete-alert-dialog'
 
+import SideRowSheet from './sheet/side-row-sheet'
+import { EditBrotherForm } from './sheet/forms/edit-brothers-form'
+
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -132,9 +135,20 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                        <DropdownMenuItem onClick={ () => console.log("Edit row") } >
-                            <Pencil className="mr-2 h-4 w-4"/> Edit
-                        </DropdownMenuItem>
+                        <SideRowSheet
+                            title="Edit Row"
+                            description=""
+                            FormType={
+                                <EditBrotherForm 
+                                    rowData={brother}
+                                />
+                            }
+                            trigger={
+                                <DropdownMenuItem onSelect={ (e) => e.preventDefault() } >
+                                    <Pencil className="mr-2 h-4 w-4"/> Edit
+                                </DropdownMenuItem>
+                            }
+                        />
 
                         <DeleteAlertDialog
                             endpoint={ deleteEndpoint }
@@ -144,9 +158,7 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
-                            }>
-                        </DeleteAlertDialog>
-
+                            } />
 
                         <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
                              <Clipboard className="mr-2 h-4 w-4"/> Copy Full Name

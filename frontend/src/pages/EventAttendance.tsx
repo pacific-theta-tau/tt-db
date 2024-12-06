@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { EventAttendance, eventAttendanceTableColumns } from "../components/columns"
 import { DataTable } from "../components/data-table"
 import { Skeleton } from '@/components/ui/skeleton'
-import AddRowSheet from '@/components/sheet/add-row-sheet';
+import SideRowSheet from '@/components/sheet/side-row-sheet';
 import { EventAttendanceForm } from '@/components/sheet/forms/event-attendance-form';
 import { getData, ApiResponse } from '@/api/api'
 
@@ -65,7 +65,7 @@ const EventAttendancePage: React.FC = () => {
             columns={eventAttendanceTableColumns}
             data={data}
             AddSheet={
-                () => <AddRowSheet
+                () => <SideRowSheet
                         title="Add attendance record"
                         description="Refresh page once you hit submit"
                         FormType={<EventAttendanceForm />}

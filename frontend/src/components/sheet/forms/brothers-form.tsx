@@ -1,5 +1,4 @@
-// form-types.tsx: Defines form components for different data table pages
-// These forms should be used as props to `<AddSheet />`
+// brothers-form.tsx: "Add Row" form to be used by <SideRowSheet />
 "use client"
 
 import React from 'react'

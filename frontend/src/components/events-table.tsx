@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Event, eventsTableColumns } from './columns'
 import { DataTable } from './data-table'
 import { Skeleton } from '@/components/ui/skeleton'
-import AddRowSheet from './sheet/add-row-sheet'
+import SideRowSheet from './sheet/side-row-sheet'
 import { EventsForm } from './sheet/forms/events-form'
 import { ApiResponse, getData } from '@/api/api';
 
@@ -52,7 +52,7 @@ const EventsTable: React.FC = () => {
             columns={eventsTableColumns}
             data={data}
             AddSheet={
-                () => <AddRowSheet
+                () => <SideRowSheet
                     title="Add new event record"
                     description="Refresh the page once you hit submit to see updated table"
                     FormType={<EventsForm />}

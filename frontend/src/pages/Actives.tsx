@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { brotherStatusTableColumns, BrotherStatus } from "../components/columns"
 import { DataTable } from "../components/data-table"
 import { Skeleton } from '@/components/ui/skeleton'
-import AddRowSheet from '@/components/sheet/add-row-sheet';
+import SideRowSheet from '@/components/sheet/side-row-sheet';
 import { getData, ApiResponse } from '@/api/api'
 import { BrotherStatusForm } from '@/components/sheet/forms/brothers-status-form';
 import { Dropdown } from 'react-day-picker';
@@ -110,7 +110,7 @@ const ActivesPage: React.FC = () => {
                 columns={brotherStatusTableColumns}
                 data={data}
                 AddSheet={
-                    () => <AddRowSheet
+                    () => <SideRowSheet
                             title="Add new member record"
                             description="Refresh the page once you hit submit"
                             FormType={<BrotherStatusForm />}

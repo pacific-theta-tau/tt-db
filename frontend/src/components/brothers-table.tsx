@@ -3,7 +3,7 @@ import { Brother, brothersTableColumns } from "./columns"
 import { DataTable } from "./data-table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BrotherForm } from './sheet/forms/brothers-form'
-import AddRowSheet from './sheet/add-row-sheet';
+import SideRowSheet from './sheet/side-row-sheet';
 import { ApiResponse, getData } from '../api/api'
 
 
@@ -52,7 +52,7 @@ const BrothersTable: React.FC = () => {
             columns={brothersTableColumns}
             data={data}
             AddSheet={
-                () => <AddRowSheet
+                () => <SideRowSheet
                         title="Add new member record"
                         description="Refresh the page once you hit submit"
                         FormType={<BrotherForm />}
