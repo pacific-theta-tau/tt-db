@@ -19,6 +19,7 @@ import { DeleteAlertDialog } from '@/components/delete-alert-dialog'
 import SideRowSheet from './sheet/side-row-sheet'
 import { EditBrotherForm } from './sheet/forms/edit-brothers-form'
 import { eventsQueryKey } from '@/components/events-table'
+import { attendanceQueryKey } from '@/pages/EventAttendance'
 
 
 // This type is used to define the shape of our data.
@@ -385,7 +386,7 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
                                   <span>Delete</span>
                                 </DropdownMenuItem>
                             }
-                            queryKey="eventAttendanceTableData"
+                            queryKey={attendanceQueryKey}
                             >
                     </DeleteAlertDialog>
 
