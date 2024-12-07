@@ -6,7 +6,6 @@ import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, Clipboard, Pencil, Trash2 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { ArrowUpDown } from "lucide-react"
-
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,11 +15,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { DeleteAlertDialog } from '@/components/delete-alert-dialog'
-
 import SideRowSheet from './sheet/side-row-sheet'
 import { EditBrotherForm } from './sheet/forms/edit-brothers-form'
+import { eventsQueryKey } from '@/components/events-table'
 
 
 // This type is used to define the shape of our data.
@@ -271,7 +269,7 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
                                   <span>Delete</span>
                                 </DropdownMenuItem>
                             }
-                            queryKey="eventsTableData"
+                            queryKey={ eventsQueryKey }
                             >
                         </DeleteAlertDialog>
 

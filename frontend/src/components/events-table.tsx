@@ -14,10 +14,10 @@ async function fetchTableData() {
     return result.data
 }
 
-export const queryKey = "eventsTableData"
+export const eventsQueryKey = "eventsTableData"
 
 const EventsTable: React.FC = () => {
-    const { data, isLoading, isError } = useQuery({ queryKey: [queryKey], queryFn: fetchTableData });
+    const { data, isLoading, isError } = useQuery({ queryKey: [eventsQueryKey], queryFn: fetchTableData });
 
     if (isLoading) {
         // Load dummy empty data and skeleton
