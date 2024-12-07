@@ -9,23 +9,16 @@ import { ApiResponse, getData } from '../api/api'
 
 
 async function fetchTableData() {
-        const endpoint = "http://localhost:8080/api/brothers"
-        try {
-            const result: ApiResponse<Brother[]> = await getData(endpoint)
-            console.log('result:', result)
-            return result.data
-        } catch (error: any) {
-            console.log('Error fetching data:', error);
-            throw error;
-        }
+    const endpoint = "http://localhost:8080/api/brothers"
+    const result: ApiResponse<Brother[]> = await getData(endpoint)
+    console.log('result:', result)
+    return result.data
 }
 
 
 const BrothersTable: React.FC = () => {
-    // const [data, setData] = useState<Brother[]>([]);
-    // const [loading, setLoading] = useState<boolean | null>(true);
-    // const [error, setError] = useState<string | null>(null);
-    const { data, isLoading, isError } = useQuery({queryKey: ["brothersTableData"], queryFn: fetchTableData})
+    const queryKey = "brothersTableData"
+    const { data, isLoading, isError } = useQuery({queryKey: [queryKey], queryFn: fetchTableData})
 
     if (isLoading) {
         // Load dummy empty data and skeleton

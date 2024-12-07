@@ -1,39 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from "@tanstack/react-query";
 import { Event, eventsTableColumns } from './columns'
 import { DataTable } from './data-table'
 import { Skeleton } from '@/components/ui/skeleton'
 import SideRowSheet from './sheet/side-row-sheet'
 import { EventsForm } from './sheet/forms/events-form'
-import { ApiResponse, getData } from '@/api/api';
+import { ApiResponse, request } from '@/api/api';
+
+
+async function fetchTableData() {
+    const endpoint = "http://localhost:8080/api/events"
+    const result: ApiResponse<Event[]> = await request(endpoint, "GET")
+    return result.data
+}
+
+export const queryKey = "eventsTableData"
 
 const EventsTable: React.FC = () => {
-    const [data, setData] = useState<Event[]>([]);   
-    const [loading, setLoading] = useState<boolean | null>(true);
-    const [error, setError] = useState<string | null>(null);
+    const { data, isLoading, isError } = useQuery({ queryKey: [queryKey], queryFn: fetchTableData });
 
-    useEffect(() => {
-        const endpoint = "http://localhost:8080/api/events"
-        const fetchData = async () => {
-            try {
-                setLoading(true)
-                const result: ApiResponse<Event[]> = await getData(endpoint)
-                console.log('result:', result)
-                setData(result.data);
-            } catch (e) {
-                setError((e as Error).message);
-                console.log('Error fetching data:', error);
-                throw error
-            } finally {
-                /* uncomment line below to test skeleton during loading */
-                // await new Promise(f => setTimeout(f, 3000));
-                setLoading(false);
-            }
-        }
-
-        fetchData();
-    }, []);
-
-    if (loading) {
+    if (isLoading) {
         // Load dummy empty data and skeleton
         const loadingData = Array(5).fill({}) 
         const loadingTableColumns = eventsTableColumns.map((column) => ({
@@ -43,14 +29,14 @@ const EventsTable: React.FC = () => {
         return <DataTable columns={ loadingTableColumns } data={loadingData} />
     }
 
-    if (error) {
-        return <div>Error: {error}</div>;
+    if (isError) {
+        return <div>Error loading table data</div>;
     }
 
     return (
         <DataTable
             columns={eventsTableColumns}
-            data={data}
+            data={data ?? []}
             AddSheet={
                 () => <SideRowSheet
                     title="Add new event record"

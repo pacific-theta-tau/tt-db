@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useQuery } from "@tanstack/react-query";
 import { brotherStatusTableColumns, BrotherStatus } from "../components/columns"
 import { DataTable } from "../components/data-table"
 import { Skeleton } from '@/components/ui/skeleton'
 import SideRowSheet from '@/components/sheet/side-row-sheet';
-import { getData, ApiResponse } from '@/api/api'
+import { request, ApiResponse } from '@/api/api'
 import { BrotherStatusForm } from '@/components/sheet/forms/brothers-status-form';
-import { Dropdown } from 'react-day-picker';
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
@@ -24,50 +23,32 @@ export function getSeasonYear(): string {
   return `${season} ${year}`;
 }
 
+
+async function fetchTableData(selectedSemester: string): Promise<BrotherStatus[]> {
+    console.log(">Fetching actives from", selectedSemester)
+    const endpoint = `http://localhost:8080/api/semesters/${selectedSemester}/statuses`
+    const result: ApiResponse<BrotherStatus[]> = await request(endpoint, 'GET')
+    console.log(result)
+
+    return result.data
+}
+
+async function fetchSemesterData() {
+    const endpoint = "http://localhost:8080/api/semesters"
+    const responseSemesters: ApiResponse<string[]> = await request(endpoint, 'GET')
+    return responseSemesters.data
+}
+
 const ActivesPage: React.FC = () => {
-    const [data, setData] = useState<BrotherStatus[]>([]);
-    const [loading, setLoading] = useState<boolean | null>(true);
-    const [error, setError] = useState<string | null>(null);
-    const [semestersDropdownList, setSemestersDropdownList] = useState<string[]>([]);
-    // TODO: remove `semester` and use useState instead for setting default
+    // const [semestersDropdownList, setSemestersDropdownList] = useState<string[]>([]);
     const [selectedSemester, setSelectedSemester] = useState<string>(getSeasonYear)
 
-    // Fetch/Update table data. Listening to dropdown component selection
-    useEffect(() => {
-        const endpoint = `http://localhost:8080/api/semesters/${selectedSemester}/statuses`
-        const fetchData = async () => {
-             try {
-                setLoading(true)
-                const result: ApiResponse<BrotherStatus[]> = await getData(endpoint)
-                setData(result.data);
-            } catch (error: any) {
-                setError((error as Error).message);
-                throw error;
-            } finally {
-                /* uncomment line below to test skeleton during loading */
-                // await new Promise(f => setTimeout(f, 3000));
-                setLoading(false);
-            }
-        }
-        fetchData()
-       }, [selectedSemester]);
+    // React Query hooks
+    const queryKey = "activesTableData"
+    const { data: semesterLabels } = useQuery({ queryKey: ["semesters"], queryFn: fetchSemesterData })
+    const { data, isLoading, isError } = useQuery({ queryKey: [queryKey, selectedSemester], queryFn: () => fetchTableData(selectedSemester) })
 
-    useEffect(() => {
-        const endpoint = "http://localhost:8080/api/semesters"
-        const fetchData = async () => {
-             try {
-                const responseSemesters: ApiResponse<string[]> = await getData(endpoint)
-                setSemestersDropdownList(responseSemesters.data)
-            } catch (error) {
-                console.log('Error fetching data:', error);
-                throw error;
-            } finally {
-            }
-        }
-        fetchData()
-    }, [])
-
-    if (loading) {
+    if (isLoading) {
         // Load dummy empty data and skeleton
         const loadingData = Array(5).fill({}) 
         const loadingTableColumns = brotherStatusTableColumns.map((column) => ({
@@ -77,8 +58,8 @@ const ActivesPage: React.FC = () => {
         return <DataTable columns={ loadingTableColumns } data={loadingData} />
     }
 
-    if (error) {
-        return <div className="text-red-500">Error: {error}</div>;
+    if (isError) {
+        return <div className="text-red-500">Error loading table data</div>;
     }
 
     return (
@@ -95,8 +76,8 @@ const ActivesPage: React.FC = () => {
                   <SelectValue placeholder="Select a semester" />
                 </SelectTrigger>
                 <SelectContent>
-                  {semestersDropdownList && semestersDropdownList.length > 0 ? (
-                      semestersDropdownList.map((semesterLabel, index) => (
+                  {semesterLabels && semesterLabels.length > 0 ? (
+                      semesterLabels.map((semesterLabel, index) => (
                           <SelectItem key={index.toString()} value={semesterLabel}>{semesterLabel}</SelectItem>
                       ))
                   ) : (
@@ -108,7 +89,7 @@ const ActivesPage: React.FC = () => {
 
             <DataTable
                 columns={brotherStatusTableColumns}
-                data={data}
+                data={data ?? []}
                 AddSheet={
                     () => <SideRowSheet
                             title="Add new member record"
