@@ -140,12 +140,8 @@ export function EventAttendanceForm() {
       onSuccess: (data) => {
           // TODO: use "message" field for toast description
           toast({
-              title: "You submitted the following values:",
-              description: (
-                  <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                      <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                  </pre>
-              ),
+              title: "Success!",
+              description: "Added new attendance record to database.",
           })
         // Invalidate table data query to reload the table
         queryClient.invalidateQueries({ queryKey: [attendanceQueryKey] });
@@ -153,14 +149,10 @@ export function EventAttendanceForm() {
       onError: (error) => {
           // Make toast destructive
           toast({
-              title: "Failed to submit ",
+              title: "Uh oh! Something went wrong.",
+              description: "Failed to add new attendance record.",
               variant: "destructive",
               //action: <ToastAction></ToastAction>,
-              description: (
-                  <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                      <code className="text-white">{error.message}</code>
-                  </pre>
-              ),
           })
       }
     });

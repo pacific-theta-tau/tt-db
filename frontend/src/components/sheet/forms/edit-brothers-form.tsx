@@ -107,12 +107,8 @@ export function EditBrotherForm({rowData}: {rowData: Brother} ) {
     onSuccess: (data) => {
         // TODO: use "message" field for toast description
         toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
+            title: "Success!",
+            description: "Record updated successfully.",
         })
       // Invalidate table data query to reload the table
       queryClient.invalidateQueries({ queryKey: ["brothersTableData"] });
@@ -120,14 +116,10 @@ export function EditBrotherForm({rowData}: {rowData: Brother} ) {
     onError: (error) => {
         // Make toast destructive
         toast({
-            title: "Failed to submit ",
+            title: "Uh oh! Something went wrong.",
+            description: "Failed to update record.",
             variant: "destructive",
             //action: <ToastAction></ToastAction>,
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{error.message}</code>
-                </pre>
-            ),
         })
     }
   });

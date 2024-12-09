@@ -79,7 +79,7 @@ async function sendPostRequest(data: z.infer<typeof formSchema>) {
     let result: ApiResponse<Brother>
     result = await request(endpoint, 'POST', data)
 
-    return result.data
+    return result
 }
 
 export function BrotherForm() {
@@ -93,12 +93,8 @@ export function BrotherForm() {
     onSuccess: (data) => {
         // TODO: use "message" field for toast description
         toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
+            title: "Success!",
+            description: "Added new member record successfully.",
         })
       // Invalidate table data and "Brother Search" dialog data to auto refetch
       queryClient.invalidateQueries({ queryKey: ["brothersTableData"] });
@@ -107,14 +103,10 @@ export function BrotherForm() {
     onError: (error) => {
         // Make toast destructive
         toast({
-            title: "Failed to submit ",
+            title: "Uh oh! Something went wrong.",
             variant: "destructive",
             //action: <ToastAction></ToastAction>,
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{error.message}</code>
-                </pre>
-            ),
+            description: "Failed to create new record.",
         })
     }
   });

@@ -132,12 +132,8 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
         onSuccess: (data) => {
             // TODO: use "message" field for toast description
             toast({
-                title: "You submitted the following values:",
-                description: (
-                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                        <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                    </pre>
-                ),
+                title: "Success!",
+                description: "Added new status record to database.",
             })
               // Invalidate table data query to reload the table
               queryClient.invalidateQueries({ queryKey: [activesQueryKey] });
@@ -145,14 +141,10 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
         onError: (error) => {
             // Make toast destructive
             toast({
-                title: "Failed to submit ",
+                title: "Uh oh! Something went wrong",
+                description: "Failed to create new status record.",
                 variant: "destructive",
                 //action: <ToastAction></ToastAction>,
-                description: (
-                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                        <code className="text-white">{error.message}</code>
-                    </pre>
-                ),
             })
         }
     })
