@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { request } from '@/api/api';
 import {
   AlertDialog,
@@ -20,34 +19,44 @@ interface DeleteAlertDialogProps {
     trigger?: React.ReactNode
     endpoint: string
     body?: Record<string, unknown>
+    queryKey?: string
 }
 
-export const DeleteAlertDialog: React.FC<DeleteAlertDialogProps> = ({ trigger, endpoint, body }) => {
+export const DeleteAlertDialog: React.FC<DeleteAlertDialogProps> = ({ trigger, endpoint, body, queryKey }) => {
+    // Used to keep Dialog component open until request is done
     const [isOpen, setIsOpen] = useState(false)
-    const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast()
-    const handleDelete = async () => {
-        setIsLoading(true)
-        console.log("HANDLE DELETE FUNCTION CALLED")
-        try {
+
+    // React Query and Mutation hooks
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: async () => {
             const data = await request(endpoint, "DELETE", body)
             console.log(data)
-
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: [queryKey] });
             toast({
                 title: "Deleted Successfully",
                 description: "The row has been deleted successfully.",
             })
-        } catch (error: unknown) {
+        },
+        onError: (error) => {
             console.error('Error fetching data:', error);
             toast({
                 title: "Failed to delete row",
                 description: error instanceof Error ? error.message : "Failed to delete the item. Please try again.",
                 variant: "destructive",
             })
-        } finally {
-            setIsLoading(false)
+
+        },
+        onSettled: () => {
             setIsOpen(false)
         }
+    })
+
+    const handleDelete = async () => {
+        mutation.mutate()
     }
 
     return (
@@ -64,8 +73,8 @@ export const DeleteAlertDialog: React.FC<DeleteAlertDialogProps> = ({ trigger, e
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete} disabled={isLoading}>
-                    { isLoading ? "Deleting..." : "Delete" }
+                  <AlertDialogAction onClick={handleDelete} disabled={mutation.isPending}>
+                    { mutation.isPending ? "Deleting..." : "Delete" }
                   </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

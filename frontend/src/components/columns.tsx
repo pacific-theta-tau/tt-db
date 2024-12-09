@@ -6,7 +6,6 @@ import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, Clipboard, Pencil, Trash2 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { ArrowUpDown } from "lucide-react"
-
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,11 +15,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { DeleteAlertDialog } from '@/components/delete-alert-dialog'
-
 import SideRowSheet from './sheet/side-row-sheet'
 import { EditBrotherForm } from './sheet/forms/edit-brothers-form'
+import { eventsQueryKey } from '@/components/events-table'
+import { attendanceQueryKey } from '@/pages/EventAttendance'
+import { activesQueryKey } from '@/pages/Actives'
 
 
 // This type is used to define the shape of our data.
@@ -125,7 +125,8 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
             }
  
             return (
-                <DropdownMenu>
+                // Setting modal=false to fix `AlertDialog` side-effects of not letting click anything
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                           <span className="sr-only">Open menu</span>
@@ -158,7 +159,9 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
-                            } />
+                            }
+                            queryKey="brothersTableData"
+                            />
 
                         <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
                              <Clipboard className="mr-2 h-4 w-4"/> Copy Full Name
@@ -244,7 +247,8 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
             }
      
             return (
-                <DropdownMenu>
+                // Setting modal=false to fix `AlertDialog` side-effects of not letting click anything
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
@@ -266,7 +270,9 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
-                            }>
+                            }
+                            queryKey={ eventsQueryKey }
+                            >
                         </DeleteAlertDialog>
 
                         <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(event.eventName)} >
@@ -358,7 +364,7 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
         }
 
         return (
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
                         <span className="sr-only">Open menu</span>
@@ -380,7 +386,9 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
-                            }>
+                            }
+                            queryKey={attendanceQueryKey}
+                            >
                     </DeleteAlertDialog>
 
                     <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(attendance.firstName + " " + attendance.lastName)} >
@@ -510,7 +518,8 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
             const deleteEndpoint = `/v1/brothers/${brotherID}/statuses/${semesterID}`
      
           return (
-            <DropdownMenu>
+            // Setting modal=false to fix `AlertDialog` side-effects of not letting click anything
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <span className="sr-only">Open menu</span>
@@ -531,7 +540,9 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
                               <Trash2 className="mr-2 h-4 w-4" />
                               <span>Delete</span>
                             </DropdownMenuItem>
-                        }>
+                        }
+                        queryKey="activesTableData"
+                        >
                 </DeleteAlertDialog>
 
                 <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brotherStatus.firstName + " " + brotherStatus.lastName)} >

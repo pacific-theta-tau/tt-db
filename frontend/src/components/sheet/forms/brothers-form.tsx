@@ -2,11 +2,12 @@
 "use client"
 
 import React from 'react'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useToast } from "@/hooks/use-toast"
-import { ApiResponse, requestPOST } from '@/api/api'
+import { ApiResponse, request, requestPOST } from '@/api/api'
 
 import {
   Select,
@@ -72,38 +73,55 @@ const formSchema = z.object({
     phoneNumber: z.string().optional(),
 })
 
+
+async function sendPostRequest(data: z.infer<typeof formSchema>) {
+    const endpoint = "http://localhost:8080/api/brothers"
+    let result: ApiResponse<Brother>
+    result = await request(endpoint, 'POST', data)
+
+    return result
+}
+
 export function BrotherForm() {
+  const { toast } = useToast()
+  const queryClient = useQueryClient();
+
+  // React Query mutation hook
+  const mutation = useMutation(
+  {
+    mutationFn: sendPostRequest,
+    onSuccess: (data) => {
+        // TODO: use "message" field for toast description
+        toast({
+            title: "Success!",
+            description: "Added new member record successfully.",
+        })
+      // Invalidate table data and "Brother Search" dialog data to auto refetch
+      queryClient.invalidateQueries({ queryKey: ["brothersTableData"] });
+      queryClient.invalidateQueries({ queryKey: ["brotherSearchData"] });
+    },
+    onError: (error) => {
+        // Make toast destructive
+        toast({
+            title: "Uh oh! Something went wrong.",
+            variant: "destructive",
+            //action: <ToastAction></ToastAction>,
+            description: "Failed to create new record.",
+        })
+    }
+  });
+
+  // React hook form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      phoneNumber: "",
+      phoneNumber: ""
     },
   })
 
-  const { toast } = useToast()
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    const endpoint = "http://localhost:8080/api/brothers"
-    let result: ApiResponse<Brother>
-    try {
-        const body = JSON.stringify(data)
-        result = await requestPOST(endpoint, body)
-        console.log('result:', result)
-    } catch (error) {
-        console.log('Error fetching data:', error);
-        throw error;
-    } finally {
-        /* uncomment line below to test skeleton during loading */
-        // await new Promise(f => setTimeout(f, 3000));
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
-    }
+    mutation.mutate(data)
   }
 
   return (
@@ -151,8 +169,8 @@ export function BrotherForm() {
                           </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                        {majors.map((major) => (
-                          <SelectItem value={major}>{major}</SelectItem>
+                        {majors.map((major, index) => (
+                          <SelectItem value={major} key={index}>{major}</SelectItem>
                         ))}
                   </SelectContent>
               </Select>

@@ -2,6 +2,7 @@
 "use client"
 
 import React from 'react'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -64,9 +65,26 @@ const formSchema = z.object({
     phoneNumber: z.string().optional(),
 })
 
+
+async function sendPatchRequest(data: z.infer<typeof formSchema>, brotherID: string): Promise<ApiResponse<Brother>>{
+    /**
+     * Mutation function to send patch request to modify row
+     *
+     * @param data - Data being sent as request body
+     * @param brotherID - ID of the record to be changed
+     * @returns Promise of an ApiResponse
+     */
+    const endpoint = `http://localhost:8080/api/brothers/${brotherID}`
+    let result: ApiResponse<Brother>
+    result = await request(endpoint, "PATCH", data)
+    /* uncomment line below to test skeleton during loading */
+    // await new Promise(f => setTimeout(f, 3000));
+    return result
+}
+
 export function EditBrotherForm({rowData}: {rowData: Brother} ) {
-    console.log(rowData)
-    const brotherID = rowData.brotherID
+  const { toast } = useToast()
+  const brotherID = rowData.brotherID
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,30 +99,33 @@ export function EditBrotherForm({rowData}: {rowData: Brother} ) {
     },
   })
 
-  const { toast } = useToast()
-  async function onSubmit(data: z.infer<typeof formSchema>) {
-    const endpoint = `http://localhost:8080/api/brothers/${brotherID}`
-    let result: ApiResponse<Brother>
-    console.log('sending:', data)
-    try {
-        const body = data;
-        result = await request(endpoint, "PATCH", body)
-        console.log('result:', result)
-    } catch (error) {
-        console.log('Error fetching data:', error);
-        throw error;
-    } finally {
-        /* uncomment line below to test skeleton during loading */
-        // await new Promise(f => setTimeout(f, 3000));
+  const queryClient = useQueryClient();
+  // React Query mutation hook
+  const mutation = useMutation(
+  {
+    mutationFn: (data: z.infer<typeof formSchema>) => sendPatchRequest(data, brotherID),
+    onSuccess: (data) => {
+        // TODO: use "message" field for toast description
         toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
+            title: "Success!",
+            description: "Record updated successfully.",
+        })
+      // Invalidate table data query to reload the table
+      queryClient.invalidateQueries({ queryKey: ["brothersTableData"] });
+    },
+    onError: (error) => {
+        // Make toast destructive
+        toast({
+            title: "Uh oh! Something went wrong.",
+            description: "Failed to update record.",
+            variant: "destructive",
+            //action: <ToastAction></ToastAction>,
         })
     }
+  });
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+      mutation.mutate(data)
   }
 
   return (
@@ -152,8 +173,8 @@ export function EditBrotherForm({rowData}: {rowData: Brother} ) {
                           </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                        {majors.map((major) => (
-                          <SelectItem value={major}>{major}</SelectItem>
+                        {majors.map((major, index) => (
+                          <SelectItem value={major} key={index}>{major}</SelectItem>
                         ))}
                   </SelectContent>
               </Select>

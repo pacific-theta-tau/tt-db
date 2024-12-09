@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from 'react-router-dom';
 import { EventAttendance, eventAttendanceTableColumns } from "../components/columns"
 import { DataTable } from "../components/data-table"
 import { Skeleton } from '@/components/ui/skeleton'
 import SideRowSheet from '@/components/sheet/side-row-sheet';
 import { EventAttendanceForm } from '@/components/sheet/forms/event-attendance-form';
-import { getData, ApiResponse } from '@/api/api'
+import { request, ApiResponse } from '@/api/api'
 
 type AttendanceData = {
     attendance: EventAttendance[],
@@ -16,37 +17,21 @@ type AttendanceData = {
     eventName: string
 }
 
+
+async function fetchTableData(eventID: string): Promise<EventAttendance[]> {
+    const endpoint = "http://localhost:8080/api/events/" + eventID + "/attendance"
+    const response: ApiResponse<AttendanceData> = await request(endpoint, 'GET')
+    const responseData: AttendanceData = response.data
+    return responseData.attendance
+}
+
+export const attendanceQueryKey = "attendanceQueryData"
+
 const EventAttendancePage: React.FC = () => {
-    const { eventID } = useParams<{ eventID: string }>();
-    const [data, setData] = useState<EventAttendance[]>([]);
-    const [loading, setLoading] = useState<boolean | null>(true);
-    const [error, setError] = useState<string | null>(null);
+    const { eventID = "" } = useParams<{ eventID: string }>();
+    const { data, isLoading, isError } = useQuery({ queryKey: [attendanceQueryKey], queryFn: () => fetchTableData(eventID) })
 
-    useEffect(() => {
-        const endpoint = "http://localhost:8080/api/events/" + eventID + "/attendance"
-        const fetchData = async () => {
-             try {
-                setLoading(true)
-                const response: ApiResponse<AttendanceData> = await getData(endpoint)
-                const responseData: AttendanceData = response.data
-                // const result: AttendanceData[] = response.data !== null ? response.data : []
-                console.log('response:', response)
-                console.log('attendance:', responseData.attendance)
-                setData(responseData.attendance);
-            } catch (e) {
-                setError((e as Error).message);
-                console.log('Error fetching data:', error);
-                throw error;
-            } finally {
-                /* uncomment line below to test skeleton during loading */
-                // await new Promise(f => setTimeout(f, 3000))
-                setLoading(false);
-            }
-        }
-        fetchData()
-       }, []);
-
-    if (loading) {
+    if (isLoading) {
         // Load dummy empty data and skeleton
         const loadingData = Array(5).fill({}) 
         const loadingTableColumns = eventAttendanceTableColumns.map((column) => ({
@@ -56,14 +41,14 @@ const EventAttendancePage: React.FC = () => {
         return <DataTable columns={ loadingTableColumns } data={loadingData} />
     }
 
-    if (error) {
-        return <div>Error: {error}</div>;
+    if (isError) {
+        return <div>Error loading table data</div>;
     }
 
     return (
         <DataTable
             columns={eventAttendanceTableColumns}
-            data={data}
+            data={data ?? []}
             AddSheet={
                 () => <SideRowSheet
                         title="Add attendance record"
