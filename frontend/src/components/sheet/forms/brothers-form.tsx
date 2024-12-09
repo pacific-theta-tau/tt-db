@@ -100,8 +100,9 @@ export function BrotherForm() {
                 </pre>
             ),
         })
-      // Invalidate table data query to reload the table
+      // Invalidate table data and "Brother Search" dialog data to auto refetch
       queryClient.invalidateQueries({ queryKey: ["brothersTableData"] });
+      queryClient.invalidateQueries({ queryKey: ["brotherSearchData"] });
     },
     onError: (error) => {
         // Make toast destructive

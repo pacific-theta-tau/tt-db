@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { brotherStatusTableColumns, BrotherStatus } from "../components/columns"
 import { DataTable } from "../components/data-table"
@@ -39,14 +39,15 @@ async function fetchSemesterData() {
     return responseSemesters.data
 }
 
+export const activesQueryKey = "activesTableData"
+
 const ActivesPage: React.FC = () => {
-    // const [semestersDropdownList, setSemestersDropdownList] = useState<string[]>([]);
     const [selectedSemester, setSelectedSemester] = useState<string>(getSeasonYear)
+    console.log('actives page- selectedSemester', selectedSemester)
 
     // React Query hooks
-    const queryKey = "activesTableData"
     const { data: semesterLabels } = useQuery({ queryKey: ["semesters"], queryFn: fetchSemesterData })
-    const { data, isLoading, isError } = useQuery({ queryKey: [queryKey, selectedSemester], queryFn: () => fetchTableData(selectedSemester) })
+    const { data, isLoading, isError } = useQuery({ queryKey: [activesQueryKey, selectedSemester], queryFn: () => fetchTableData(selectedSemester) })
 
     if (isLoading) {
         // Load dummy empty data and skeleton
@@ -91,11 +92,16 @@ const ActivesPage: React.FC = () => {
                 columns={brotherStatusTableColumns}
                 data={data ?? []}
                 AddSheet={
-                    () => <SideRowSheet
+                    () =>(
+                        <SideRowSheet
                             title="Add new member record"
                             description="Refresh the page once you hit submit"
-                            FormType={<BrotherStatusForm />}
-                          />}
+                            FormType={
+                                <BrotherStatusForm selectedSemester={selectedSemester} />
+                            }
+                        />
+                    )
+                }
             />
         </div>
    )
