@@ -115,7 +115,7 @@ export function EventAttendanceForm() {
     })
 
     // React Hook and table for member search field
-    const { data: searchData, isLoading, isFetching, isError } = useQuery({queryKey: ["eventAttendanceSearchData"], queryFn: fetchSearchData })
+    const { data: searchData, isLoading, isFetching, isError } = useQuery({queryKey: ["brotherSearchData"], queryFn: fetchSearchData })
     const table = useReactTable({
         data: searchData ?? [],
         columns: rollCallSearchColumns,

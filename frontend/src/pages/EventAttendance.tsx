@@ -25,10 +25,11 @@ async function fetchTableData(eventID: string): Promise<EventAttendance[]> {
     return responseData.attendance
 }
 
+export const attendanceQueryKey = "attendanceQueryData"
+
 const EventAttendancePage: React.FC = () => {
     const { eventID = "" } = useParams<{ eventID: string }>();
-    const queryKey = "eventsAttendanceTableData"
-    const { data, isLoading, isError } = useQuery({ queryKey: [queryKey], queryFn: () => fetchTableData(eventID) })
+    const { data, isLoading, isError } = useQuery({ queryKey: [attendanceQueryKey], queryFn: () => fetchTableData(eventID) })
 
     if (isLoading) {
         // Load dummy empty data and skeleton
