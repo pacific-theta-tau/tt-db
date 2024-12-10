@@ -82,7 +82,8 @@ async function sendPatchRequest(data: z.infer<typeof formSchema>, brotherID: str
     return result
 }
 
-export function EditBrotherForm({rowData}: {rowData: Brother} ) {
+
+export function EditBrotherForm({rowData, onClose}: {rowData: Brother, onClose?: () => void } ) {
   const { toast } = useToast()
   const brotherID = rowData.brotherID
   const form = useForm<z.infer<typeof formSchema>>({
@@ -104,7 +105,7 @@ export function EditBrotherForm({rowData}: {rowData: Brother} ) {
   const mutation = useMutation(
   {
     mutationFn: (data: z.infer<typeof formSchema>) => sendPatchRequest(data, brotherID),
-    onSuccess: (data) => {
+    onSuccess: () => {
         // TODO: use "message" field for toast description
         toast({
             title: "Success!",
@@ -117,11 +118,12 @@ export function EditBrotherForm({rowData}: {rowData: Brother} ) {
         // Make toast destructive
         toast({
             title: "Uh oh! Something went wrong.",
-            description: "Failed to update record.",
+            description: `Failed to update record.\nError: ${error.message}`,
             variant: "destructive",
             //action: <ToastAction></ToastAction>,
         })
-    }
+    },
+    onSettled: onClose,
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {

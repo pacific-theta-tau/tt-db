@@ -18,6 +18,7 @@ import {
 import { DeleteAlertDialog } from '@/components/delete-alert-dialog'
 import SideRowSheet from './sheet/side-row-sheet'
 import { EditBrotherForm } from './sheet/forms/edit-brothers-form'
+import { EditEventsForm } from './sheet/forms/edit-events-form'
 import { eventsQueryKey } from '@/components/events-table'
 import { attendanceQueryKey } from '@/pages/EventAttendance'
 import { activesQueryKey } from '@/pages/Actives'
@@ -255,13 +256,25 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                        <DropdownMenuItem onClick={ () => console.log("Edit Row")} >
-                            <Pencil className="mr-2 h-4 w-4"/> Edit
-                        </DropdownMenuItem>
-                        
+                        <SideRowSheet
+                            title="Edit Row"
+                            description=""
+                            FormType={
+                                <EditEventsForm
+                                    rowData={event}
+                                />
+                            }
+                            trigger={
+                                <DropdownMenuItem onSelect={ (e) => e.preventDefault() } >
+                                    <Pencil className="mr-2 h-4 w-4"/> Edit
+                                </DropdownMenuItem>
+                            }
+                        />
+                                                
                         <DeleteAlertDialog
                             endpoint={ deleteEndpoint }
                             body={ deleteBodyParams }
