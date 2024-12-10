@@ -240,14 +240,15 @@ func (h* Handler) CreateEvent(w http.ResponseWriter, r *http.Request) {
 //	@Summary		Update event record
 //	@Description	Update event record by eventID
 //	@Tags			Events
-//	@Param			eventid		body int											true	"Event ID"
+//	@Param			eventid		path int											true	"Event ID"
 //	@Success		200		object		models.APIResponse
 //	@Failure		400		{object}	models.APIResponse
-//	@Router			/api/events [put]
+//	@Router			/api/events/{eventid} [patch]
 func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     ctx, cancel :=  context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
 
+    // Parse request body
     body, err := io.ReadAll(r.Body)
 	if err != nil {
         errMsg := fmt.Sprintf("Error while reading request body: %s", err.Error())
@@ -264,15 +265,22 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	parsedEventID, ok := requestBody["eventID"].(float64)
-	if !ok {
-        errMsg := "Missing eventID in request body"
+    // Parse eventID from endpoint path
+	eventID, err := strconv.Atoi(chi.URLParam(r, "eventID"))
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while converting eventID string to int: %s", err.Error())
+        log.Printf(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+    }
+    if eventID == 0 {
+        errMsg := fmt.Sprintf("Missing urlParam eventID: %s", eventID)
         log.Printf(errMsg)
         models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
 	}
-    eventID := int(parsedEventID)
 
+    // Build query statement for each param in requestBody
     updateQuery := fmt.Sprintf("UPDATE %s SET", events_table)
     columns := []string{
         "eventName",
@@ -280,7 +288,6 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
         "eventLocation",
         "eventDate",
     }
-    // Build query statement for each param in requestBody
     for _, column := range columns {
         newColumnValue, ok := requestBody[column]
         if !ok {
@@ -315,6 +322,7 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     `
     log.Printf("UPDATE query: %s", updateQuery)
 
+    // Query Database
     var queryResult models.Event
     err = h.db.QueryRowContext(ctx, updateQuery, eventID).Scan(
         &queryResult.EventID,
@@ -331,7 +339,7 @@ func (h *Handler) UpdateEventByID(w http.ResponseWriter, r *http.Request) {
     }
     log.Printf("query result: %+v", queryResult)
 
-    // query modified row
+    // Get modified row
     // TODO: use RETURNING row clause instead of querying for the modified row
     event, err := queryEvent(h, ctx, eventID)
     if err != nil {
