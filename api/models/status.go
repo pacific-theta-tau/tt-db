@@ -27,7 +27,7 @@ func CreateStatusFromRow(row *sql.Rows) (Status, error) {
 //  @Description Brother Status information for a semester
 type BrotherStatus struct {
     BrotherID   int `json:"brotherID"`
-    RollCall    string `json:"rollCall"`
+    RollCall    int `json:"rollCall"`
     FirstName   string `json:"firstName"`
     LastName    string `json:"lastName"`
     Major       string `json:"major"`

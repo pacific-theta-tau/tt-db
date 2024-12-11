@@ -115,6 +115,7 @@ func (h *Handler) CreateSemesterLabel(w http.ResponseWriter, r *http.Request) {
 } 
 
 
+// TODO: move status-related endpoint to status-handler.go
 //	@Summary		Get Brother statuses for a semester
 //	@Description	Get all brother statuses for a semester
 //	@Tags		    Semesters

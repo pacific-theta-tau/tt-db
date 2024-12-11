@@ -250,8 +250,8 @@ func (h *Handler) RemoveBrother(w http.ResponseWriter, r *http.Request) {
 //	@Param			body_params body    models.Brother  true	"Values to update for Brother"
 //	@Success		200		object		models.APIResponse
 //	@Failure		400		{object}	models.APIResponse
-//	@Router			/api/brothers/{id} [put]
-/* PUT /api/brothers/{id} */
+//	@Router			/api/brothers/{id} [patch]
+/* PATCH /api/brothers/{id} */
 func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -274,9 +274,9 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// rollCall, ok := requestBody["rollCall"]
-	brotherID, ok := requestBody["brotherID"]
-	if !ok {
-        errMsg := fmt.Sprintf("Key not found in request body: %s", err.Error())
+	brotherID := chi.URLParam(r, "id")
+	if brotherID == "0" {
+        errMsg := fmt.Sprintf("Missing urlParam brotherID: %s", brotherID)
         log.Printf(errMsg)
         models.RespondWithFail(w, http.StatusBadRequest, errMsg)
 		return
@@ -301,7 +301,19 @@ func (h *Handler) UpdateBrother(w http.ResponseWriter, r *http.Request) {
 		if !ok {
 			continue
 		}
-		query += fmt.Sprintf(" %s = '%s',", column, newColumnValue)
+
+        switch v := newColumnValue.(type) {
+        case float64: // Numbers in JSON decode as float64 by default
+            query += fmt.Sprintf(" %s = '%d',", column, int(v))
+        case int:
+            query += fmt.Sprintf(" %s = '%d',", column, v)
+        case string:
+            query += fmt.Sprintf(" %s = '%s',", column, v)
+        default:
+            log.Printf("Unsupported type for column %s: %T", column, v)
+        }
+
+        //query += fmt.Sprintf(" %s = '%s',", column, newColumnValue)
 	}
 
 	// remove trailling comma

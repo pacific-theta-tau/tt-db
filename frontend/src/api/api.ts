@@ -51,14 +51,14 @@ export const requestPOST = async <T>(endpoint: string, body: string): Promise<T>
 }
 
 export type ApiRequestOptions = {
-    method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     body?: any;
     queryParams?: any;
 }
 
 export const request = async <T>(
     endpoint: string,
-    method?: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    method?: 'GET' | 'POST' | 'PUT'| 'PATCH' | 'DELETE',
     body?: Record<string, unknown>,
     queryParams?: any,
 ): Promise<T> => {

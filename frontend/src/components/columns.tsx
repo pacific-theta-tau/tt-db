@@ -6,7 +6,6 @@ import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, Clipboard, Pencil, Trash2 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { ArrowUpDown } from "lucide-react"
-
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,8 +15,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { DeleteAlertDialog } from '@/components/delete-alert-dialog'
+import SideRowSheet from './sheet/side-row-sheet'
+import { EditBrotherForm } from './sheet/forms/edit-brothers-form'
+import { EditEventsForm } from './sheet/forms/edit-events-form'
+import { EditEventAttendanceForm } from './sheet/forms/edit-attendance-form'
+import { eventsQueryKey } from '@/components/events-table'
+import { attendanceQueryKey } from '@/pages/EventAttendance'
+import { activesQueryKey } from '@/pages/Actives'
+import { EditActivesForm } from './sheet/forms/edit-actives-form'
 
 
 // This type is used to define the shape of our data.
@@ -122,7 +128,8 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
             }
  
             return (
-                <DropdownMenu>
+                // Setting modal=false to fix `AlertDialog` side-effects of not letting click anything
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                           <span className="sr-only">Open menu</span>
@@ -132,9 +139,20 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                        <DropdownMenuItem onClick={ () => console.log("Edit row") } >
-                            <Pencil className="mr-2 h-4 w-4"/> Edit
-                        </DropdownMenuItem>
+                        <SideRowSheet
+                            title="Edit Row"
+                            description=""
+                            FormType={
+                                <EditBrotherForm 
+                                    rowData={brother}
+                                />
+                            }
+                            trigger={
+                                <DropdownMenuItem onSelect={ (e) => e.preventDefault() } >
+                                    <Pencil className="mr-2 h-4 w-4"/> Edit
+                                </DropdownMenuItem>
+                            }
+                        />
 
                         <DeleteAlertDialog
                             endpoint={ deleteEndpoint }
@@ -144,9 +162,9 @@ export const brothersTableColumns: ColumnDef<Brother>[] = [
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
-                            }>
-                        </DeleteAlertDialog>
-
+                            }
+                            queryKey="brothersTableData"
+                            />
 
                         <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brother.firstName + " " + brother.lastName)} >
                              <Clipboard className="mr-2 h-4 w-4"/> Copy Full Name
@@ -232,20 +250,33 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
             }
      
             return (
-                <DropdownMenu>
+                // Setting modal=false to fix `AlertDialog` side-effects of not letting click anything
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                        <DropdownMenuItem onClick={ () => console.log("Edit Row")} >
-                            <Pencil className="mr-2 h-4 w-4"/> Edit
-                        </DropdownMenuItem>
-                        
+                        <SideRowSheet
+                            title="Edit Row"
+                            description=""
+                            FormType={
+                                <EditEventsForm
+                                    rowData={event}
+                                />
+                            }
+                            trigger={
+                                <DropdownMenuItem onSelect={ (e) => e.preventDefault() } >
+                                    <Pencil className="mr-2 h-4 w-4"/> Edit
+                                </DropdownMenuItem>
+                            }
+                        />
+                                                
                         <DeleteAlertDialog
                             endpoint={ deleteEndpoint }
                             body={ deleteBodyParams }
@@ -254,7 +285,9 @@ export const eventsTableColumns: ColumnDef<Event>[] = [
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
-                            }>
+                            }
+                            queryKey={ eventsQueryKey }
+                            >
                         </DeleteAlertDialog>
 
                         <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(event.eventName)} >
@@ -346,7 +379,7 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
         }
 
         return (
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
                         <span className="sr-only">Open menu</span>
@@ -356,9 +389,20 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                    <DropdownMenuItem onClick={ () => console.log("Edit row")} >
-                        <Pencil className="mr-2 h-4 w-4"/>Edit 
-                    </DropdownMenuItem>
+                    <SideRowSheet
+                            title="Edit Row"
+                            description=""
+                            FormType={
+                                <EditEventAttendanceForm
+                                    rowData={attendance}
+                                />
+                            }
+                            trigger={
+                                <DropdownMenuItem onSelect={ (e) => e.preventDefault() } >
+                                    <Pencil className="mr-2 h-4 w-4"/> Edit
+                                </DropdownMenuItem>
+                            }
+                    />
 
                     <DeleteAlertDialog
                             endpoint={ deleteEndpoint }
@@ -368,7 +412,9 @@ export const eventAttendanceTableColumns: ColumnDef<EventAttendance>[] = [
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   <span>Delete</span>
                                 </DropdownMenuItem>
-                            }>
+                            }
+                            queryKey={attendanceQueryKey}
+                            >
                     </DeleteAlertDialog>
 
                     <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(attendance.firstName + " " + attendance.lastName)} >
@@ -498,7 +544,8 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
             const deleteEndpoint = `/v1/brothers/${brotherID}/statuses/${semesterID}`
      
           return (
-            <DropdownMenu>
+            // Setting modal=false to fix `AlertDialog` side-effects of not letting click anything
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <span className="sr-only">Open menu</span>
@@ -508,9 +555,20 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                <DropdownMenuItem onClick={ () => console.log("Edit row") } >
-                    <Pencil className="mr-2 h-4 w-4"/>Edit
-                </DropdownMenuItem>
+                    <SideRowSheet
+                            title="Edit Row"
+                            description=""
+                            FormType={
+                                <EditActivesForm
+                                    rowData={brotherStatus}
+                                />
+                            }
+                            trigger={
+                                <DropdownMenuItem onSelect={ (e) => e.preventDefault() } >
+                                    <Pencil className="mr-2 h-4 w-4"/> Edit
+                                </DropdownMenuItem>
+                            }
+                    />
 
                 <DeleteAlertDialog
                         endpoint={ deleteEndpoint }
@@ -519,7 +577,9 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
                               <Trash2 className="mr-2 h-4 w-4" />
                               <span>Delete</span>
                             </DropdownMenuItem>
-                        }>
+                        }
+                        queryKey={ activesQueryKey }
+                        >
                 </DeleteAlertDialog>
 
                 <DropdownMenuItem onClick={ () => navigator.clipboard.writeText(brotherStatus.firstName + " " + brotherStatus.lastName)} >

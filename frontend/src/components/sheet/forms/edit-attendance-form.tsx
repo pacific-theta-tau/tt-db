@@ -3,7 +3,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -12,9 +12,9 @@ import { useToast } from "@/hooks/use-toast"
 import { Search } from "lucide-react"
 import { useReactTable, getCoreRowModel, getFilteredRowModel, flexRender, ColumnDef } from '@tanstack/react-table'
 import { rollCallSearchColumns } from '@/components/columns';
-import { Brother, BrotherStatus } from "@/components/columns"
-import { request, ApiResponse } from "@/api/api"
-import { activesQueryKey } from "@/pages/Actives"
+import { Brother, EventAttendance } from "@/components/columns"
+import { request, ApiResponse } from '@/api/api';
+import { attendanceQueryKey } from '@/pages/EventAttendance'
 
 
 // UI imports
@@ -53,102 +53,74 @@ import {
 } from "@/components/ui/table"
 
 
+
 const statuses: readonly [string, ...string[]] = [
-    'Active',
-    'Pre-Alumnus',
-    'Alumnus',
-    'Co-op',
-    'Transferred',
-    'Expelled',
+    'Present',
+    'Absent',
+    'Excused',
 ]
 
 const formSchema = z.object({
-        rollCall: z.number({
-            required_error: "You must provide a roll call"
-        }),
-        semester: z.string({
-            required_error: "You must provide a semester"
-        }),
-        status: z.enum(statuses, {
-            required_error: "You need to select status.",
-        }),
-    })
-
+    rollCall: z.number({
+        required_error: "You must provide a roll call"
+    }),
+    status: z.enum(statuses, {
+        required_error: "You need to select status.",
+    }),
+})
 
 async function fetchSearchData() {
-    console.log("CALLED fetchSearchData")
+    /**
+    * Mutation function to create new event row from form data
+    *
+    * @param data - Form data to be sent in request body
+    * @returns A Promise with Event data
+    */
     const endpoint = "http://localhost:8080/api/brothers"
-    const responseSearch: ApiResponse<Brother[]> = await request(endpoint, 'GET')
-    console.log('responseSearch:', responseSearch)
-
-    return responseSearch.data
+    const response: ApiResponse<Brother[]> = await request(endpoint, 'GET')
+    return response.data
 }
 
-
-async function fetchSemestersData() {
-    console.log("CALLED fetchSemestersData")
-    const endpoint2 = "http://localhost:8080/api/semesters"
-    const responseSemesters: ApiResponse<string[]> = await request(endpoint2, 'GET')
-    console.log('responseSemesters:', responseSemesters)
-    return responseSemesters.data
-}
-
-
-async function sendPostRequest(data: z.infer<typeof formSchema>, semester: string, brotherID: string) {
-    const endpoint = `http://localhost:8080/api/semesters/${semester}/statuses`
+async function sendPatchRequest(data: z.infer<typeof formSchema>, eventID: string, brotherID: number) {
+    /**
+    * Mutation function to create new attendance record from form data
+    *
+    * @param data - Form data to be sent in request body
+    * @param eventID - ID of the event related to new attendance record
+    * @param rollCall - rollCall of member
+    * @returns A Promise with Event data
+    */
+    const endpoint = "http://localhost:8080/api/events/" + eventID + "/attendance"
     const body = {
-            "brotherID": parseInt(brotherID),
-            "status": data.status,
+            "eventID": eventID,
+            "brotherID": brotherID,
+            "attendanceStatus": data.status,
     }
-    const result: ApiResponse<BrotherStatus[]> = await request(endpoint, 'POST', body)
-    return result.data
+    console.log("Patch Body:", body)
+    const result: ApiResponse<EventAttendance> = await request(endpoint, 'PATCH', body)
+    return result
 }
 
-
-export function BrotherStatusForm({selectedSemester}: { selectedSemester: string }){
-    console.log("Selected Semester:", selectedSemester)
+export function EditEventAttendanceForm({ rowData, onClose }: { rowData: EventAttendance, onClose?: () => void }) {
     const { toast } = useToast()
-    const [rollCall, setRollCall] = useState(0)
-    const [brotherID, setBrotherID] = useState("")
+    // RollCall is used only in the UI to help users recognize what brother has been selected.
+    const [_, setRollCall] = useState(rowData.rollCall)
+    const [brotherID, setBrotherID] = useState(rowData.brotherID)
     const [globalFilter, setGlobalFilter] = useState("")
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const { eventID = '0' } = useParams<{ eventID: string }>();
+
+    // Pre-fill form with current row values
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            semester: selectedSemester
+            rollCall: rowData.rollCall,
+            status: rowData.attendanceStatus,
         },
     })
 
-    // React Query and Mutation Hooks
-    // TODO: handle isLoading and isError states for search dialog and semester dropdown
-    // searchData is for "Search Brother" search field
-    const { data: searchData, isLoading, isError } = useQuery({queryKey: ["brotherSearchData"], queryFn: fetchSearchData})
-    // semestersData is for the "Select Semester" dropdown field
-    const { data: semestersData } = useQuery({queryKey: ["semestersData"], queryFn: fetchSemestersData})
-    const queryClient = useQueryClient();
-    const mutation = useMutation(
-    {
-        mutationFn: (data: z.infer<typeof formSchema>) => sendPostRequest(data, selectedSemester, brotherID),
-        onSuccess: (data) => {
-            // TODO: use "message" field for toast description
-            toast({
-                title: "Success!",
-                description: "Added new status record to database.",
-            })
-              // Invalidate table data query to reload the table
-              queryClient.invalidateQueries({ queryKey: [activesQueryKey] });
-            },
-        onError: (error) => {
-            // Make toast destructive
-            toast({
-                title: "Uh oh! Something went wrong",
-                description: "Failed to create new status record.",
-                variant: "destructive",
-                //action: <ToastAction></ToastAction>,
-            })
-        }
-    })
-
+    // Brother Table Search by Roll Call
+    const { data: searchData, isLoading, isFetching, isError } = useQuery({queryKey: ["brotherSearchData"], queryFn: fetchSearchData })
     const table = useReactTable({
         data: searchData ?? [],
         columns: rollCallSearchColumns,
@@ -160,17 +132,45 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
         },
     })
 
+    // Update rollCall and brotherID on search selection
     const handleSelectMember = (rollCallSearch: Brother) => {
         setRollCall(rollCallSearch.rollCall)
-        setBrotherID(rollCallSearch.brotherID)
+        setBrotherID(parseInt(rollCallSearch.brotherID))
         form.setValue("rollCall", rollCallSearch.rollCall)
         setIsDialogOpen(false)
     }
 
+    // React Hook and Mutation for Attendance Table
+    const queryClient = useQueryClient();
+    const mutation = useMutation(
+    {
+      mutationFn: (data: z.infer<typeof formSchema>) => sendPatchRequest(data, eventID, brotherID),
+      onSuccess: (data) => {
+          // TODO: use "message" field for toast description
+          toast({
+              title: "Success!",
+              description: "Added new attendance record to database.",
+          })
+        // Invalidate table data query to reload the table
+        queryClient.invalidateQueries({ queryKey: [attendanceQueryKey] });
+      },
+      onError: (error) => {
+          // Make toast destructive
+          toast({
+              title: "Uh oh! Something went wrong.",
+              description: "Failed to add new attendance record.",
+              variant: "destructive",
+              //action: <ToastAction></ToastAction>,
+          })
+      },
+      onSettled: onClose,
+    });
+  
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        mutation.mutate(data)
+      //const endpoint = "http://localhost:8080/api/attendance"
+      mutation.mutate(data)
     }
-
+  
     return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -183,7 +183,7 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
                     <FormControl>
                       <div className="flex">
                         <Input
-                          placeholder="Enter member Roll Call"
+                          placeholder="Enter your Member ID"
                           {...field}
                           className="flex-grow"
                           onChange={
@@ -198,7 +198,7 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
                               <Search className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="sm:max-w-[500px] overflow-y-scroll sm:max-h-[700px]">
+                          <DialogContent className="sm:max-w-[500px]">
                             <DialogHeader>
                               <DialogTitle>Search Brothers</DialogTitle>
                             </DialogHeader>
@@ -255,48 +255,22 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
                   </FormItem>
                 )}
               />
-          <FormField
-            control={form.control}
-            name="semester"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Semester *</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={selectedSemester}>
-                    <FormControl>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Select Semester" />
-                            </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                          {semestersData && semestersData.length > 0 ? (
-                              semestersData.map((semester, index) => (
-                                  <SelectItem key={index.toString()} value={semester}>{semester}</SelectItem>
-                              ))
-                          ) : (
-                              <SelectItem value={selectedSemester}>Loading...</SelectItem>
-                          )
-                          }
-                    </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+  
           <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status *</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue="">
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Select Status" />
                             </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                          {statuses.map((status, index) => (
-                            <SelectItem value={status} key={index.toString()}>{status}</SelectItem>
+                          {statuses.map((status) => (
+                            <SelectItem value={status}>{status}</SelectItem>
                           ))}
                     </SelectContent>
                 </Select>
@@ -304,8 +278,7 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
               </FormItem>
             )}
           />
-          {/* TODO: add `disabled` attribute for useQuery isLoading? */}
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={isLoading || isFetching || isError}>Submit</Button>
         </form>
       </Form>
     )

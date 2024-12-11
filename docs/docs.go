@@ -380,6 +380,125 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/brothers/{brotherID}/statuses": {
+            "patch": {
+                "description": "Deletes the status of the specified brother for the specified semester.",
+                "tags": [
+                    "Statuses"
+                ],
+                "summary": "Deletes the status of brother for specified semester",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "brotherID",
+                        "name": "brotherID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "semesterID",
+                        "name": "semesterID",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "body",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brothers/{brotherID}/statuses/{semesterID}": {
+            "delete": {
+                "description": "Deletes the status of the specified brother for the specified semester.",
+                "tags": [
+                    "Statuses"
+                ],
+                "summary": "Deletes the status of brother for specified semester",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "brotherID",
+                        "name": "brotherID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "semesterID",
+                        "name": "semesterID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/brothers/{id}": {
             "get": {
                 "description": "Get Brother record by ID",
@@ -411,20 +530,20 @@ const docTemplate = `{
                     }
                 }
             },
-            "put": {
-                "description": "Update one or more fields for Brother record",
+            "delete": {
+                "description": "Delete Brother with by Roll Call",
                 "tags": [
                     "Brothers"
                 ],
-                "summary": "Update Brother record",
+                "summary": "Delete Brother by Roll Call",
                 "parameters": [
                     {
-                        "description": "Values to update for Brother",
+                        "description": "RollCall of Brother",
                         "name": "body_params",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Brother"
+                            "type": "string"
                         }
                     }
                 ],
@@ -443,20 +562,20 @@ const docTemplate = `{
                     }
                 }
             },
-            "delete": {
-                "description": "Delete Brother with by Roll Call",
+            "patch": {
+                "description": "Update one or more fields for Brother record",
                 "tags": [
                     "Brothers"
                 ],
-                "summary": "Delete Brother by Roll Call",
+                "summary": "Update Brother record",
                 "parameters": [
                     {
-                        "description": "RollCall of Brother",
+                        "description": "Values to update for Brother",
                         "name": "body_params",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Brother"
                         }
                     }
                 ],
@@ -587,38 +706,6 @@ const docTemplate = `{
                     }
                 }
             },
-            "put": {
-                "description": "Update event record by eventID",
-                "tags": [
-                    "Events"
-                ],
-                "summary": "Update event record",
-                "parameters": [
-                    {
-                        "description": "Event ID",
-                        "name": "eventid",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/models.APIResponse"
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "Create new event record",
                 "tags": [
@@ -653,6 +740,70 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete event record by eventID",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Delete event record",
+                "parameters": [
+                    {
+                        "description": "Event ID",
+                        "name": "eventid",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/events/{eventID}/attendance": {
+            "patch": {
+                "description": "Update attendance using specific resource endpoint",
+                "tags": [
+                    "Attendance"
+                ],
+                "summary": "Update attendance record from eventID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "EventID",
+                        "name": "eventID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
                         }
                     },
                     "400": {
@@ -706,6 +857,36 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "patch": {
+                "description": "Update event record by eventID",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Update event record",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "eventid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
             }
         },
         "/api/events/{eventid}/attendance": {
@@ -737,6 +918,48 @@ const docTemplate = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/handlers.GetEventAttendance.EventDataAndAttendance"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create new event record",
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Create new event record",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "eventID",
+                        "name": "eventid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Event"
                                         }
                                     }
                                 }
@@ -795,6 +1018,17 @@ const docTemplate = `{
                     "Semesters"
                 ],
                 "summary": "Create semester label",
+                "parameters": [
+                    {
+                        "description": "Semester Label (e.g. ` + "`" + `Fall 2023` + "`" + `)",
+                        "name": "semester",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -818,6 +1052,66 @@ const docTemplate = `{
                     "Semesters"
                 ],
                 "summary": "Get Brother statuses for a semester",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Attendance"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.APIResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create all brother statuses for a semester",
+                "tags": [
+                    "Semesters"
+                ],
+                "summary": "Create Brother statuses for a semester",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "semesterLabel",
+                        "name": "semesterLabel",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BrotherID",
+                        "name": "brotherID",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Status",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1050,7 +1344,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rollCall": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "semesterLabel": {
                     "type": "string"
@@ -1090,6 +1384,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "brotherID": {
+                    "type": "integer"
+                },
+                "eventID": {
                     "type": "integer"
                 },
                 "firstName": {

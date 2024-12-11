@@ -63,59 +63,57 @@ const statuses: readonly [string, ...string[]] = [
 ]
 
 const formSchema = z.object({
-        rollCall: z.number({
-            required_error: "You must provide a roll call"
-        }),
-        semester: z.string({
-            required_error: "You must provide a semester"
-        }),
-        status: z.enum(statuses, {
-            required_error: "You need to select status.",
-        }),
-    })
+    // Had to set rollCall to `any()` because default value is setting it as string. Perhaps is a bug with API response.
+    rollCall: z.any({
+        required_error: "You must provide a roll call"
+    }),
+//        semester: z.string({
+//            required_error: "You must provide a semester"
+//        }),
+    status: z.enum(statuses, {
+        required_error: "You need to select status.",
+    }),
+})
 
 
 async function fetchSearchData() {
-    console.log("CALLED fetchSearchData")
     const endpoint = "http://localhost:8080/api/brothers"
     const responseSearch: ApiResponse<Brother[]> = await request(endpoint, 'GET')
-    console.log('responseSearch:', responseSearch)
-
     return responseSearch.data
 }
 
 
-async function fetchSemestersData() {
-    console.log("CALLED fetchSemestersData")
-    const endpoint2 = "http://localhost:8080/api/semesters"
-    const responseSemesters: ApiResponse<string[]> = await request(endpoint2, 'GET')
-    console.log('responseSemesters:', responseSemesters)
-    return responseSemesters.data
-}
+//async function fetchSemestersData() {
+//    console.log("CALLED fetchSemestersData")
+//    const endpoint2 = "http://localhost:8080/api/semesters"
+//    const responseSemesters: ApiResponse<string[]> = await request(endpoint2, 'GET')
+//    console.log('responseSemesters:', responseSemesters)
+//    return responseSemesters.data
+//}
 
 
-async function sendPostRequest(data: z.infer<typeof formSchema>, semester: string, brotherID: string) {
-    const endpoint = `http://localhost:8080/api/semesters/${semester}/statuses`
+async function sendPatchRequest(data: z.infer<typeof formSchema>, semesterID: number, brotherID: number) {
+    const endpoint = `http://localhost:8080/api/brothers/${brotherID}/statuses`
     const body = {
-            "brotherID": parseInt(brotherID),
+            "semesterID": semesterID,
             "status": data.status,
     }
-    const result: ApiResponse<BrotherStatus[]> = await request(endpoint, 'POST', body)
+    const result: ApiResponse<BrotherStatus[]> = await request(endpoint, 'PATCH', body)
     return result.data
 }
 
 
-export function BrotherStatusForm({selectedSemester}: { selectedSemester: string }){
-    console.log("Selected Semester:", selectedSemester)
+export function EditActivesForm({rowData, onClose}: { rowData: BrotherStatus, onClose?: () => void}){
     const { toast } = useToast()
-    const [rollCall, setRollCall] = useState(0)
-    const [brotherID, setBrotherID] = useState("")
+    const [_, setRollCall] = useState(rowData.rollCall)
+    const [brotherID, setBrotherID] = useState(rowData.brotherID)
     const [globalFilter, setGlobalFilter] = useState("")
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            semester: selectedSemester
+            rollCall: rowData.rollCall,
+            status: rowData.status,
         },
     })
 
@@ -124,16 +122,16 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
     // searchData is for "Search Brother" search field
     const { data: searchData, isLoading, isError } = useQuery({queryKey: ["brotherSearchData"], queryFn: fetchSearchData})
     // semestersData is for the "Select Semester" dropdown field
-    const { data: semestersData } = useQuery({queryKey: ["semestersData"], queryFn: fetchSemestersData})
+    // const { data: semestersData } = useQuery({queryKey: ["semestersData"], queryFn: fetchSemestersData})
     const queryClient = useQueryClient();
     const mutation = useMutation(
     {
-        mutationFn: (data: z.infer<typeof formSchema>) => sendPostRequest(data, selectedSemester, brotherID),
-        onSuccess: (data) => {
+        mutationFn: (data: z.infer<typeof formSchema>) => sendPatchRequest(data, rowData.semesterID, brotherID),
+        onSuccess: () => {
             // TODO: use "message" field for toast description
             toast({
                 title: "Success!",
-                description: "Added new status record to database.",
+                description: "Updated status record to database.",
             })
               // Invalidate table data query to reload the table
               queryClient.invalidateQueries({ queryKey: [activesQueryKey] });
@@ -142,11 +140,12 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
             // Make toast destructive
             toast({
                 title: "Uh oh! Something went wrong",
-                description: "Failed to create new status record.",
+                description: `Failed to update status record.\nError: ${error.message}`,
                 variant: "destructive",
                 //action: <ToastAction></ToastAction>,
             })
-        }
+        },
+        onSettled: onClose,
     })
 
     const table = useReactTable({
@@ -162,7 +161,7 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
 
     const handleSelectMember = (rollCallSearch: Brother) => {
         setRollCall(rollCallSearch.rollCall)
-        setBrotherID(rollCallSearch.brotherID)
+        setBrotherID(parseInt(rollCallSearch.brotherID))
         form.setValue("rollCall", rollCallSearch.rollCall)
         setIsDialogOpen(false)
     }
@@ -188,8 +187,8 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
                           className="flex-grow"
                           onChange={
                               event => {
-                                  field.onChange(+event.target.value)
-                                  setRollCall(+event.target.value)
+                                  field.onChange(event.target.valueAsNumber)
+                                  setRollCall(event.target.valueAsNumber)
                               }
                           }/>
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -255,13 +254,14 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
                   </FormItem>
                 )}
               />
+          {/*
           <FormField
             control={form.control}
             name="semester"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Semester *</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={selectedSemester}>
+                <Select disabled=true onValueChange={field.onChange} defaultValue={selectedSemester}>
                     <FormControl>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Select Semester" />
@@ -282,6 +282,7 @@ export function BrotherStatusForm({selectedSemester}: { selectedSemester: string
               </FormItem>
             )}
           />
+          */}
           <FormField
             control={form.control}
             name="status"

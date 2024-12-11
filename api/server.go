@@ -73,7 +73,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	r.Use(middleware.Logger)
     corsHandler := cors.New(cors.Options{
         AllowedOrigins:   []string{"*"},     // Allow all origins
-        AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowedMethods:   []string{"GET", "PATCH", "POST", "PUT", "DELETE", "OPTIONS"},
         AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
         ExposedHeaders:   []string{"Link"},
         AllowCredentials: true,
@@ -94,7 +94,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	//r.Get("/api/brothers/{rollCall}", handler.GetBrotherByRollCall)
 	r.Get("/api/brothers/{id}", handler.GetBrotherByID)
 	r.Post("/api/brothers", handler.AddBrother)
-	r.Put("/api/brothers", handler.UpdateBrother)
+	r.Patch("/api/brothers/{id}", handler.UpdateBrother)
 	r.Delete("/api/brothers", handler.RemoveBrother)
     // brothers count
 	r.Get("/api/brothers/count", handler.GetBrothersCount)
@@ -107,6 +107,7 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
     r.Get("/api/statuses", handler.GetAllStatusLabels)
     r.Get("/api/brothers/{id}/statuses", handler.GetBrotherStatusHistory)
     r.Post("/api/brothers/{id}/statuses", handler.CreateBrotherStatus)
+    r.Patch("/api/brothers/{id}/statuses", handler.UpdateBrotherStatusByBrotherID)
     r.Delete("/v1/brothers/{brotherID}/statuses/{semesterID}", handler.DeleteStatusByMemberAndSemesterHandler)
 
     // events endpoint
@@ -114,8 +115,9 @@ func setupRoutes(handler *handlers.Handler) *chi.Mux {
 	r.Get("/api/events/{eventID}", handler.GetEventByEventID)
 	r.Get("/api/events/{eventID}/attendance", handler.GetEventAttendance)
 	r.Post("/api/events/{eventID}/attendance", handler.CreateAttendanceRecordForEvent)
+	r.Patch("/api/events/{eventID}/attendance", handler.UpdateAttendanceByEventID)
     r.Post("/api/events", handler.CreateEvent)
-    r.Put("/api/events", handler.UpdateEventByID)
+    r.Patch("/api/events/{eventID}", handler.UpdateEventByID)
     r.Delete("/api/events", handler.DeleteEventByEventID)
 
     // attendance endpoints

@@ -357,3 +357,97 @@ func (h *Handler) UpdateAttendanceRecord(w http.ResponseWriter, r *http.Request)
     models.RespondWithSuccess(w, http.StatusOK, "")
 }
 
+
+//	@Summary		Update attendance record from eventID
+//	@Description	Update attendance using specific resource endpoint
+//	@Tags		    Attendance
+//  @Param          eventID      path        string true "EventID"
+//	@Success		200		object		models.APIResponse
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/events/{eventID}/attendance [patch]
+func (h *Handler) UpdateAttendanceByEventID(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    // Parse url params
+    eventID := chi.URLParam(r, "eventID")
+    if eventID == "" {
+        errMsg := fmt.Sprintf("Missing eventID in url params.")
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusBadRequest, errMsg)
+        return
+    }
+    eventIDInt, err := strconv.Atoi(eventID)
+    if err != nil {
+        errMsg := fmt.Sprintf("Failed to convert eventID to int. eventID: %s; Error: %s", eventID, err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusInternalServerError, errMsg)
+        return
+    }
+
+    // Unmarshal request body data
+    var requestBody struct {
+        BrotherID           int `json:"brotherID"`
+        AttendanceStatus    string `json:"attendanceStatus"`
+    }
+
+    err = json.NewDecoder(r.Body).Decode(&requestBody)
+    if err != nil {
+        errMsg := fmt.Sprintf("Failed to parse request body params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusBadRequest, errMsg)
+        return
+    }
+
+    // Validate data provided in request body
+    validate := validator.New()
+	if err := validate.Struct(requestBody); err != nil {
+        errMsg := fmt.Sprintf("Invalid request body params: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+		return
+	}
+
+    log.Printf("\tRequest Body: %+v", requestBody)
+
+    // Check for missing or zero values
+	if requestBody.BrotherID == 0 || eventIDInt == 0 {
+        errMsg := fmt.Sprintf("Invalid brotherID or eventID", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+		return
+	}
+
+    // validate attendance status
+    _, ok := models.AttendanceStatus[requestBody.AttendanceStatus]; if !ok {
+        // TODO: print valid statues dynamically instead of hardcoding
+        errMsg := "Invalid attendance status. Must be one of: 'present', 'absent', or 'excused'"
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+		return
+    }
+
+    // Query database
+    query := `
+    UPDATE attendance
+    SET attendanceStatus = $1
+    WHERE brotherID = $2 AND eventID = $3
+    `
+    log.Println("Query:\n", query)
+    _, err = h.db.QueryContext(
+        ctx,
+        query,
+        requestBody.AttendanceStatus,
+        requestBody.BrotherID,
+        eventIDInt,
+    )
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while updating attendance record: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+		return
+	}
+
+    // TODO: return updated row
+    models.RespondWithSuccess(w, http.StatusOK, "")
+}
