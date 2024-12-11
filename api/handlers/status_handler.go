@@ -3,6 +3,7 @@ package handlers
 
 import (
 	"context"
+	"strconv"
 	//"database/sql"
 	"encoding/json"
 	"fmt"
@@ -13,7 +14,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/pacific-theta-tau/tt-db/api/models"
 )
-
 
 // GET /api/statuses
 //	@Summary		Get status labels
@@ -82,7 +82,7 @@ func (h *Handler) CreateStatusForBrother(w http.ResponseWriter, r *http.Request)
 }
 
 
-// POST /api/brothers/{brotherID}/statuses/{semesterID}
+// Delete /api/brothers/{brotherID}/statuses/{semesterID}
 //	@Summary		Deletes the status of brother for specified semester
 //	@Description	Deletes the status of the specified brother for the specified semester.
 //	@Tags			Statuses
@@ -115,4 +115,80 @@ func (h* Handler) DeleteStatusByMemberAndSemesterHandler(w http.ResponseWriter, 
 	}
 
     models.RespondWithSuccess(w, http.StatusOK, "Deleted row successfully")
+}
+
+
+// Patch /api/brothers/{brotherID}/statuses
+//	@Summary		Deletes the status of brother for specified semester
+//	@Description	Deletes the status of the specified brother for the specified semester.
+//	@Tags			Statuses
+//  @Param  brotherID path   string 
+//  @Param  semesterID body int
+//  @Param  status body string 
+//	@Success		200		object		models.APIResponse{data=[]string}
+//	@Failure		400		{object}	models.APIResponse
+//	@Router			/api/brothers/{brotherID}/statuses [patch]
+func (h* Handler) UpdateBrotherStatusByBrotherID(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+
+    // parse url params
+    brotherID := chi.URLParam(r, "id")
+    if brotherID == "" {
+        errMsg := "Missing brotherID in url params"
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
+    }
+    brotherIDInt, err  := strconv.Atoi(brotherID)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error converting brotherID to int. Error: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+    }
+
+    // parse request body
+    var requestBody struct {
+        Status string `json:"status"`
+        SemesterID int `json:"semesterID"`
+        //SemesterLabel string `json:"semesterLabel"`
+    }
+    err = json.NewDecoder(r.Body).Decode(&requestBody)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while parsing request body. Error: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+        return
+    }
+    
+    // validate request body
+    validate := validator.New()
+    if err := validate.Struct(requestBody); err != nil {
+        errMsg := fmt.Sprintf("Invalid Input: %s", err.Error())
+        log.Println(errMsg)
+        models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+        return
+    }
+
+    //// Get SemesterID
+    //semesterID, err := h.GetSemesterIdBySemesterLabel(requestBody.SemesterLabel) 
+    //if err != nil {
+    //    errMsg := fmt.Sprintf("Failed to fetch semesterID for semester label `$s`", requestBody.SemesterLabel)
+    //    log.Println(errMsg)
+    //    models.RespondWithFail(w, http.StatusBadRequest, errMsg)
+    //    return
+    //}
+
+    // Query Database
+    query := "UPDATE brotherStatus SET status = $1 WHERE brotherID = $2 AND semesterID = $3"
+    _, err = h.db.ExecContext(ctx, query, requestBody.Status, brotherIDInt, requestBody.SemesterID)
+    if err != nil {
+        errMsg := fmt.Sprintf("Error while querying:\n\t'%s'\n", err.Error())
+        log.Println(errMsg)
+        models.RespondWithError(w, http.StatusInternalServerError, errMsg)
+		return
+	}
+
+    models.RespondWithSuccess(w, http.StatusOK, "")
 }

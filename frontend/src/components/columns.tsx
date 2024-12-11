@@ -23,6 +23,7 @@ import { EditEventAttendanceForm } from './sheet/forms/edit-attendance-form'
 import { eventsQueryKey } from '@/components/events-table'
 import { attendanceQueryKey } from '@/pages/EventAttendance'
 import { activesQueryKey } from '@/pages/Actives'
+import { EditActivesForm } from './sheet/forms/edit-actives-form'
 
 
 // This type is used to define the shape of our data.
@@ -554,9 +555,20 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                <DropdownMenuItem onClick={ () => console.log("Edit row") } >
-                    <Pencil className="mr-2 h-4 w-4"/>Edit
-                </DropdownMenuItem>
+                    <SideRowSheet
+                            title="Edit Row"
+                            description=""
+                            FormType={
+                                <EditActivesForm
+                                    rowData={brotherStatus}
+                                />
+                            }
+                            trigger={
+                                <DropdownMenuItem onSelect={ (e) => e.preventDefault() } >
+                                    <Pencil className="mr-2 h-4 w-4"/> Edit
+                                </DropdownMenuItem>
+                            }
+                    />
 
                 <DeleteAlertDialog
                         endpoint={ deleteEndpoint }
@@ -566,7 +578,7 @@ export const brotherStatusTableColumns: ColumnDef<BrotherStatus>[] = [
                               <span>Delete</span>
                             </DropdownMenuItem>
                         }
-                        queryKey="activesTableData"
+                        queryKey={ activesQueryKey }
                         >
                 </DeleteAlertDialog>
 
