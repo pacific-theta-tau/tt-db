@@ -86,8 +86,8 @@ func (h *Handler) CreateStatusForBrother(w http.ResponseWriter, r *http.Request)
 //	@Summary		Deletes the status of brother for specified semester
 //	@Description	Deletes the status of the specified brother for the specified semester.
 //	@Tags			Statuses
-//  @Param  brotherID path   string 
-//  @Param  semesterID path   string 
+//  @Param  brotherID path   string true "brotherID"
+//  @Param  semesterID path   string true "semesterID"
 //	@Success		200		object		models.APIResponse{data=[]string}
 //	@Failure		400		{object}	models.APIResponse
 //	@Router			/api/brothers/{brotherID}/statuses/{semesterID} [delete]
@@ -122,9 +122,9 @@ func (h* Handler) DeleteStatusByMemberAndSemesterHandler(w http.ResponseWriter, 
 //	@Summary		Deletes the status of brother for specified semester
 //	@Description	Deletes the status of the specified brother for the specified semester.
 //	@Tags			Statuses
-//  @Param  brotherID path   string 
-//  @Param  semesterID body int
-//  @Param  status body string 
+//  @Param  brotherID path   string true "brotherID"
+//  @Param  semesterID body int true "semesterID"
+//  @Param  status body string true "body"
 //	@Success		200		object		models.APIResponse{data=[]string}
 //	@Failure		400		{object}	models.APIResponse
 //	@Router			/api/brothers/{brotherID}/statuses [patch]

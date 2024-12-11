@@ -110,7 +110,7 @@ definitions:
       major:
         type: string
       rollCall:
-        type: string
+        type: integer
       semesterLabel:
         type: string
       status:
@@ -137,6 +137,8 @@ definitions:
       attendanceStatus:
         type: string
       brotherID:
+        type: integer
+      eventID:
         type: integer
       firstName:
         type: string
@@ -277,6 +279,79 @@ paths:
       summary: Create Brother record
       tags:
       - Brothers
+  /api/brothers/{brotherID}/statuses:
+    patch:
+      description: Deletes the status of the specified brother for the specified semester.
+      parameters:
+      - description: brotherID
+        in: path
+        name: brotherID
+        required: true
+        type: string
+      - description: semesterID
+        in: body
+        name: semesterID
+        required: true
+        schema:
+          type: integer
+      - description: body
+        in: body
+        name: status
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Deletes the status of brother for specified semester
+      tags:
+      - Statuses
+  /api/brothers/{brotherID}/statuses/{semesterID}:
+    delete:
+      description: Deletes the status of the specified brother for the specified semester.
+      parameters:
+      - description: brotherID
+        in: path
+        name: brotherID
+        required: true
+        type: string
+      - description: semesterID
+        in: path
+        name: semesterID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Deletes the status of brother for specified semester
+      tags:
+      - Statuses
   /api/brothers/{id}:
     delete:
       description: Delete Brother with by Roll Call
@@ -319,7 +394,7 @@ paths:
       summary: Get Brother record by ID
       tags:
       - Brothers
-    put:
+    patch:
       description: Update one or more fields for Brother record
       parameters:
       - description: Values to update for Brother
@@ -482,6 +557,27 @@ paths:
       tags:
       - Brothers
   /api/events:
+    delete:
+      description: Delete event record by eventID
+      parameters:
+      - description: Event ID
+        in: body
+        name: eventid
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Delete event record
+      tags:
+      - Events
     get:
       description: Get data from all rows in events table
       responses:
@@ -527,15 +623,15 @@ paths:
       summary: Create new event record
       tags:
       - Events
-    put:
-      description: Update event record by eventID
+  /api/events/{eventID}/attendance:
+    patch:
+      description: Update attendance using specific resource endpoint
       parameters:
-      - description: Event ID
-        in: body
-        name: eventid
+      - description: EventID
+        in: path
+        name: eventID
         required: true
-        schema:
-          type: integer
+        type: string
       responses:
         "200":
           description: OK
@@ -545,9 +641,9 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.APIResponse'
-      summary: Update event record
+      summary: Update attendance record from eventID
       tags:
-      - Events
+      - Attendance
   /api/events/{eventid}:
     get:
       description: Get event information by eventID
@@ -572,6 +668,26 @@ paths:
           schema:
             $ref: '#/definitions/models.APIResponse'
       summary: Get event data
+      tags:
+      - Events
+    patch:
+      description: Update event record by eventID
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventid
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Update event record
       tags:
       - Events
   /api/events/{eventid}/attendance:
@@ -600,6 +716,31 @@ paths:
       summary: Get event and attendance data
       tags:
       - Events
+    post:
+      description: Create new event record
+      parameters:
+      - description: eventID
+        in: path
+        name: eventid
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Event'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create new event record
+      tags:
+      - Events
   /api/semesters:
     get:
       description: Get all semester labels (e.g. "Spring 2024")
@@ -624,6 +765,13 @@ paths:
       - Semesters
     post:
       description: Create semester label (e.g. Spring 2024)
+      parameters:
+      - description: Semester Label (e.g. `Fall 2023`)
+        in: body
+        name: semester
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -654,6 +802,43 @@ paths:
           schema:
             $ref: '#/definitions/models.APIResponse'
       summary: Get Brother statuses for a semester
+      tags:
+      - Semesters
+    post:
+      description: Create all brother statuses for a semester
+      parameters:
+      - description: semesterLabel
+        in: path
+        name: semesterLabel
+        required: true
+        type: string
+      - description: BrotherID
+        in: body
+        name: brotherID
+        required: true
+        schema:
+          type: integer
+      - description: Status
+        in: body
+        name: status
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Attendance'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+      summary: Create Brother statuses for a semester
       tags:
       - Semesters
   /api/statuses:
