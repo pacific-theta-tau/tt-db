@@ -1,5 +1,5 @@
 // add-row-sheet.tsx: Sheet+form that opens when "Add row" button is clicked in data table pages
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -19,8 +19,18 @@ const SideFormSheet: React.FC<{
     FormType: React.JSX.Element
     trigger?: React.ReactNode
 }> = ({ title, description, FormType, trigger }) => {
+  /* Controlling the open/close state of `Sheet` because some `FormType` components require
+   * e.preventDefault(), which prevents the sheet from closing on form submission.
+   * By passing the `setIsOpen` function to the FormType, we can triggeer closing the sheet after submission.
+   */
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDialog = () => setIsOpen(false);
+
+  const additionalProps = { onClose: closeDialog };
+  const newForm = React.cloneElement(FormType, additionalProps)
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         { trigger ?
             trigger : 
@@ -34,7 +44,8 @@ const SideFormSheet: React.FC<{
                     {description}
                   </SheetDescription>
                 </SheetHeader>
-                    { FormType }
+                    { /* FormType */ }
+                    { newForm }
                 <SheetFooter>
                     {/**/}
                 </SheetFooter>
