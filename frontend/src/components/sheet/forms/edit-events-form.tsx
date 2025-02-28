@@ -68,7 +68,7 @@ async function sendPatchRequest(data: z.infer<typeof formSchema>, eventID: strin
     * @param data - Form data to be sent in request body
     * @returns A Promise with Event data
     */
-    const endpoint = `http://localhost:8080/api/events/${eventID}`
+    const endpoint = `/api/events/${eventID}`
     const result: ApiResponse<Event[]> = await request(endpoint, 'PATCH', data);
     return result
 }

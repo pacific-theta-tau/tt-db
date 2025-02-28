@@ -76,7 +76,7 @@ async function fetchSearchData() {
     * @param data - Form data to be sent in request body
     * @returns A Promise with Event data
     */
-    const endpoint = "http://localhost:8080/api/brothers"
+    const endpoint = "/api/brothers"
     const response: ApiResponse<Brother[]> = await request(endpoint, 'GET')
     return response.data
 }
@@ -90,7 +90,7 @@ async function sendPatchRequest(data: z.infer<typeof formSchema>, eventID: strin
     * @param rollCall - rollCall of member
     * @returns A Promise with Event data
     */
-    const endpoint = "http://localhost:8080/api/events/" + eventID + "/attendance"
+    const endpoint = "/api/events/" + eventID + "/attendance"
     const body = {
             "eventID": eventID,
             "brotherID": brotherID,

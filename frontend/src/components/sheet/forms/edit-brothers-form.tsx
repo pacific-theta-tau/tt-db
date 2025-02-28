@@ -74,7 +74,7 @@ async function sendPatchRequest(data: z.infer<typeof formSchema>, brotherID: str
      * @param brotherID - ID of the record to be changed
      * @returns Promise of an ApiResponse
      */
-    const endpoint = `http://localhost:8080/api/brothers/${brotherID}`
+    const endpoint = `/api/brothers/${brotherID}`
     let result: ApiResponse<Brother>
     result = await request(endpoint, "PATCH", data)
     /* uncomment line below to test skeleton during loading */

@@ -9,7 +9,7 @@ import { ApiResponse, getData } from '../api/api'
 
 
 async function fetchTableData() {
-    const endpoint = "http://localhost:8080/api/brothers"
+    const endpoint = "/api/brothers"
     const result: ApiResponse<Brother[]> = await getData(endpoint)
     console.log('result:', result)
     return result.data

@@ -68,7 +68,7 @@ async function sendPostRequest(data: z.infer<typeof formSchema>): Promise<ApiRes
     * @param data - Form data to be sent in request body
     * @returns A Promise with Event data
     */
-    const endpoint = "http://localhost:8080/api/events"
+    const endpoint = "/api/events"
     const result: ApiResponse<Event[]> = await request(endpoint, 'POST', data);
     return result
 }

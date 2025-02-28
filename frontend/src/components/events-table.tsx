@@ -9,7 +9,7 @@ import { ApiResponse, request } from '@/api/api';
 
 
 async function fetchTableData() {
-    const endpoint = "http://localhost:8080/api/events"
+    const endpoint = "/api/events"
     const result: ApiResponse<Event[]> = await request(endpoint, "GET")
     return result.data
 }

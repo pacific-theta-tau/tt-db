@@ -26,7 +26,7 @@ export function getSeasonYear(): string {
 
 async function fetchTableData(selectedSemester: string): Promise<BrotherStatus[]> {
     console.log(">Fetching actives from", selectedSemester)
-    const endpoint = `http://localhost:8080/api/semesters/${selectedSemester}/statuses`
+    const endpoint = `/api/semesters/${selectedSemester}/statuses`
     const result: ApiResponse<BrotherStatus[]> = await request(endpoint, 'GET')
     console.log(result)
 
@@ -34,7 +34,7 @@ async function fetchTableData(selectedSemester: string): Promise<BrotherStatus[]
 }
 
 async function fetchSemesterData() {
-    const endpoint = "http://localhost:8080/api/semesters"
+    const endpoint = "/api/semesters"
     const responseSemesters: ApiResponse<string[]> = await request(endpoint, 'GET')
     return responseSemesters.data
 }

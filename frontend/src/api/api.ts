@@ -1,4 +1,5 @@
-const BASEURL = "http://localhost:8080"
+//const BASEURL = "http://localhost:8080"
+const BASEURL = "http://api_dev:8080"
 
 export interface ApiResponse<T> {
     status: string,

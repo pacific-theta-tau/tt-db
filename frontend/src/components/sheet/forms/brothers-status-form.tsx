@@ -77,7 +77,7 @@ const formSchema = z.object({
 
 async function fetchSearchData() {
     console.log("CALLED fetchSearchData")
-    const endpoint = "http://localhost:8080/api/brothers"
+    const endpoint = "/api/brothers"
     const responseSearch: ApiResponse<Brother[]> = await request(endpoint, 'GET')
     console.log('responseSearch:', responseSearch)
 
@@ -87,7 +87,7 @@ async function fetchSearchData() {
 
 async function fetchSemestersData() {
     console.log("CALLED fetchSemestersData")
-    const endpoint2 = "http://localhost:8080/api/semesters"
+    const endpoint2 = "/api/semesters"
     const responseSemesters: ApiResponse<string[]> = await request(endpoint2, 'GET')
     console.log('responseSemesters:', responseSemesters)
     return responseSemesters.data
@@ -95,7 +95,7 @@ async function fetchSemestersData() {
 
 
 async function sendPostRequest(data: z.infer<typeof formSchema>, semester: string, brotherID: string) {
-    const endpoint = `http://localhost:8080/api/semesters/${semester}/statuses`
+    const endpoint = `/api/semesters/${semester}/statuses`
     const body = {
             "brotherID": parseInt(brotherID),
             "status": data.status,

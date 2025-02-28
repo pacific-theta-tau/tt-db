@@ -75,7 +75,7 @@ const formSchema = z.object({
 
 
 async function sendPostRequest(data: z.infer<typeof formSchema>) {
-    const endpoint = "http://localhost:8080/api/brothers"
+    const endpoint = "/api/brothers"
     let result: ApiResponse<Brother>
     result = await request(endpoint, 'POST', data)
 

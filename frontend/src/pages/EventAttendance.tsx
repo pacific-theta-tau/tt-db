@@ -19,7 +19,7 @@ type AttendanceData = {
 
 
 async function fetchTableData(eventID: string): Promise<EventAttendance[]> {
-    const endpoint = "http://localhost:8080/api/events/" + eventID + "/attendance"
+    const endpoint = "/api/events/" + eventID + "/attendance"
     const response: ApiResponse<AttendanceData> = await request(endpoint, 'GET')
     const responseData: AttendanceData = response.data
     return responseData.attendance
