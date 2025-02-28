@@ -1,4 +1,4 @@
-FROM node:alpine AS build
+FROM node:alpine AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -20,5 +20,15 @@ RUN npm install
 # Copy the rest of the frontend application source code to the working directory
 COPY frontend/ .
 
+RUN npm run build 
+
 # Run TypeScript application in dev
-CMD npm run dev
+# CMD npm run dev
+
+
+# Stage 2: Serve with Nginx
+FROM nginx:latest
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

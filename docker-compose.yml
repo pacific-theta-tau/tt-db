@@ -40,8 +40,9 @@ services:
     build:
       context: ./
       dockerfile: docker/backend/Dockerfile
-    command: ["/app/main", "-env=prod"]
-    env_file: prod.env
+    #command: ["/app/main", "-env=prod"]
+    #env_file: prod.env
+    env_file: dev.env
     ports:
       - "8080:8080"
 
@@ -65,6 +66,7 @@ services:
       dockerfile: docker/frontend/Dockerfile
     ports:
       - "5173:5173"
+      - "80:80"
     depends_on:
       db:
         condition: service_healthy

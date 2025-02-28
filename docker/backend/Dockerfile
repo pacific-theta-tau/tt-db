@@ -1,5 +1,5 @@
 # Import official golang image
-FROM golang
+FROM golang AS builder
 
 # Create /app directory in container
 RUN mkdir /app
@@ -11,7 +11,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN go mod download
+RUN go mod tidy
 
 # RUN go build -o main cmd/server/main.go
 RUN go build -o main main.go
