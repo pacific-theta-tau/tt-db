@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
+// import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+// import { AppSidebar } from "@/components/app-sidebar"
 
 import LoginPage from './pages/Login'
 import HomePage from './pages/Home'
@@ -10,7 +10,7 @@ import ActivesPage from './pages/Actives'
 import EventsPage from './pages/Events'
 import EventAttendancePage from './pages/EventAttendance'
 import NotFoundPage from './pages/NotFound'
-import { NavBar2 } from './components/navbar'
+// import { NavBar2 } from './components/navbar'
 import './App.css'
 
 import { ThemeProvider } from "@/components/theme-provider"
